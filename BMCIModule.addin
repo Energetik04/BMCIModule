@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+<AddIn Type="Application">
+                <Name>BMCIModule_Application</Name>
+                <Assembly>C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll</Assembly>
+                <AddInId>F8AF5982-6FE6-4C62-8F79-E0B6FF252F73</AddInId>
+                <FullClassName>BMCIModule.BMCIModule_Application</FullClassName>
+                <VendorId>ADSK</VendorId>
+                <VendorDescription>Autodesk, www.autodesk.com</VendorDescription>
+</AddIn>
+</RevitAddIns>
