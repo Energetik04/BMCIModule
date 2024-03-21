@@ -1,0 +1,12 @@
+D:\SamplePlugins\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll
+D:\SamplePlugins\BMCIModule\BMCIModule\bin\Debug\BMCIModule.pdb
+D:\SamplePlugins\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.AssemblyReference.cache
+D:\SamplePlugins\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
+D:\SamplePlugins\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
+D:\SamplePlugins\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.pdb
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.AssemblyReference.cache
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
