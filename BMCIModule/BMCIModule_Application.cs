@@ -18,19 +18,46 @@ namespace BMCIModule
         {
             string namePlugin = "BMCIModule";
             string nameRibbon1 = "Координация";
+            string  wayForApplication=@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll";
             
             application.CreateRibbonTab(namePlugin);
             RibbonPanel panelCoordination=application.CreateRibbonPanel(namePlugin,nameRibbon1);
-            /* путь к сборке продумать и продумать 
+
+            //добавление кнопки координации
+            AddButtonCoordination(panelCoordination);
+            
+
+            void AddButtonCoordination(RibbonPanel panel) 
+            {
+                /* путь к сборке продумать и продумать 
              название видимое пользователям и добавить название класса*/
-            PushButtonData dataButtonCoordination =new PushButtonData("CoordinationButton","Создание рабочего файла", @"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll", "BMCIModule.CoordinationFile");
-            //добавление кнопки в панель и подсказок
-            PushButton coordinationButton=panelCoordination.AddItem(dataButtonCoordination) as PushButton;
-            coordinationButton.ToolTip = "Перенос площадки, координат базовой точки и точки съемки";
-            // путь к картинкам либо изменить либо пересмотреть 
-            coordinationButton.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\earth.png"));
-            /*List<RibbonItem> items = new List<RibbonItem>();
-            items.AddRange(panelCoordination.AddItem(coordinationButton));*/
+                PushButtonData dataButtonCoordination = new PushButtonData("CoordinationButton", "Копирование координат", wayForApplication, "BMCIModule.CoordinationFile");
+                dataButtonCoordination.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
+                // путь к картинкам либо изменить либо пересмотреть 
+                dataButtonCoordination.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+
+
+                // кнопка копирование осей
+                PushButtonData copyGridButtonData = new PushButtonData("CopyGridButton", "Копирование осей", wayForApplication, "BMCIModule.CopyGrids");
+                copyGridButtonData.ToolTip = "Копирование осей из связанного файла имеющего название Координационный";
+                copyGridButtonData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Scale-32-Dark.png"));
+
+                // кнопка копирования уровней
+                PushButtonData copyLevelButtonData = new PushButtonData("CopyLevelButton","Копирование уровней",wayForApplication, "BMCIModule.CopyLevel");
+                copyLevelButtonData.ToolTip = "Копирование уровней из связанного файла имеющего название Координационный";
+                copyLevelButtonData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Database-32-Light.png"));
+                // Объединение кнопок в одну
+                SplitButtonData splitCopy = new SplitButtonData("splitCoordination", "Split");
+                SplitButton splitButtonCopy=panel.AddItem(splitCopy) as SplitButton;
+
+                splitButtonCopy.AddPushButton(dataButtonCoordination);
+                splitButtonCopy.AddPushButton(copyGridButtonData);
+                splitButtonCopy.AddPushButton(copyLevelButtonData);
+
+            }
+
+
+
 
             
             return Result.Succeeded;

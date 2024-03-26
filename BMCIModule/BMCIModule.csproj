@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMCIModule_Application.cs" />
+    <Compile Include="CopyLevel.cs" />
+    <Compile Include="CopyGrids.cs" />
     <Compile Include="CoordinationFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
