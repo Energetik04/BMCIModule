@@ -24,37 +24,45 @@ namespace BMCIModule
                 FilteredElementCollector collector=new FilteredElementCollector(doc);
                 IList<Element> rvtLink= collector.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
                 //переборка коллекции
-                foreach (Element element1 in rvtLink)
+                if (rvtLink.Count == 0)
                 {
-                    using (Transaction t = new Transaction(doc, "Координация"))
+                    message = "Нету связанных файлов. Добавьте файл для координации проекта.";
+                    return Result.Cancelled;
+                }
+                else
+                {
+                    foreach (Element element1 in rvtLink)
                     {
-                       
-                        t.Start();
-                        if (element1.Name.Contains("Координационный"))
+                    
+                        using (Transaction t = new Transaction(doc, "Координация"))
                         {
-                            doc.AcquireCoordinates(element1.Id);
+                            t.Start();
+                            if (element1.Name.Contains("Координационный"))
+                            {
+                                doc.AcquireCoordinates(element1.Id);
+                            }
+                            else
+                            {
+                                throw new FileNotFoundException();
+
+                            }
+                            // работа с базовой точкой
+                            BasePoint.GetSurveyPoint(doc).Clipped = false;
+
+                            // работа с точкой съемки
+                            Parameter projectSurveyPointNorthSouth = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
+                            Parameter projectSurveyPointEastWest = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
+                            Parameter projectSurveyPointElev = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
+
+                            projectSurveyPointNorthSouth.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM).AsDouble());
+                            projectSurveyPointEastWest.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM).AsDouble());
+                            projectSurveyPointElev.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM).AsDouble());
+
+                            BasePoint.GetProjectBasePoint(doc).Pinned = true;
+                            BasePoint.GetSurveyPoint(doc).Clipped = true;
+
+                            t.Commit();
                         }
-                        else
-                        {
-                            throw new FileNotFoundException();
-                            
-                        }                                            
-                        // работа с базовой точкой
-                        BasePoint.GetSurveyPoint(doc).Clipped=false;
-
-                        // работа с точкой съемки
-                        Parameter projectSurveyPointNorthSouth =BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
-                        Parameter projectSurveyPointEastWest = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
-                        Parameter projectSurveyPointElev=BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
-                        
-                        projectSurveyPointNorthSouth.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM).AsDouble());
-                        projectSurveyPointEastWest.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM).AsDouble());
-                        projectSurveyPointElev.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM).AsDouble());
-
-                        BasePoint.GetProjectBasePoint(doc).Pinned = true;
-                        BasePoint.GetSurveyPoint(doc).Clipped = true;
-                                                                     
-                        t.Commit();
                     }
 
                 }
@@ -66,13 +74,6 @@ namespace BMCIModule
                 message = "Нету связанной модели с именем Координационный или связь выгружена. Проверьте диспетчер связей";
                 return Result.Cancelled;
             }
-            catch
-            {
-                message = "Нету связанных файлов. Добавьте файл для координации проекта.";
-                return Result.Cancelled;
-            }
-            
-
         }
     }
 }
