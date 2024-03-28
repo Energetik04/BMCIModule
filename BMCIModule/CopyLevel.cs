@@ -16,10 +16,12 @@ namespace BMCIModule
         public Result Execute(ExternalCommandData commandData, ref string messgae, ElementSet elementSet)
         {
             Document doc = commandData.Application.ActiveUIDocument.Document;
-            FilteredElementCollector collector = new FilteredElementCollector(doc);
 
-            IList<Element> levelProject = collector.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Levels).ToElements();
-            IList<Element> rvtLink = collector.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
+            FilteredElementCollector collectorLevelProject = new FilteredElementCollector(doc);
+            FilteredElementCollector collectorRvtLink=new FilteredElementCollector(doc);
+
+            IList<Element> levelProject = collectorLevelProject.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Levels).ToElements();
+            IList<Element> rvtLink = collectorRvtLink.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
 
             foreach (Element element1 in rvtLink)
             {

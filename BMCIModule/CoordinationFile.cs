@@ -34,30 +34,40 @@ namespace BMCIModule
                     foreach (Element element1 in rvtLink)
                     {
                     
-                        using (Transaction t = new Transaction(doc, "Координация"))
+                        using (Transaction t = new Transaction(doc, "Координация точек"))
                         {
                             t.Start();
+                            Parameter projectBasePointNorthSouth = BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
+                            Parameter projectBasePointEastWest = BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
+                            Parameter projectBasePointElevation = BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
+                            Parameter projectSurveyPointNorthSouth = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
+                            Parameter projectSurveyPointEastWest = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
+                            Parameter projectSurveyPointElev = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
                             if (element1.Name.Contains("Координационный"))
                             {
-                                doc.AcquireCoordinates(element1.Id);
+                                if ((projectBasePointEastWest.AsDouble() == 0) && (projectBasePointElevation.AsDouble() == 0) && (projectBasePointNorthSouth.AsDouble() == 0)
+                                    &&(projectSurveyPointEastWest.AsDouble()==0)&&(projectSurveyPointNorthSouth.AsDouble()==0)&&(projectSurveyPointElev.AsDouble()==0))
+                                {
+                                    doc.AcquireCoordinates(element1.Id);
+                                }
+                                else
+                                {
+                                    TaskDialog.Show("Координация точек проекта", "Базовая точка проекта или точка съемки не находятся в позиции 0.0.0");
+                                    return Result.Cancelled;
+                                }
                             }
                             else
                             {
                                 throw new FileNotFoundException();
-
                             }
                             // работа с базовой точкой
                             BasePoint.GetSurveyPoint(doc).Clipped = false;
 
                             // работа с точкой съемки
-                            Parameter projectSurveyPointNorthSouth = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
-                            Parameter projectSurveyPointEastWest = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
-                            Parameter projectSurveyPointElev = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
-
                             projectSurveyPointNorthSouth.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM).AsDouble());
                             projectSurveyPointEastWest.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM).AsDouble());
                             projectSurveyPointElev.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM).AsDouble());
-
+                            
                             BasePoint.GetProjectBasePoint(doc).Pinned = true;
                             BasePoint.GetSurveyPoint(doc).Clipped = true;
 
