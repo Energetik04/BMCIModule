@@ -1,11 +1,13 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Xml.Linq;
 
 
@@ -26,38 +28,31 @@ namespace BMCIModule
             if (gridProject.Count > 0)
             {
                 TaskDialog taskDialogGrid = new TaskDialog("Предупреждение пользователю");
-                taskDialogGrid.MainContent = "В данном файле уже есть оси, при нажатии:"
-                    + "\n\"Ok\" - существующие оси удаляться, будут добавлены оси из связи;" 
-                    + "\n\"Cancel\" - никакие действия предприниматься не будут.";
-                taskDialogGrid.AddCommandLink(TaskDialogCommandLinkId.CommandLink1, "Ok");//исправить
-                taskDialogGrid.AddCommandLink(TaskDialogCommandLinkId.CommandLink2, "Cancel");// исправить и добавить + 1 кнопку
+                taskDialogGrid.MainContent = "В данном файле уже есть оси, выберите следующее действие:";
+                
+                taskDialogGrid.AddCommandLink(TaskDialogCommandLinkId.CommandLink1, "Ничего не делать, получить список созданных осей");
+                taskDialogGrid.AddCommandLink(TaskDialogCommandLinkId.CommandLink2, "Пропустить");
+                taskDialogGrid.AddCommandLink(TaskDialogCommandLinkId.CommandLink3, "Проигнорировать и создать оси, есть вероятность получить ошибку");
                 taskDialogGrid.CommonButtons=TaskDialogCommonButtons.Close;
                 taskDialogGrid.DefaultButton = TaskDialogResult.Close;
                 TaskDialogResult tresult = taskDialogGrid.Show();
-                if ( tresult==TaskDialogResult.CommandLink1 )
+                if ( tresult==TaskDialogResult.CommandLink3 )
                 {
-                    foreach (Element element1 in rvtLink)
+                    try
                     {
-                        using (Transaction tCopyGrid = new Transaction(doc, "Копирование осей"))
+                        foreach (Element element1 in rvtLink)
                         {
-                            tCopyGrid.Start();
-
-                            RevitLinkInstance revitLinkInstance = element1 as RevitLinkInstance;
-                            FilteredElementCollector collectorElementInstance = new FilteredElementCollector(revitLinkInstance.GetLinkDocument());
-                            ICollection<Element> linkGrids = collectorElementInstance.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Grids).ToElements();
-                            // Добавить выбор семейства для марки внизу
-                            foreach (Element gridCreate in linkGrids)
+                            using (Transaction tCopyGrid = new Transaction(doc, "Копирование осей"))
                             {
-                                Grid linkGrid = gridCreate as Grid;
-
-                                Line lineLinkGrid = linkGrid.Curve as Line;
-                                Grid newGrid = Grid.Create(doc, lineLinkGrid);
-                                newGrid.Name = linkGrid.Name;
-                                newGrid.Pinned = true;
-
+                                tCopyGrid.Start();
+                                IterateRvtLink(element1, doc, tCopyGrid);
+                                tCopyGrid.Commit();
                             }
-                            tCopyGrid.Commit();
                         }
+                    }
+                    catch (Exception InvalidOperationException)
+                    {
+                        return Result.Succeeded;
                     }
                 }
                 else
@@ -65,12 +60,13 @@ namespace BMCIModule
                     // не работает с закрыть
                     if((tresult==TaskDialogResult.CommandLink2) || (tresult == TaskDialogResult.Cancel))
                     {
-                        message = "В данном файле присутствуют оси:";
+                        /*message = "В данном файле присутствуют оси:";
                         foreach (Element grid in gridProject)
                         {
-                            message +="\n ось"+(grid as Grid).Name;
-                        }
+                            message +="\n ось"+(grid as Autodesk.Revit.DB.Grid).Name;
+                        }*/
                     }
+                    message = "Команда копирования осей прервана";
                  return Result.Cancelled;  
                 }
             }
@@ -81,26 +77,37 @@ namespace BMCIModule
                     using (Transaction tCopyGrid = new Transaction(doc, "Копирование осей"))
                     {
                         tCopyGrid.Start();
-
-                        RevitLinkInstance revitLinkInstance = element1 as RevitLinkInstance;
-                        FilteredElementCollector collectorElementInstance = new FilteredElementCollector(revitLinkInstance.GetLinkDocument());
-                        ICollection<Element> linkGrids = collectorElementInstance.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Grids).ToElements();
-                        // Добавить выбор семейства для марки внизу
-                        foreach (Element gridCreate in linkGrids)
-                        {
-                            Grid linkGrid = gridCreate as Grid;
-
-                            Line lineLinkGrid = linkGrid.Curve as Line;
-                            Grid newGrid = Grid.Create(doc, lineLinkGrid);
-                            newGrid.Name = linkGrid.Name;
-                            newGrid.Pinned = true;
-
-                        }
+                        IterateRvtLink(element1, doc, tCopyGrid);
                         tCopyGrid.Commit();
                     }
                 }
             }
             return Result.Succeeded;
+        }
+
+         void IterateRvtLink(Element element1,Document doc,Transaction tCopyGrid)
+         {
+
+            RevitLinkInstance revitLinkInstance = element1 as RevitLinkInstance;
+            FilteredElementCollector collectorElementInstance = new FilteredElementCollector(revitLinkInstance.GetLinkDocument());
+            ICollection<Element> linkGrids = collectorElementInstance.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Grids).ToElements();
+            // Добавить выбор семейства для марки внизу
+            try
+            {
+                foreach (Element gridCreate in linkGrids)
+                {
+                    Autodesk.Revit.DB.Grid linkGrid = gridCreate as Autodesk.Revit.DB.Grid;
+                    Line lineLinkGrid = linkGrid.Curve as Line;
+                    Autodesk.Revit.DB.Grid newGrid = Autodesk.Revit.DB.Grid.Create(doc, lineLinkGrid);
+                    newGrid.Name = linkGrid.Name;
+                    newGrid.Pinned = true;
+                }
+            }
+            catch (Exception ArgumentExceptions)
+            {
+                TaskDialog.Show("Создание осей","Присутствуют оси с одинаковым названием, присвойти существующим осям уникальное имя.");
+                tCopyGrid.RollBack();
+            }
         }
     }
     
