@@ -22,10 +22,13 @@ namespace BMCIModule
 
             FilteredElementCollector collectorGrid = new FilteredElementCollector(doc);
             FilteredElementCollector collectorLink = new FilteredElementCollector(doc);
+           
+
             IList<Element> gridProject = collectorGrid.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Grids).ToElements();
             IList<Element> rvtLink = collectorLink.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
             
-            if (gridProject.Count > 0)
+
+            if (gridProject.Count != 0)
             {
                 TaskDialog taskDialogGrid = new TaskDialog("Предупреждение пользователю");
                 taskDialogGrid.MainContent = "В данном файле уже есть оси, выберите следующее действие:";
@@ -88,12 +91,31 @@ namespace BMCIModule
          void IterateRvtLink(Element element1,Document doc,Transaction tCopyGrid)
          {
 
+            FilteredWorksetCollector collectorWorkset = new FilteredWorksetCollector(doc);
+            //фильтр рабочих наборов и перечень
+            WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
+            IList<Workset> setWorkset = collectorWorkset.WherePasses(setFilter).ToWorksets();
+            //делегирование поиска и создание рабочего набора
+            SearchWorkset getWorkset = new SearchWorkset(CreateWorkset.GetWorkset);
+            Workset worksetLevelAndGrid = getWorkset(setWorkset, doc);
+
             RevitLinkInstance revitLinkInstance = element1 as RevitLinkInstance;
             FilteredElementCollector collectorElementInstance = new FilteredElementCollector(revitLinkInstance.GetLinkDocument());
             ICollection<Element> linkGrids = collectorElementInstance.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Grids).ToElements();
             // Добавить выбор семейства для марки внизу
             try
             {
+                if (worksetLevelAndGrid.IsOpen == true)
+                {
+                    WorksetTable wtb=null;
+                    wtb.SetActiveWorksetId(worksetLevelAndGrid.Id);
+                }
+                else
+                {
+                    WorksetConfiguration worksetConfiguration = new WorksetConfiguration(WorksetConfigurationOption.OpenAllWorksets);
+                    WorksetTable wtb = null;
+                    wtb.SetActiveWorksetId(worksetLevelAndGrid.Id);
+                }
                 foreach (Element gridCreate in linkGrids)
                 {
                     Autodesk.Revit.DB.Grid linkGrid = gridCreate as Autodesk.Revit.DB.Grid;

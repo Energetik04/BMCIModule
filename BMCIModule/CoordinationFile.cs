@@ -81,7 +81,7 @@ namespace BMCIModule
             }
             catch (FileNotFoundException)
             {
-                message = "Нету связанной модели с именем Координационный или связь выгружена. Проверьте диспетчер связей";
+                message = "Нету связанной модели с именем Координационный. Проверьте диспетчер связей";
                 return Result.Cancelled;
             }
         }

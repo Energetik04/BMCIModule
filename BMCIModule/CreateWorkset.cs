@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace BMCIModule
 {
+    delegate Workset SearchWorkset(IList<Workset> setWorkset,Document document);
     [Transaction(TransactionMode.Manual)]
+        
     public class CreateWorkset:IExternalCommand
     {
         public Result Execute (ExternalCommandData commanddata, ref  string message,ElementSet elements)
@@ -22,9 +24,8 @@ namespace BMCIModule
             //Фильтрация рабочих наборов
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
-
             
-            
+                       
             // марки проктов электриков
             List<string> tagProjectETO = new List<string>();
             string tagProjectETOName = "ЭМ,ЭО,ЭГ,ЭС,ЭК,ЭП";
@@ -38,5 +39,24 @@ namespace BMCIModule
 
             return Result.Succeeded;
         }
+
+        public static Workset GetWorkset(IList<Workset> setWorkset, Document doc)
+        {
+            string worksetLevelAndGridName = "#BMCI - ОБЩИЕ УРОВНИ И СЕТКИ";
+            bool flag = false;
+            Workset worksetLevelAndGrid;
+            foreach (Workset workset in setWorkset)
+            {
+                if (workset.Name == worksetLevelAndGridName)
+                {
+                    flag = true;
+                    return worksetLevelAndGrid = workset;
+                }
+            
+            }
+            return worksetLevelAndGrid = Workset.Create(doc, worksetLevelAndGridName);
+                                  
+        }
+
     }
 }
