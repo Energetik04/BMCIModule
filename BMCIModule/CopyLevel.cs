@@ -37,7 +37,16 @@ namespace BMCIModule
                             FilteredElementCollector collectorElementInstance = new FilteredElementCollector(revitLinkInstance.GetLinkDocument());
                             ICollection<Element> linkLevels = collectorElementInstance.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Levels).ToElements();
                             int count = 0;
-                            
+
+                            FilteredWorksetCollector collectorWorkset = new FilteredWorksetCollector(doc);
+                            //фильтр рабочих наборов и перечень
+                            WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
+                            IList<Workset> setWorkset = collectorWorkset.WherePasses(setFilter).ToWorksets();
+                            //делегирование поиска и создание рабочего набора
+                            SearchWorkset getWorkset = new SearchWorkset(CreateWorkset.GetWorkset);
+                            Workset workSetLevelAndGrid=getWorkset(setWorkset, doc);
+
+
                             foreach (Element getLevelLink in linkLevels)
                             {
                                 if (count < levelProject.Count())
@@ -45,6 +54,7 @@ namespace BMCIModule
                                     levelProject[count].Name = getLevelLink.Name;
                                     Parameter getElevationNewLevel = (levelProject[count] as Level).get_Parameter((BuiltInParameter.LEVEL_ELEV));
                                     getElevationNewLevel.Set(getLevelLink.get_Parameter((BuiltInParameter.LEVEL_ELEV)).AsDouble());
+                                    levelProject[count].get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM).Set(workSetLevelAndGrid.Id.IntegerValue);
                                     (levelProject[count] as Level).Pinned = true;
                                     count++;
                                 }
@@ -53,6 +63,7 @@ namespace BMCIModule
                                     Parameter setElevationNewLevel = getLevelLink.get_Parameter((BuiltInParameter.LEVEL_ELEV));
                                     Level createNewLevel = Level.Create(doc, setElevationNewLevel.AsDouble());
                                     createNewLevel.Name = getLevelLink.Name;
+                                    createNewLevel.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM).Set(workSetLevelAndGrid.Id.IntegerValue);
                                     createNewLevel.Pinned = true;
                                 }
                             }

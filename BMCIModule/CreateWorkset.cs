@@ -26,7 +26,7 @@ namespace BMCIModule
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
             
                        
-            // марки проктов электриков
+            /*// марки проктов электриков
             List<string> tagProjectETO = new List<string>();
             string tagProjectETOName = "ЭМ,ЭО,ЭГ,ЭС,ЭК,ЭП";
             string[] newTagProjectETOName = tagProjectETOName.Split(',').ToArray();
@@ -35,7 +35,7 @@ namespace BMCIModule
                 tagProjectETO.Add(newTagProjectETOName[i]);
             }
             SelectWorkset selectWorkset = new SelectWorkset(tagProjectETO);
-            selectWorkset.ShowDialog();
+            selectWorkset.ShowDialog();*/
 
             return Result.Succeeded;
         }

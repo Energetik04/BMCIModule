@@ -103,34 +103,20 @@ namespace BMCIModule
             FilteredElementCollector collectorElementInstance = new FilteredElementCollector(revitLinkInstance.GetLinkDocument());
             ICollection<Element> linkGrids = collectorElementInstance.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_Grids).ToElements();
             // Добавить выбор семейства для марки внизу
-            try
-            {
-                if (worksetLevelAndGrid.IsOpen == true)
-                {
-                    WorksetTable wtb=null;
-                    wtb.SetActiveWorksetId(worksetLevelAndGrid.Id);
-                }
-                else
-                {
-                    WorksetConfiguration worksetConfiguration = new WorksetConfiguration(WorksetConfigurationOption.OpenAllWorksets);
-                    WorksetTable wtb = null;
-                    wtb.SetActiveWorksetId(worksetLevelAndGrid.Id);
-                }
+            
+           
                 foreach (Element gridCreate in linkGrids)
                 {
-                    Autodesk.Revit.DB.Grid linkGrid = gridCreate as Autodesk.Revit.DB.Grid;
-                    Line lineLinkGrid = linkGrid.Curve as Line;
-                    Autodesk.Revit.DB.Grid newGrid = Autodesk.Revit.DB.Grid.Create(doc, lineLinkGrid);
-                    newGrid.Name = linkGrid.Name;
-                    newGrid.Pinned = true;
+                Autodesk.Revit.DB.Grid linkGrid = gridCreate as Autodesk.Revit.DB.Grid;
+                Line lineLinkGrid = linkGrid.Curve as Line;
+                Autodesk.Revit.DB.Grid newGrid = Autodesk.Revit.DB.Grid.Create(doc, lineLinkGrid);
+                newGrid.Name = linkGrid.Name;
+                //Parameter setGridWorkset = newGrid.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM);
+                //setGridWorkset.Set(worksetLevelAndGrid.Id.IntegerValue);
+                newGrid.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM).Set(worksetLevelAndGrid.Id.IntegerValue);
+                newGrid.Pinned = true;
                 }
-            }
-            catch (Exception ArgumentExceptions)
-            {
-                TaskDialog.Show("Создание осей","Присутствуют оси с одинаковым названием, присвойти существующим осям уникальное имя.");
-                tCopyGrid.RollBack();
-            }
+            
         }
     }
-    
 }

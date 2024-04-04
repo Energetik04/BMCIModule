@@ -54,7 +54,7 @@ namespace BMCIModule
                 splitButtonCopy.AddPushButton(copyGridButtonData);
                 splitButtonCopy.AddPushButton(copyLevelButtonData);
 
-                //кнопка выбора набора марок
+                //кнопка выбора набора марок и создания рабочих наборов
                 PushButtonData selectSetTagWorkset = new PushButtonData("CreareWorkset", "Создание рабочих наборов", wayForApplication, "BMCIModule.CreateWorkset");
                 selectSetTagWorkset.ToolTip = "Создание рабочих набором путем выбора марок комплектов";
                 selectSetTagWorkset.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\CreateWorkSet.png"));
