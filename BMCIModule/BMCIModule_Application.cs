@@ -39,12 +39,12 @@ namespace BMCIModule
 
                 // кнопка копирование осей
                 PushButtonData copyGridButtonData = new PushButtonData("CopyGridButton", "Копирование осей", wayForApplication, "BMCIModule.CopyGrids");
-                copyGridButtonData.ToolTip = "Копирование осей из связанного файла имеющего название Координационный";
+                copyGridButtonData.ToolTip = "Копирование осей из связанного файла имеющего название Координационный, так же создает рабочий набор с именем #BMCI - ОБЩИЕ УРОВНИ И СЕТКИ";
                 copyGridButtonData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Scale-32-Dark.png"));
 
                 // кнопка копирования уровней
                 PushButtonData copyLevelButtonData = new PushButtonData("CopyLevelButton","Копирование уровней",wayForApplication, "BMCIModule.CopyLevel");
-                copyLevelButtonData.ToolTip = "Копирование уровней из связанного файла имеющего название Координационный";
+                copyLevelButtonData.ToolTip = "Копирование уровней из связанного файла имеющего название Координационный, так же создает рабочий набор с именем #BMCI - ОБЩИЕ УРОВНИ И СЕТКИ";
                 copyLevelButtonData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Database-32-Light.png"));
                 // Объединение кнопок в одну
                 SplitButtonData splitCopy = new SplitButtonData("splitCoordination", "Split");
