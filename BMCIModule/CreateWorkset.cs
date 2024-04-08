@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using BMCIModule.Department;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,8 @@ namespace BMCIModule
             //Фильтрация рабочих наборов
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
-            
-                       
+
+
             /*// марки проктов электриков
             List<string> tagProjectETO = new List<string>();
             string tagProjectETOName = "ЭМ,ЭО,ЭГ,ЭС,ЭК,ЭП";
@@ -33,9 +34,10 @@ namespace BMCIModule
             for (int i = 0; i < newTagProjectETOName.Length; i++)
             {
                 tagProjectETO.Add(newTagProjectETOName[i]);
-            }
-            SelectWorkset selectWorkset = new SelectWorkset(tagProjectETO);
-            selectWorkset.ShowDialog();*/
+            }*/
+            SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
+            SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.CreateSetMark());
+            selectWorkset.ShowDialog();
 
             return Result.Succeeded;
         }

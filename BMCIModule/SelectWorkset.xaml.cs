@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BMCIModule.Department;
 
 
 namespace BMCIModule
@@ -22,8 +23,8 @@ namespace BMCIModule
     /// </summary>
     public partial class SelectWorkset : Window
     {
-        List<string> tagName;
-        public SelectWorkset(List<string> tagNameETO)
+        List<Mark> tagName;
+        public SelectWorkset(List<Mark> tagNameETO)
         {
             InitializeComponent();
             tagName=tagNameETO;

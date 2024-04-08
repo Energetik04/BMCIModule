@@ -59,6 +59,9 @@
     <Compile Include="CopyLevel.cs" />
     <Compile Include="CopyGrids.cs" />
     <Compile Include="CoordinationFile.cs" />
+    <Compile Include="Department\SetMarkETO.cs" />
+    <Compile Include="Department\SetDepartmentBMCI.cs" />
+    <Compile Include="Department\Mark.cs" />
     <Compile Include="Department\Department.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectWorkset.xaml.cs">
