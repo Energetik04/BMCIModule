@@ -23,7 +23,7 @@ namespace BMCIModule
     /// </summary>
     public partial class SelectWorkset : Window
     {
-        List<Mark> tagName;
+        List<Mark> tagName=new List<Mark>();
         public SelectWorkset(List<Mark> tagNameETO)
         {
             InitializeComponent();
@@ -31,11 +31,9 @@ namespace BMCIModule
             //список получил,надо отрегулировать размеры получаймой дрыснни
             tagETOName.ItemsSource = tagName;
             
+            tagETOName.DisplayMemberPath = "Name";
         }
 
-        private void SetSelectWorkset(object sender,EventArgs e)
-        {
-            
-        }
+
     }
 }

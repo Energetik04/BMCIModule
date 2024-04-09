@@ -9,12 +9,13 @@
     <Grid>
         <StackPanel x:Name="TitleWindow" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             
-            <TextBox HorizontalAlignment="Center" FontSize="14" FontFamily="GOST Common">
+            <TextBox HorizontalAlignment="Center" FontSize="14" FontFamily="GOST Common" IsReadOnly="True">
                 Выберите марки проектов для создания рабочих наборов
                 </TextBox>
         </StackPanel>
-        <StackPanel x:Name="ETO" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="100" >
-            <ListBox x:Name="tagETOName" HorizontalAlignment="Left" Height="100" Width="63" FontSize="14"/>
+        <StackPanel x:Name="Tag" HorizontalAlignment="Left" VerticalAlignment="Center" Width="14*" Height="10*" >
+            <ListBox x:Name="tagETOName" HorizontalAlignment="Left" VerticalAlignment="Center" Height="5*" Width="5*" FontSize="14" FontFamily="GOST 2.304 type A"/>
+            <ListBox x:Name="tagACDName" HorizontalAlignment="Center" VerticalAlignment="Center" Height="300" Width="250" FontSize="14" FontFamily="GOST 2.304 type A"/>
         </StackPanel>
         
 

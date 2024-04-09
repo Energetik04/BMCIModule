@@ -55,11 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMCIModule_Application.cs" />
-    <Compile Include="CreateWorkset.cs" />
-    <Compile Include="CopyLevel.cs" />
-    <Compile Include="CopyGrids.cs" />
-    <Compile Include="CoordinationFile.cs" />
-    <Compile Include="Department\SetMarkETO.cs" />
+    <Compile Include="Coordination\CreateWorkset.cs" />
+    <Compile Include="Coordination\CopyLevel.cs" />
+    <Compile Include="Coordination\CopyGrids.cs" />
+    <Compile Include="Coordination\CoordinationFile.cs" />
+    <Compile Include="Department\SetMark.cs" />
     <Compile Include="Department\SetDepartmentBMCI.cs" />
     <Compile Include="Department\Mark.cs" />
     <Compile Include="Department\Department.cs" />
