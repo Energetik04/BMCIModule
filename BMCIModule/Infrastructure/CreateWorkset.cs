@@ -24,10 +24,10 @@ namespace BMCIModule
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
 
-            SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
-            setDepartmentBMCI.CreateSetMark();
-            SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.ETO.ListMark);
-            selectWorkset.ShowDialog();
+            //SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
+            //setDepartmentBMCI.CreateSetMark();
+            //SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.ETO.ListMark);
+            //selectWorkset.ShowDialog();
 
             return Result.Succeeded;
         }

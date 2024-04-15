@@ -1,23 +1,43 @@
 ﻿<Window x:Class="BMCIModule.SelectWorkset"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:BMCIModule.ViewModel"
              xmlns:local="clr-namespace:BMCIModule"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel x:Name="TitleWindow" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            
-            <TextBox HorizontalAlignment="Center" FontSize="14" FontFamily="GOST Common" IsReadOnly="True">
-                Выберите марки проектов для создания рабочих наборов
-                </TextBox>
-        </StackPanel>
-        <StackPanel x:Name="Tag" HorizontalAlignment="Left" VerticalAlignment="Center" Width="14*" Height="10*" >
-            <ListBox x:Name="tagETOName" HorizontalAlignment="Left" VerticalAlignment="Center" Height="5*" Width="5*" FontSize="14" FontFamily="GOST 2.304 type A"/>
-            <ListBox x:Name="tagACDName" HorizontalAlignment="Center" VerticalAlignment="Center" Height="300" Width="250" FontSize="14" FontFamily="GOST 2.304 type A"/>
-        </StackPanel>
         
+             d:DesignHeight="450" d:DesignWidth="800" 
+             Title="{Binding Title}">
+    <Window.DataContext>
+        <vm:SelectWorksetViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        
+        <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Column="0" Header="АСО">
+            <ListBox ItemsSource="{Binding departmentCollection[0].ListMark[0].Name}"/>
+        </GroupBox>
+                <!--реалиховать свойство по передаче тэга сюда -->
+        <GroupBox Grid.Column="1" Header="АСУиС"/>
+        <GroupBox Grid.Column="2" Header="ОВиК"/>
+        <GroupBox Grid.Column="3" Header="ХТО"/>
+        <GroupBox Grid.Column="4" Header="ЭТО"/>
+        <GroupBox Grid.Column="5" Header="ОИИ"/>
+        <GroupBox Grid.Column="6" Header="ГО"/>
+
+
+
+
+
 
     </Grid>
 </Window>

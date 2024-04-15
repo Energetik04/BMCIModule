@@ -5,33 +5,86 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 
 namespace BMCIModule.Department
 {
     public class SetDepartmentBMCI
     {
-        public Department ETO = new Department("Электротехнический отдел", "ЭТО");
-        public Department ESD = new Department("Отдел инженерных изысканий", "ОИИ");
-        public Department ACD = new Department("Архитектурно строительный отдел", "АСО");
-        public Department MD = new Department("Горный отдел", "ГО");
-        public Department DGPTT = new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ");
-        public Department CTD = new Department("Химико-технолгический отдел", "ХТО");
-        public Department DACCS = new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС");
-        public Department WSSD = new Department("Отдел водопровода и канализации", "ОВиК");
+        static ICollection<Mark> ETO = new List<Mark>
+        {
+            new Mark("ЭМ",false),
+            new Mark("ЭC", false),
+            new Mark("ЭО", false),
+            new Mark("ЭГ", false),
+            new Mark("ЭП", false)
+        };
 
-        public void CreateSetMark()
-        {            
-            SetMark setMarkETO = new SetMark("ЭТО");
-            SetMark setMarkACD = new SetMark("АСО");
-            SetMark setMarkCTD = new SetMark("ХТО");
-            SetMark setMarkWSSD = new SetMark("ОВиК");
-            ETO.AddItemListMark(setMarkETO.marks);
-            ACD.AddItemListMark(setMarkACD.marks);
-            CTD.AddItemListMark(setMarkCTD.marks);
-            WSSD.AddItemListMark(setMarkWSSD.marks);
+        static ICollection<Mark> ACD = new List<Mark>
+        {
+            new Mark("АР",false),
+            new Mark("КМ", false),
+        };
 
-        }
+        static ICollection<Mark> MD = new List<Mark>
+        {
+            new Mark("ГМ",false),
+            new Mark("ГПР", false),
+            new Mark("ГОР", false),
+        };
+
+        static ICollection<Mark> DGPTT = new List<Mark>
+        {
+            new Mark("ГП",false),
+            new Mark("ОВ", false),
+            new Mark("ГСВ", false),
+            new Mark("ХС", false),
+            new Mark("ТМ", false),
+            new Mark("ГСВ", false),
+        };
+
+        static ICollection<Mark> CTD = new List<Mark>
+        {
+            new Mark("ТХ",false),
+            
+        };
+
+        static ICollection<Mark>  DACCS= new List<Mark>
+        {
+            new Mark("АОВ",false),
+            new Mark("АВК", false),
+            new Mark("СС", false),
+            new Mark("ПС", false),
+            new Mark("АК", false),
+        };
+
+        static ICollection<Mark> WSSD = new List<Mark>
+        {
+            new Mark("ВК",false),
+            new Mark("НК", false),
+            new Mark("НВ", false),
+            new Mark("ВП", false),
+            new Mark("НВК", false),
+        };
+        static ICollection<Mark> ESD = new List<Mark>
+        {
+            new Mark("МОК",false),
+            
+        };
+
+        /*public ICollection<Department> departmentList = new List<Department>();
+        {
+            new Department("Электротехнический отдел","ЭТО",ETO),
+            new Department("Отдел инженерных изысканий", "ОИИ",ESD),
+            new Department("Архитектурно строительный отдел", "АСО",ACD),
+            new Department("Горный отдел", "ГО",MD),
+            new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ",DGPTT),
+            new Department("Химико-технолгический отдел", "ХТО",CTD),
+            new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС",DACCS),
+            new Department("Отдел водопровода и канализации", "ОВиК",WSSD)
+        };*/
+             
     }
     
 

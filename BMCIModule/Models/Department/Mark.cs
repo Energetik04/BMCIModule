@@ -8,18 +8,15 @@ namespace BMCIModule.Department
 {
     public class Mark
     {
-        string name;
-        bool statusmark;
-
-        public string Name { get => name; set => name = value; }
-        public bool Statusmark { get => statusmark; set => statusmark = value; }
+        public string Name { get; set; }
+        public bool Statusmark { get ; set ; }
 
         public Mark() { }
 
-        public Mark(string name)
-        {
-            Name = name;
-        }
+        //public Mark(string name)
+        //{
+        //    Name = name;
+        //}
 
         public Mark(string name, bool statusmark)
         {

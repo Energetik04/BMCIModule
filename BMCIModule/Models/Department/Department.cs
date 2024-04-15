@@ -10,33 +10,31 @@ namespace BMCIModule.Department
 {
     public class Department
     {
-        string name;
-        string tag;
-        List<Mark> listMark = new List<Mark>();
+        
+        public string Name { get; set; }
 
+        public string Tag { get; set; }
+        public ICollection<Mark> ListMark { get; set; }
 
-        public string Name { get { return Name; } set { Name = value; } }
-
-        public string Tag { get => Tag; set => Tag = value; }
-        public List<Mark> ListMark { get => listMark; set => listMark = value; }
-
-        public Department(string name)
+        /*public Department(string name)
         {
-            this.name = name;
+            Name = name;
         }
 
         public Department(string name, string tag)
         {
-            this.name = name;
-            this.tag = tag;
-        }
+            Name = name;
+            Tag = tag;
+        }*/
         public Department() { }
 
-        public List<Mark> AddItemListMark(List<Mark> mark)
+        public Department(string name, string tag, ICollection<Mark> marks)
         {
-            listMark = mark;
-            return listMark;
+            Name = name;
+            Tag = tag;
+            ListMark = marks;
         }
+                
     }
 
 }

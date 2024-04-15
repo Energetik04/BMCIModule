@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using BMCIModule.Department;
+
 
 
 namespace BMCIModule
@@ -23,15 +23,11 @@ namespace BMCIModule
     /// </summary>
     public partial class SelectWorkset : Window
     {
-        List<Mark> tagName=new List<Mark>();
-        public SelectWorkset(List<Mark> tagNameETO)
+       
+        public SelectWorkset()
         {
             InitializeComponent();
-            tagName=tagNameETO;
-            //список получил,надо отрегулировать размеры получаймой дрыснни
-            tagETOName.ItemsSource = tagName;
             
-            tagETOName.DisplayMemberPath = "Name";
         }
 
 
