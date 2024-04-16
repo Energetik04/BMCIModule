@@ -15,6 +15,8 @@
     <Grid>
         
         <Grid.ColumnDefinitions>
+         
+         <ColumnDefinition Width="*"/>
          <ColumnDefinition Width="*"/>
          <ColumnDefinition Width="*"/>
          <ColumnDefinition Width="*"/>
@@ -24,20 +26,14 @@
          <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
-            <ListBox ItemsSource="{Binding departmentCollection[0].ListMark[0].Name}"/>
-        </GroupBox>
-                <!--реалиховать свойство по передаче тэга сюда -->
+            <ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>   <!--реалиховать свойство по передаче тэга сюда -->
         <GroupBox Grid.Column="1" Header="АСУиС"/>
-        <GroupBox Grid.Column="2" Header="ОВиК"/>
-        <GroupBox Grid.Column="3" Header="ХТО"/>
-        <GroupBox Grid.Column="4" Header="ЭТО"/>
-        <GroupBox Grid.Column="5" Header="ОИИ"/>
-        <GroupBox Grid.Column="6" Header="ГО"/>
-
-
-
-
-
-
+        <GroupBox Grid.Column="2" Header="ОГПиТТ"/>
+        <GroupBox Grid.Column="3" Header="ОВиК"/>
+        <GroupBox Grid.Column="4" Header="ХТО"/>
+        <GroupBox Grid.Column="5" Header="ЭТО"/>
+        <GroupBox Grid.Column="6" Header="ОИИ"/>
+        <GroupBox Grid.Column="7" Header="ГО"/>
     </Grid>
 </Window>

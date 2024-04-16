@@ -1,0 +1,15 @@
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\bin\Debug\net8.0\BMCIModuleConsole.exe
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\bin\Debug\net8.0\BMCIModuleConsole.deps.json
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\bin\Debug\net8.0\BMCIModuleConsole.runtimeconfig.json
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\bin\Debug\net8.0\BMCIModuleConsole.dll
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\bin\Debug\net8.0\BMCIModuleConsole.pdb
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.GeneratedMSBuildEditorConfig.editorconfig
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.AssemblyInfoInputs.cache
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.AssemblyInfo.cs
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.csproj.CoreCompileInputs.cache
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.sourcelink.json
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.dll
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\refint\BMCIModuleConsole.dll
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.pdb
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\BMCIModuleConsole.genruntimeconfig.cache
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\Test\BMCIModuleTest\obj\Debug\net8.0\ref\BMCIModuleConsole.dll

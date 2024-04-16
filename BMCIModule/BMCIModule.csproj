@@ -62,7 +62,6 @@
     <Compile Include="Infrastructure\CopyLevel.cs" />
     <Compile Include="Infrastructure\CopyGrids.cs" />
     <Compile Include="Infrastructure\CoordinationFile.cs" />
-    <Compile Include="Models\Department\SetMark.cs" />
     <Compile Include="Models\Department\SetDepartmentBMCI.cs" />
     <Compile Include="Models\Department\Mark.cs" />
     <Compile Include="Models\Department\Department.cs" />

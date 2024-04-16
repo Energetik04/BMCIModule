@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Collections;
 
 
 namespace BMCIModule.Department
 {
-    public class SetDepartmentBMCI
+    public class SetDepartmentBMCI : IEnumerable
     {
-        static ICollection<Mark> ETO = new List<Mark>
+        public static List<Mark> ETO = new List<Mark>
         {
             new Mark("ЭМ",false),
             new Mark("ЭC", false),
@@ -21,20 +22,20 @@ namespace BMCIModule.Department
             new Mark("ЭП", false)
         };
 
-        static ICollection<Mark> ACD = new List<Mark>
+        public static List<Mark> ACD = new List<Mark>
         {
             new Mark("АР",false),
             new Mark("КМ", false),
         };
 
-        static ICollection<Mark> MD = new List<Mark>
+        public static List<Mark> MD = new List<Mark>
         {
             new Mark("ГМ",false),
             new Mark("ГПР", false),
             new Mark("ГОР", false),
         };
 
-        static ICollection<Mark> DGPTT = new List<Mark>
+        public static List<Mark> DGPTT = new List<Mark>
         {
             new Mark("ГП",false),
             new Mark("ОВ", false),
@@ -44,13 +45,13 @@ namespace BMCIModule.Department
             new Mark("ГСВ", false),
         };
 
-        static ICollection<Mark> CTD = new List<Mark>
+        public static List<Mark> CTD = new List<Mark>
         {
             new Mark("ТХ",false),
-            
+
         };
 
-        static ICollection<Mark>  DACCS= new List<Mark>
+        public static List<Mark> DACCS = new List<Mark>
         {
             new Mark("АОВ",false),
             new Mark("АВК", false),
@@ -59,7 +60,7 @@ namespace BMCIModule.Department
             new Mark("АК", false),
         };
 
-        static ICollection<Mark> WSSD = new List<Mark>
+        public static List<Mark> WSSD = new List<Mark>
         {
             new Mark("ВК",false),
             new Mark("НК", false),
@@ -67,25 +68,31 @@ namespace BMCIModule.Department
             new Mark("ВП", false),
             new Mark("НВК", false),
         };
-        static ICollection<Mark> ESD = new List<Mark>
+        public static List<Mark> ESD = new List<Mark>
         {
             new Mark("МОК",false),
-            
-        };
 
-        /*public ICollection<Department> departmentList = new List<Department>();
+        };
+        private Department[] departmentArray = new Department[8];
+        public SetDepartmentBMCI()
         {
-            new Department("Электротехнический отдел","ЭТО",ETO),
-            new Department("Отдел инженерных изысканий", "ОИИ",ESD),
-            new Department("Архитектурно строительный отдел", "АСО",ACD),
-            new Department("Горный отдел", "ГО",MD),
-            new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ",DGPTT),
-            new Department("Химико-технолгический отдел", "ХТО",CTD),
-            new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС",DACCS),
-            new Department("Отдел водопровода и канализации", "ОВиК",WSSD)
-        };*/
-             
+            DepartmentArray[1] = new Department("Архитектурно строительный отдел", "АСО", ACD);
+            DepartmentArray[0] = new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS);
+            DepartmentArray[2] = new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ", DGPTT);
+            DepartmentArray[3] = new Department("Отдел водопровода и канализации", "ОВиК", WSSD);
+            DepartmentArray[4] = new Department("Химико-технолгический отдел", "ХТО", CTD);
+            DepartmentArray[5] = new Department("Электротехнический отдел", "ЭТО", ETO);
+            DepartmentArray[6] = new Department("Отдел инженерных изысканий", "ОИИ", ESD);
+            DepartmentArray[7] = new Department("Горный отдел", "ГО", MD);
+        }
+
+        public Department[] DepartmentArray { get => departmentArray; set => departmentArray = value; }
+
+        public IEnumerator GetEnumerator()
+        {
+            return departmentArray.GetEnumerator();
+        }
     }
-    
+
 
 }

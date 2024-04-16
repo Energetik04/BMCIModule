@@ -19,3 +19,4 @@ C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\obj\Debug\ne
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.pdb
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.genruntimeconfig.cache
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\ref\BMCIModuleTest.dll
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
