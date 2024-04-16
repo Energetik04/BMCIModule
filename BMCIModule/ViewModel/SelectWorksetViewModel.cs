@@ -10,10 +10,6 @@ namespace BMCIModule.ViewModel
 {
     internal class SelectWorksetViewModel:Base.ViewModel
     {
-        protected override void OnProperyChanged([CallerMemberName] string PropertyName = null)
-        {
-            base.OnProperyChanged(PropertyName);
-        }
         #region Заголовок
         private string _Title="Создание рабочих наборов";
         public string  Title
@@ -27,14 +23,20 @@ namespace BMCIModule.ViewModel
 
         #endregion 
 
-        public ObservableCollection<Department.Department> departmentCollection {get;}
+        public ObservableCollection<Department.Department> departmentCollection 
+        {
+            get;
+        }
+
+       
        
         public SelectWorksetViewModel()
         {
           SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
-          departmentCollection = new ObservableCollection<Department.Department>(setDepartmentBMCI.DepartmentArray);
+          departmentCollection = new ObservableCollection<Department.Department>(setDepartmentBMCI.DepartmentArray);// необходимо обновление бинарника окна
+          
         }
 
-
+     
     }
 }

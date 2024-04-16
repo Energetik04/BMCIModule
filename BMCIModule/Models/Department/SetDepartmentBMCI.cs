@@ -76,8 +76,8 @@ namespace BMCIModule.Department
         private Department[] departmentArray = new Department[8];
         public SetDepartmentBMCI()
         {
-            DepartmentArray[1] = new Department("Архитектурно строительный отдел", "АСО", ACD);
-            DepartmentArray[0] = new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS);
+            DepartmentArray[0] = new Department("Архитектурно строительный отдел", "АСО", ACD);
+            DepartmentArray[1] = new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS);
             DepartmentArray[2] = new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ", DGPTT);
             DepartmentArray[3] = new Department("Отдел водопровода и канализации", "ОВиК", WSSD);
             DepartmentArray[4] = new Department("Химико-технолгический отдел", "ХТО", CTD);

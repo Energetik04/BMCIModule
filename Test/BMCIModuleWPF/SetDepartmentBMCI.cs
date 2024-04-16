@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BMCIModuleWPF
 {
-    public class SetDepartmentBMCI : IEnumerable
+    public class SetDepartmentBMCI : IEnumerable,INotifyPropertyChanged
     {
         public static List<Mark> ETO = new List<Mark>
         {
@@ -70,10 +73,17 @@ namespace BMCIModuleWPF
 
         };
         private Department[] departmentArray = new Department[8];
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnProperyChanged([CallerMemberName] string PropertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+
         public SetDepartmentBMCI()
         {
-            DepartmentArray[0] = new Department("Архитектурно строительный отдел", "АСО", ACD);
-            DepartmentArray[1] = new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS);
+            DepartmentArray[1] = new Department("Архитектурно строительный отдел", "АСО", ACD);
+            DepartmentArray[0] = new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS);
             DepartmentArray[2] = new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ", DGPTT);
             DepartmentArray[3] = new Department("Отдел водопровода и канализации", "ОВиК", WSSD);
             DepartmentArray[4] = new Department("Химико-технолгический отдел", "ХТО", CTD);
@@ -83,6 +93,14 @@ namespace BMCIModuleWPF
         }
 
         public Department[] DepartmentArray { get => departmentArray; set => departmentArray = value; }
+
+        public virtual bool Set<T>(ref T field, T value, [CallerMemberName] string ProportyName = null)
+        {
+            if (Equals(field, value)) return false;
+            field = value;
+            OnProperyChanged();
+            return true;
+        }
 
         public IEnumerator GetEnumerator()
         {

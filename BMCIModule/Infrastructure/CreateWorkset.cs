@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using BMCIModule.Department;
+using BMCIModule.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,12 @@ namespace BMCIModule
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
 
+            SelectWorkset viewModel = new SelectWorkset();
+
             //SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
             //setDepartmentBMCI.CreateSetMark();
             //SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.ETO.ListMark);
-            //selectWorkset.ShowDialog();
+            viewModel.ShowDialog();
 
             return Result.Succeeded;
         }

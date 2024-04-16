@@ -15,6 +15,7 @@ namespace BMCIModuleWPF
         public Class1()
         {
             SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
+            setDepartmentBMCI.Set<SetDepartmentBMCI>(ref setDepartmentBMCI,setDepartmentBMCI);
             departmentCollection = new ObservableCollection<Department>(setDepartmentBMCI.DepartmentArray);
             
         }
