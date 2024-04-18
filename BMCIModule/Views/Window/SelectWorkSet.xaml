@@ -25,12 +25,13 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
-            <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}" 
+            <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}"
                       AutoGenerateColumns="False"
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
                       HeadersVisibility="None"
-                      Background="White">
+                      Background="White"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -44,7 +45,8 @@
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
                       Background="White"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -57,7 +59,8 @@
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
                       Background="White"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -70,7 +73,8 @@
                     HorizontalGridLinesBrush="Transparent"
                     VerticalGridLinesBrush="Transparent"
                     Background="White"
-                    HeadersVisibility="None">
+                    HeadersVisibility="None"
+                    CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -83,7 +87,8 @@
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
                       Background="White"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -96,7 +101,8 @@
                       HorizontalGridLinesBrush="Transparent"
                       Background="White"
                       VerticalGridLinesBrush="Transparent"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -109,7 +115,8 @@
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
                       Background="White"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -122,7 +129,8 @@
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
                       Background="White"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      CanUserAddRows="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>

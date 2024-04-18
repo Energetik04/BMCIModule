@@ -76,7 +76,7 @@ namespace BMCIModule.Department
 
         public static List<Department> departmentArray = new List<Department> 
         {
-            new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS),
+            //new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS),
             new Department("Архитектурно строительный отдел", "АСО", ACD),
             new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS),
             new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ", DGPTT),
@@ -86,14 +86,12 @@ namespace BMCIModule.Department
             new Department("Отдел инженерных изысканий", "ОИИ", ESD),
             new Department("Горный отдел", "ГО", MD),
         };
-
         
-
         public SetDepartmentBMCI()
         {
 
         }
-        public List<Department> DepartmentArray {   get;    set;    }
+        public List<Department> DepartmentArray {get;set;}
 
     }
 
