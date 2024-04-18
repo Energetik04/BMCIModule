@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|c:\\programdata\\autodesk\\revit\\addins\\2021\\bmcimodule\\bmcimodule\\viewmodel\\base\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\base\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|c:\\programdata\\autodesk\\revit\\addins\\2021\\bmcimodule\\bmcimodule\\viewmodel\\selectworksetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\selectworksetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\views\\window\\selectworkset.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:views\\window\\selectworkset.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|c:\\programdata\\autodesk\\revit\\addins\\2021\\bmcimodule\\bmcimodule\\models\\department\\mark.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\department\\mark.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\models\\department\\setdepartmentbmci.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\department\\setdepartmentbmci.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|c:\\programdata\\autodesk\\revit\\addins\\2021\\bmcimodule\\bmcimodule\\viewmodel\\selectworksetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\selectworksetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|c:\\programdata\\autodesk\\revit\\addins\\2021\\bmcimodule\\bmcimodule\\viewmodel\\base\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\base\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\views\\window\\selectworkset.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:views\\window\\selectworkset.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F5133940-981E-4D8B-974F-BDAFDB891CE5}|..\\Test\\BMCIModuleWPF\\BMCIModuleWPF.csproj|c:\\programdata\\autodesk\\revit\\addins\\2021\\bmcimodule\\test\\bmcimodulewpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
@@ -44,7 +48,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "SelectWorkset.xaml",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Views\\Window\\SelectWorkSet.xaml",
               "RelativeDocumentMoniker": "Views\\Window\\SelectWorkSet.xaml",
@@ -57,7 +61,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "CreateWorkset.cs",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Infrastructure\\CreateWorkset.cs",
               "RelativeDocumentMoniker": "Infrastructure\\CreateWorkset.cs",
@@ -72,17 +76,17 @@
         },
         {
           "DockedWidth": 680,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "SelectWorksetViewModel.cs",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\ViewModel\\SelectWorksetViewModel.cs",
               "RelativeDocumentMoniker": "ViewModel\\SelectWorksetViewModel.cs",
-              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\ViewModel\\SelectWorksetViewModel.cs",
-              "RelativeToolTip": "ViewModel\\SelectWorksetViewModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAJAAAA",
+              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\ViewModel\\SelectWorksetViewModel.cs*",
+              "RelativeToolTip": "ViewModel\\SelectWorksetViewModel.cs*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-16T14:59:54.813Z",
               "IsPinned": true,
@@ -90,7 +94,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
+              "Title": "Mark.cs",
+              "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\Department\\Mark.cs",
+              "RelativeDocumentMoniker": "Models\\Department\\Mark.cs",
+              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\Department\\Mark.cs",
+              "RelativeToolTip": "Models\\Department\\Mark.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-18T07:44:28.893Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\Test\\BMCIModuleWPF\\MainWindow.xaml",
               "RelativeDocumentMoniker": "..\\Test\\BMCIModuleWPF\\MainWindow.xaml",
@@ -102,7 +119,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Class1.cs",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\Test\\BMCIModuleWPF\\Class1.cs",
               "RelativeDocumentMoniker": "..\\Test\\BMCIModuleWPF\\Class1.cs",
@@ -115,7 +132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "ViewModel.cs",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\ViewModel\\Base\\ViewModel.cs",
               "RelativeDocumentMoniker": "ViewModel\\Base\\ViewModel.cs",
@@ -134,14 +151,14 @@
               "RelativeDocumentMoniker": "Models\\Department\\SetDepartmentBMCI.cs",
               "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\Department\\SetDepartmentBMCI.cs",
               "RelativeToolTip": "Models\\Department\\SetDepartmentBMCI.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAuAAAA",
+              "ViewState": "AQIAABEAAAAAAAAAAAAQwBAAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-16T14:59:57.484Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "Command.cs",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Infrastructure\\Commands\\Base\\Command.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Commands\\Base\\Command.cs",

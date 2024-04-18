@@ -27,6 +27,7 @@
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
             <ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>
+            
         </GroupBox>   <!--реалиховать свойство по передаче тэга сюда -->
         <GroupBox Grid.Column="1" Header="АСУиС">
             <ListBox ItemsSource="{Binding departmentCollection[1].ListMark}" DisplayMemberPath="Name"/>
