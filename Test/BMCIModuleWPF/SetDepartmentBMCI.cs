@@ -105,6 +105,7 @@ namespace BMCIModuleWPF
 
         }
 
+
         public List<Department> DepartmentArray
         {
             get

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -13,12 +14,13 @@ namespace BMCIModule.Department
 
         private string _name;
         private string _tag;
-        private List<Mark> _listmark = new List<Mark>();
+        private List<Mark> _listmark;
 
         public string Name { get { return _name; } set { _name = value; } }
 
         public string Tag { get { return _tag; } set { _tag = value; } }
-        public List<Mark> ListMark { get { return _listmark; } set { _listmark = value; } }
+        public List<Mark> ListMark { get; set; }
+        
         public Department() { }
 
         public Department(string name, string tag, List<Mark> marks)

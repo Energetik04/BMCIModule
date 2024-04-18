@@ -30,7 +30,7 @@ namespace BMCIModule
             //SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
             //setDepartmentBMCI.CreateSetMark();
             //SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.ETO.ListMark);
-            viewModel.ShowDialog();
+            viewModel.Show();
 
             return Result.Succeeded;
         }

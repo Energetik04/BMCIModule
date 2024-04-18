@@ -12,8 +12,7 @@ using System.ComponentModel;
 
 namespace BMCIModule.Department
 {
-    public class SetDepartmentBMCI : IEnumerable, INotifyPropertyChanging
-    {
+    public class SetDepartmentBMCI { 
         static List<Mark> ETO = new List<Mark>
         {
             new Mark("ЭМ",false),
@@ -77,7 +76,7 @@ namespace BMCIModule.Department
 
         public static List<Department> departmentArray = new List<Department> 
         {
-            //new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS),
+            new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS),
             new Department("Архитектурно строительный отдел", "АСО", ACD),
             new Department("Отдел автоматизированных систем управления и связи", "ОАСУиС", DACCS),
             new Department("Отдел генплана и теплоэнергетических технологий", "ОГПиТТ", DGPTT),
@@ -88,39 +87,14 @@ namespace BMCIModule.Department
             new Department("Горный отдел", "ГО", MD),
         };
 
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        protected virtual void OnProperyChanged(string ProperyName = null)
-        {
-            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(ProperyName));
-        }
-
-        protected virtual bool Set<T>(ref T field,  T value)
-        {
-            if(Equals(field, value)) return true;
-            field = value;
-            OnProperyChanged();
-            return true;
-        }
+        
 
         public SetDepartmentBMCI()
         {
 
         }
+        public List<Department> DepartmentArray {   get;    set;    }
 
-        public List<Department> DepartmentArray 
-        {
-            get
-            {
-                OnProperyChanged ();
-                return departmentArray;
-            } 
-            set => Set(ref departmentArray, value); }
-
-        public IEnumerator GetEnumerator()
-        {
-            return departmentArray.GetEnumerator();
-        }
     }
 
 

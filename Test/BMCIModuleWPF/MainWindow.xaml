@@ -21,23 +21,96 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
-        <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}" AutoGenerateColumns="False">
-            <DataGrid.Columns >
-                <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True"/>
-                <DataGridCheckBoxColumn Binding="{Binding StatusMark}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <!--<ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>-->
+            <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}" 
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="Transparent"
+                  VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </GroupBox>
         <!--реалиховать свойство по передаче тэга сюда -->
-        <!--реалиховать свойство по передаче тэга сюда -->
-        <GroupBox Grid.Column="1" Header="АСУиС"/>
-        <GroupBox Grid.Column="2" Header="ОВиК"/>
-        <GroupBox Grid.Column="3" Header="ХТО"/>
-        <GroupBox Grid.Column="4" Header="ЭТО"/>
-        <GroupBox Grid.Column="5" Header="ОИИ"/>
-        <GroupBox Grid.Column="6" Header="ГО"/>
+        <GroupBox Grid.Column="1" Header="АСУиС">
+            <DataGrid ItemsSource="{Binding  departmentCollection[1].ListMark}" 
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="Transparent"
+                  VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="2" Header="ОГПиТТ">
+            <DataGrid ItemsSource="{Binding  departmentCollection[2].ListMark}" 
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="Transparent"
+                  VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="3" Header="ОВиК">
+            <DataGrid ItemsSource="{Binding  departmentCollection[3].ListMark}" 
+      AutoGenerateColumns="False"
+      HorizontalGridLinesBrush="Transparent"
+      VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="4" Header="ХТО">
+            <DataGrid ItemsSource="{Binding  departmentCollection[4].ListMark}" 
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="Transparent"
+                  VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="5" Header="ЭТО">
+            <DataGrid ItemsSource="{Binding  departmentCollection[5].ListMark}" 
+      AutoGenerateColumns="False"
+      HorizontalGridLinesBrush="Transparent"
+      VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="6" Header="ОИИ">
+            <DataGrid ItemsSource="{Binding  departmentCollection[6].ListMark}" 
+            AutoGenerateColumns="False"
+            HorizontalGridLinesBrush="Transparent"
+            VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="7" Header="ГО">
+            <DataGrid ItemsSource="{Binding  departmentCollection[7].ListMark}" 
+            AutoGenerateColumns="False"
+            HorizontalGridLinesBrush="Transparent"
+            VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
     </Grid>
 </Window>
