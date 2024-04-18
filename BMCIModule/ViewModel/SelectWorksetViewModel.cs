@@ -21,20 +21,13 @@ namespace BMCIModule.ViewModel
 
         #region Команды
 
-        #endregion 
+        #endregion
 
-       public ObservableCollection<Department.Department> departmentCollection 
-       {
-            get;
-            
-        }
-        
-
+        public ObservableCollection<Department.Department> departmentCollection { get; }// свойство коллекции департаментов
         public SelectWorksetViewModel()
         {
             SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
             departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
-                               
         }
 
     }
