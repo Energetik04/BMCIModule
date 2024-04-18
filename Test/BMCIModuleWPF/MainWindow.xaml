@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BMCIModuleWPF"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize">
+        Title="MainWindow" Height="350" Width="700" ResizeMode="NoResize">
     <Window.DataContext>
         <local:Class1/>
     </Window.DataContext>
@@ -23,9 +23,15 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
-
-            <ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>
+        <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}" AutoGenerateColumns="False">
+            <DataGrid.Columns >
+                <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Binding="{Binding StatusMark}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>-->
         </GroupBox>
+        <!--реалиховать свойство по передаче тэга сюда -->
         <!--реалиховать свойство по передаче тэга сюда -->
         <GroupBox Grid.Column="1" Header="АСУиС"/>
         <GroupBox Grid.Column="2" Header="ОВиК"/>

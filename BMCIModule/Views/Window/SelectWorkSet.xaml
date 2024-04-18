@@ -26,8 +26,16 @@
          <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
-            <ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>
-            
+            <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}" 
+                      AutoGenerateColumns="False"
+                HorizontalGridLinesBrush="Transparent"
+                VerticalGridLinesBrush="Transparent">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <!--<ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>-->
         </GroupBox>   <!--реалиховать свойство по передаче тэга сюда -->
         <GroupBox Grid.Column="1" Header="АСУиС">
             <ListBox ItemsSource="{Binding departmentCollection[1].ListMark}" DisplayMemberPath="Name"/>
