@@ -29,7 +29,8 @@
                       AutoGenerateColumns="False"
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
-                      HeadersVisibility="None">
+                      HeadersVisibility="None"
+                      Background="White">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -42,6 +43,7 @@
                       AutoGenerateColumns="False"
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
+                      Background="White"
                       HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
@@ -54,6 +56,7 @@
                       AutoGenerateColumns="False"
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
+                      Background="White"
                       HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
@@ -66,6 +69,7 @@
                     AutoGenerateColumns="False"
                     HorizontalGridLinesBrush="Transparent"
                     VerticalGridLinesBrush="Transparent"
+                    Background="White"
                     HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
@@ -78,6 +82,7 @@
                       AutoGenerateColumns="False"
                       HorizontalGridLinesBrush="Transparent"
                       VerticalGridLinesBrush="Transparent"
+                      Background="White"
                       HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
@@ -87,9 +92,10 @@
         </GroupBox>
         <GroupBox Grid.Column="5" Header="ЭТО">
             <DataGrid ItemsSource="{Binding  departmentCollection[5].ListMark}" 
-          AutoGenerateColumns="False"
-          HorizontalGridLinesBrush="Transparent"
-          VerticalGridLinesBrush="Transparent"
+                      AutoGenerateColumns="False"
+                      HorizontalGridLinesBrush="Transparent"
+                      Background="White"
+                      VerticalGridLinesBrush="Transparent"
                       HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
@@ -99,9 +105,10 @@
         </GroupBox>
         <GroupBox Grid.Column="6" Header="ОИИ">
             <DataGrid ItemsSource="{Binding  departmentCollection[6].ListMark}" 
-                AutoGenerateColumns="False"
-                HorizontalGridLinesBrush="Transparent"
-                VerticalGridLinesBrush="Transparent"
+                      AutoGenerateColumns="False"
+                      HorizontalGridLinesBrush="Transparent"
+                      VerticalGridLinesBrush="Transparent"
+                      Background="White"
                       HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
@@ -111,9 +118,10 @@
         </GroupBox>
         <GroupBox Grid.Column="7" Header="ГО">
             <DataGrid ItemsSource="{Binding  departmentCollection[7].ListMark}" 
-                AutoGenerateColumns="False"
-                HorizontalGridLinesBrush="Transparent"
-                VerticalGridLinesBrush="Transparent"
+                      AutoGenerateColumns="False"
+                      HorizontalGridLinesBrush="Transparent"
+                      VerticalGridLinesBrush="Transparent"
+                      Background="White"
                       HeadersVisibility="None">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
