@@ -28,12 +28,26 @@
         <GroupBox Grid.Column="0" Header="АСО">
             <ListBox ItemsSource="{Binding departmentCollection[0].ListMark}" DisplayMemberPath="Name"/>
         </GroupBox>   <!--реалиховать свойство по передаче тэга сюда -->
-        <GroupBox Grid.Column="1" Header="АСУиС"/>
-        <GroupBox Grid.Column="2" Header="ОГПиТТ"/>
-        <GroupBox Grid.Column="3" Header="ОВиК"/>
-        <GroupBox Grid.Column="4" Header="ХТО"/>
-        <GroupBox Grid.Column="5" Header="ЭТО"/>
-        <GroupBox Grid.Column="6" Header="ОИИ"/>
-        <GroupBox Grid.Column="7" Header="ГО"/>
+        <GroupBox Grid.Column="1" Header="АСУиС">
+            <ListBox ItemsSource="{Binding departmentCollection[1].ListMark}" DisplayMemberPath="Name"/>
+         </GroupBox>
+        <GroupBox Grid.Column="2" Header="ОГПиТТ">
+            <ListBox ItemsSource="{Binding departmentCollection[2].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>
+        <GroupBox Grid.Column="3" Header="ОВиК">
+            <ListBox ItemsSource="{Binding departmentCollection[3].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>
+        <GroupBox Grid.Column="4" Header="ХТО">
+            <ListBox ItemsSource="{Binding departmentCollection[4].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>
+        <GroupBox Grid.Column="5" Header="ЭТО">
+            <ListBox ItemsSource="{Binding departmentCollection[5].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>
+        <GroupBox Grid.Column="6" Header="ОИИ">
+            <ListBox ItemsSource="{Binding departmentCollection[6].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>
+        <GroupBox Grid.Column="7" Header="ГО">
+            <ListBox ItemsSource="{Binding departmentCollection[7].ListMark}" DisplayMemberPath="Name"/>
+        </GroupBox>
     </Grid>
 </Window>

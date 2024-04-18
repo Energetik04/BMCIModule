@@ -109,7 +109,7 @@ namespace BMCIModuleWPF
         {
             get
             {
-                PropertyChanging(departmentArray, PropertyChangedEventArgs);
+                //PropertyChanging(departmentArray, PropertyChangedEventArgs);
                 return departmentArray;
             }
             set => Set(ref departmentArray, value);

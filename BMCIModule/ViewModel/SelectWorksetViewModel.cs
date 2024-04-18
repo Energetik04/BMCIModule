@@ -24,26 +24,16 @@ namespace BMCIModule.ViewModel
         #endregion 
 
        public ObservableCollection<Department.Department> departmentCollection 
-        {
-            get
-            {
-                setDepartmentBMCI.PropertyChanging += CreateSetDepartmet();
-                return departmentCollection;
-            }
-            set { }
+       {
+            get;
             
         }
-        SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
-
-        public  void CreateSetDepartmet()
-        {
-            departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);
-        }
+        
 
         public SelectWorksetViewModel()
         {
-            
-           // departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
+            SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
+            departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
                                
         }
 
