@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:BMCIModule.ViewModel"
              xmlns:local="clr-namespace:BMCIModule"
         
-             d:Height="350" d:Width="700" ResizeMode="NoResize"
+             Height="350" Width="700" ResizeMode="NoResize"
              Title="{Binding Title}">
     <Window.DataContext>
         <vm:SelectWorksetViewModel/>

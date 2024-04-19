@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BMCIModuleWPF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5aa5cd3b01975e1da6696baf7bd6de44f9fce963")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10f5e79838ae5dbc0eeaaec5c52e62d3cbcecc60")]
 [assembly: System.Reflection.AssemblyProductAttribute("BMCIModuleWPF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BMCIModuleWPF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
