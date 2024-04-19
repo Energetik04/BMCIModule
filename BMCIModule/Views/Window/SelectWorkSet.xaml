@@ -139,27 +139,20 @@
         </GroupBox>
     </Grid>
         <Grid Height="50">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                
-            </Grid.ColumnDefinitions>
-            <GroupBox Grid.Column="0">
-                <Button>
-                    
-                </Button>
-             </GroupBox>
-            <GroupBox Grid.Column="1">
-                <Button>
-
-                </Button>
-            </GroupBox>
-            <GroupBox Grid.Column="2">
-                <Button>
-
-                </Button>
-            </GroupBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="4">
+                <Button Width="Auto" 
+                        Height="20" 
+                        Margin="7" 
+                        Content="Сохранить"/>
+                <Button Width="Auto" 
+                        Height="20" 
+                        Margin="7" 
+                        Content="Открыть"/>
+                <Button Width="Auto" 
+                        Height="20" 
+                        Margin="7" 
+                        Content="Закрыть"/>
+            </StackPanel>
 
         </Grid>
     </StackPanel>
