@@ -28,11 +28,14 @@ namespace BMCIModule.ViewModel
         #region Команды
 
         #region CloseAplicationCommand
+        /// <summary>
+        /// Пока не работает через ShutDown
+        /// </summary>
         public ICommand CloseAplicationCommand {  get; } // Создание комманды
 
         private void OnCloseAplicationCommandExecuted(object p)
         {
-            Application.Current.Shutdown();
+            Application.Current.MainWindow.Close();
         }
         private bool CanCloseAplicationCommandExecute(object p) => true;
          #endregion

@@ -13,6 +13,7 @@ namespace BMCIModule
 {
     delegate Workset SearchWorkset(IList<Workset> setWorkset,Document document);
     [Transaction(TransactionMode.Manual)]
+    //[RegenerationAttribute(RegenerationOption.Manual)]
         
     public class CreateWorkset:IExternalCommand
     {
@@ -30,7 +31,7 @@ namespace BMCIModule
             //SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
             //setDepartmentBMCI.CreateSetMark();
             //SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.ETO.ListMark);
-            viewModel.Show();
+            viewModel.ShowDialog();
 
             return Result.Succeeded;
         }
