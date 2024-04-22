@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMCIModule", "BMCIModule.cs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{4492BB8C-F477-486E-A3E7-F8F356C2DCAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMCIModuleConsole", "..\Test\BMCIModuleTest\BMCIModuleConsole.csproj", "{BDFCDDD0-2318-4675-AC6A-39CF7DB57465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMCIModuleConsole", "..\Test\BMCIModuleTest\BMCIModuleConsole.csproj", "{BDFCDDD0-2318-4675-AC6A-39CF7DB57465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMCIModuleWPF", "..\Test\BMCIModuleWPF\BMCIModuleWPF.csproj", "{F5133940-981E-4D8B-974F-BDAFDB891CE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMCIModuleWPF", "..\Test\BMCIModuleWPF\BMCIModuleWPF.csproj", "{F5133940-981E-4D8B-974F-BDAFDB891CE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -144,7 +144,8 @@
                 <Button Width="65" 
                     Height="20" 
                     Margin="2" 
-                    Content="Сохранить"/>
+                    Content="Сохранить"
+                    Command="{Binding SavePresetWorksetToXMLCommand}"/>
                 <Button Width="65" 
                     Height="20" 
                     Margin="2" 

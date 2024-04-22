@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Infrastructure\Commands\Base\Command.cs" />
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
+    <Compile Include="Models\RevitUtil.cs" />
     <Compile Include="ViewModel\Base\ViewModel.cs" />
     <Compile Include="ViewModel\RibbonPanel\BMCIModule_Application.cs" />
     <Compile Include="Models\CreateWorkset.cs" />
