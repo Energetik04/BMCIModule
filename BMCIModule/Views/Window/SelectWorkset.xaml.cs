@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System.IO;
+using System.Windows;
+using System.Windows.Input;
 
 
 
@@ -21,5 +24,20 @@ namespace BMCIModule
         {
             Close();
         }
+
+        //private void SaveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        //{
+        //    e.CanExecute = true;
+        //}
+        //private void SaveCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        //{
+        //    var saveDlg = new SaveFileDialog { Filter = "Text Files|*.txt" };
+        //    // Был ли совершен щелчок на кнопке ОК?
+        //    if (true == saveDlg.ShowDialog())
+        //    {
+        //        // Сохранить данные из TextBox в указанном файле.
+        //        File.WriteAllText(saveDlg.FileName, txtData.Text);
+        //    }
+        //}
     }
 }
