@@ -6,14 +6,16 @@
              xmlns:vm="clr-namespace:BMCIModule.ViewModel"
              xmlns:local="clr-namespace:BMCIModule"
         
-             Height="Auto" Width="Auto" ResizeMode="NoResize"
+             Height="Auto" Width="Auto" ResizeMode="NoResize"  
              Title="{Binding Title}">
     <Window.DataContext>
         <vm:SelectWorksetViewModel/>
     </Window.DataContext>
     <StackPanel Orientation="Vertical"
-                VerticalAlignment="Top">
-    <Grid>
+                VerticalAlignment="Top"
+                Width="Auto"
+                Height="Auto">
+        <Grid>
        <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -151,7 +153,13 @@
                 <Button Width="65" 
                         Height="20" 
                         Margin="2" 
-                        Content="Закрыть"/>
+                        Content="Применить"
+                        ClickMode="Press"/>
+                <Button Width="65" 
+                        Height="20" 
+                        Margin="2" 
+                        Content="Закрыть"
+                        ClickMode="Press"/>
             </StackPanel>
 
         </Grid>
