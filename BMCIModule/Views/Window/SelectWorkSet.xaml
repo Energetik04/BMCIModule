@@ -128,7 +128,9 @@
                         ClickMode="Press"/>
                 <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
-                        ClickMode="Press"/>
+                        Command="{Binding CloseAplicationCommand}">
+                   
+                </Button>
             </StackPanel>
 
         </Grid>

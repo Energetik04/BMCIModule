@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BMCIModule.Infrastructure.Commands
 {
-    internal class RelayCommand : Base.Command
+    internal class RelayCommand : Base.Command // рабочая лошадка для многих комманд
     {
         private readonly Action<object> _Execute;
         private readonly Func<object,bool> _CanExecute;

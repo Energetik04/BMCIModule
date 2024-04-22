@@ -58,10 +58,10 @@
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
     <Compile Include="ViewModel\Base\ViewModel.cs" />
     <Compile Include="ViewModel\RibbonPanel\BMCIModule_Application.cs" />
-    <Compile Include="Infrastructure\CreateWorkset.cs" />
-    <Compile Include="Infrastructure\CopyLevel.cs" />
-    <Compile Include="Infrastructure\CopyGrids.cs" />
-    <Compile Include="Infrastructure\CoordinationFile.cs" />
+    <Compile Include="Models\CreateWorkset.cs" />
+    <Compile Include="Models\CopyLevel.cs" />
+    <Compile Include="Models\CopyGrids.cs" />
+    <Compile Include="Models\CoordinationFile.cs" />
     <Compile Include="Models\Department\SetDepartmentBMCI.cs" />
     <Compile Include="Models\Department\Mark.cs" />
     <Compile Include="Models\Department\Department.cs" />
