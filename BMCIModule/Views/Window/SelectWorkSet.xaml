@@ -6,11 +6,28 @@
              xmlns:vm="clr-namespace:BMCIModule.ViewModel"
              xmlns:local="clr-namespace:BMCIModule"
         
-             Height="Auto" Width="Auto" ResizeMode="NoResize"  
+             Height="220" Width="700" ResizeMode="NoResize"  
              Title="{Binding Title}">
     <Window.DataContext>
         <vm:SelectWorksetViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style x:Key="DataGridStyle" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="HeadersVisibility" Value="None"/>
+        </Style>
+    </Window.Resources>
+
+
     <StackPanel Orientation="Vertical"
                 VerticalAlignment="Top"
                 Width="Auto"
@@ -28,12 +45,7 @@
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
             <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}"
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      VerticalGridLinesBrush="Transparent"
-                      HeadersVisibility="None"
-                      Background="White"
-                      CanUserAddRows="False">
+                      Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -43,12 +55,7 @@
         <!--реалиховать свойство по передаче тэга сюда -->
         <GroupBox Grid.Column="1" Header="АСУиС">
             <DataGrid ItemsSource="{Binding  departmentCollection[1].ListMark}" 
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      VerticalGridLinesBrush="Transparent"
-                      Background="White"
-                      HeadersVisibility="None"
-                      CanUserAddRows="False">
+                      Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -57,12 +64,7 @@
         </GroupBox>
         <GroupBox Grid.Column="2" Header="ОГПиТТ">
             <DataGrid ItemsSource="{Binding  departmentCollection[2].ListMark}" 
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      VerticalGridLinesBrush="Transparent"
-                      Background="White"
-                      HeadersVisibility="None"
-                      CanUserAddRows="False">
+                      Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -71,12 +73,7 @@
         </GroupBox>
         <GroupBox Grid.Column="3" Header="ОВиК">
             <DataGrid ItemsSource="{Binding  departmentCollection[3].ListMark}" 
-                    AutoGenerateColumns="False"
-                    HorizontalGridLinesBrush="Transparent"
-                    VerticalGridLinesBrush="Transparent"
-                    Background="White"
-                    HeadersVisibility="None"
-                    CanUserAddRows="False">
+                    Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -85,12 +82,7 @@
         </GroupBox>
         <GroupBox Grid.Column="4" Header="ХТО">
             <DataGrid ItemsSource="{Binding  departmentCollection[4].ListMark}" 
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      VerticalGridLinesBrush="Transparent"
-                      Background="White"
-                      HeadersVisibility="None"
-                      CanUserAddRows="False">
+                      Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -99,12 +91,7 @@
         </GroupBox>
         <GroupBox Grid.Column="5" Header="ЭТО">
             <DataGrid ItemsSource="{Binding  departmentCollection[5].ListMark}" 
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      Background="White"
-                      VerticalGridLinesBrush="Transparent"
-                      HeadersVisibility="None"
-                      CanUserAddRows="False">
+                     Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -113,12 +100,7 @@
         </GroupBox>
         <GroupBox Grid.Column="6" Header="ОИИ">
             <DataGrid ItemsSource="{Binding  departmentCollection[6].ListMark}" 
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      VerticalGridLinesBrush="Transparent"
-                      Background="White"
-                      HeadersVisibility="None"
-                      CanUserAddRows="False">
+                      Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
@@ -127,13 +109,8 @@
         </GroupBox>
         <GroupBox Grid.Column="7" Header="ГО">
             <DataGrid ItemsSource="{Binding  departmentCollection[7].ListMark}" 
-                      AutoGenerateColumns="False"
-                      HorizontalGridLinesBrush="Transparent"
-                      VerticalGridLinesBrush="Transparent"
-                      Background="White"
-                      HeadersVisibility="None"
-                      CanUserAddRows="False">
-                <DataGrid.Columns >
+                      Style="{StaticResource DataGridStyle}">
+                <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
                 </DataGrid.Columns>
@@ -142,22 +119,14 @@
     </Grid>
         <Grid Height="50">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="10">
-                <Button Width="65" 
-                        Height="20" 
-                        Margin="2" 
+                <Button Style="{StaticResource ButtonStyle}" 
                         Content="Сохранить"/>
-                <Button Width="65" 
-                        Height="20" 
-                        Margin="2" 
+                <Button Style="{StaticResource ButtonStyle}" 
                         Content="Открыть"/>
-                <Button Width="65" 
-                        Height="20" 
-                        Margin="2" 
+                <Button Style="{StaticResource ButtonStyle}" 
                         Content="Применить"
                         ClickMode="Press"/>
-                <Button Width="65" 
-                        Height="20" 
-                        Margin="2" 
+                <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
                         ClickMode="Press"/>
             </StackPanel>
