@@ -38,7 +38,7 @@ namespace BMCIModule.ViewModel
         /// </summary>
         /// 
 
-        private RevitUtils _revitUtils;
+        public RevitUtils _revitUtils;
         public RevitUtils RevitUtils
         {
             get => _revitUtils;
@@ -48,7 +48,7 @@ namespace BMCIModule.ViewModel
 
         private void OnCloseAplicationCommandExecuted(object p)
         {
-            
+
         }
 
         private bool CanCloseAplicationCommandExecute(object p) => true;
@@ -62,11 +62,7 @@ namespace BMCIModule.ViewModel
         private bool CanSavePresetWorksetToXMLCommandExecute(object p) => true;
         private void OnSavePresetWorksetToXMLCommandExecute(object p)
         {
-            List<Department.Department> saveCollection=new List<Department.Department>(SetDepartmentBMCI.departmentArray);
-            XmlSerializer xmlFile = new XmlSerializer(typeof(List<Department.Department>));
-            StreamWriter file = new StreamWriter("saveCollectionXML.xml");
-            xmlFile.Serialize(file, saveCollection);
-            file.Close();
+
         }
         #endregion
 

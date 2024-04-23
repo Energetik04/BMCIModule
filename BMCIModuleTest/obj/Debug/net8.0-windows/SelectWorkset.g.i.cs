@@ -53,7 +53,7 @@ namespace BMCIModuleTest {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BMCIModuleTest;component/selectworkset.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BMCIModuleTest;V1.0.0.0;component/selectworkset.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\SelectWorkset.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
