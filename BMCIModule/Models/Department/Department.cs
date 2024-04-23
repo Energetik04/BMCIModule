@@ -14,12 +14,15 @@ namespace BMCIModule.Department
 
         private string _name;
         private string _tag;
-        private List<Mark> _listmark;
+        private List<Mark> _listmark=new List<Mark>();
 
         public string Name { get { return _name; } set { _name = value; } }
 
         public string Tag { get { return _tag; } set { _tag = value; } }
-        public List<Mark> ListMark { get; set; }
+        public List<Mark> ListMark 
+        { get => _listmark;
+          set => _listmark = value;
+        }
         
         public Department() { }
 

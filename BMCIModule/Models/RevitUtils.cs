@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace BMCIModule.Models
 {
-    internal class RevitUtil
+    internal class RevitUtils
     {
-        public SelectWorkset SelectWorkset { get; set; }
+        public SelectWorkset SelectWorkset {  get; set; }
 
         public void CloseWindow()
         {
             SelectWorkset.Close();
         }
+
     }
 }

@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB.Visual;
 using BMCIModule.Department;
 using BMCIModule.Infrastructure.Commands;
+using BMCIModule.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,6 +22,7 @@ namespace BMCIModule.ViewModel
         /// Окно создания рабочих наборов
         /// </summary>
         private string _Title="Создание рабочих наборов";
+        
         public string  Title
         {
             get => _Title; //возвращаем свойство
@@ -32,13 +34,21 @@ namespace BMCIModule.ViewModel
 
         #region CloseAplicationCommand
         /// <summary>
-        /// Пока не работает через ShutDown
+        /// Пока не работает
         /// </summary>
+        /// 
+
+        private RevitUtils _revitUtils;
+        public RevitUtils RevitUtils
+        {
+            get => _revitUtils;
+            set => Set(ref _revitUtils, value);
+        }
         public ICommand CloseAplicationCommand {  get; } // Создание комманды
 
         private void OnCloseAplicationCommandExecuted(object p)
         {
-            Application.Current.MainWindow.Close();
+            
         }
 
         private bool CanCloseAplicationCommandExecute(object p) => true;
@@ -71,7 +81,7 @@ namespace BMCIModule.ViewModel
         public SelectWorksetViewModel()
         {
             departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
-            CloseAplicationCommand = new RelayCommand(OnCloseAplicationCommandExecuted);// есть рабочая лошадка и по ее конструктору создаем команду
+            CloseAplicationCommand = new RelayCommand(OnCloseAplicationCommandExecuted,CanCloseAplicationCommandExecute);// есть рабочая лошадка и по ее конструктору создаем команду
             SavePresetWorksetToXMLCommand = new RelayCommand(OnSavePresetWorksetToXMLCommandExecute, CanSavePresetWorksetToXMLCommandExecute);
         }
         #endregion

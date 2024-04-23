@@ -2,10 +2,12 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using BMCIModule.Department;
+using BMCIModule.Models;
 using BMCIModule.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,21 +19,22 @@ namespace BMCIModule
         
     public class CreateWorkset:IExternalCommand
     {
+        
         public Result Execute (ExternalCommandData commanddata, ref  string message,ElementSet elements)
         {
+            // Создание класса окна для Создания рабочих наборов
+            var viewModel = new SelectWorkset();
+            var SelectWorksetViewModel=new SelectWorksetViewModel();
+            
+
+
             Document doc = commanddata.Application.ActiveUIDocument.Document;
 
             FilteredWorksetCollector collectorWorkset=new FilteredWorksetCollector(doc);
             //Фильтрация рабочих наборов
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
-
-            SelectWorkset viewModel = new SelectWorkset();
-
-            //SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();
-            //setDepartmentBMCI.CreateSetMark();
-            //SelectWorkset selectWorkset = new SelectWorkset(setDepartmentBMCI.ETO.ListMark);
-
+            
             viewModel.ShowDialog();
 
             return Result.Succeeded;

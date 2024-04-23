@@ -135,7 +135,6 @@
                 <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
                         Command="{Binding CloseAplicationCommand}"
-                        Click="Close_SelectWorkset"
                         >
 
                 </Button>
