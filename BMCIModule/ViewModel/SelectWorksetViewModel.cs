@@ -48,7 +48,7 @@ namespace BMCIModule.ViewModel
 
         private void OnCloseAplicationCommandExecuted(object p)
         {
-
+            Application.Current.Shutdown();
         }
 
         private bool CanCloseAplicationCommandExecute(object p) => true;
