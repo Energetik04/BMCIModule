@@ -55,13 +55,12 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="BMCIModule.SelectWorkset" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="BMCIModule.SelectWorksetWindow" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="7" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Views\Window\SelectWorkset.xaml.cs</FileName>
+      <FileName>Views\Window\SelectWorksetWindow.xaml.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BMCIModule.Department.Department" Collapsed="true">
     <Position X="8.75" Y="1.5" Width="1.5" />
@@ -94,7 +93,7 @@
   <Class Name="BMCIModule.ViewModel.Base.ViewModel">
     <Position X="1.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAIAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAABAJAAAAAAAAAgAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModel\Base\ViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

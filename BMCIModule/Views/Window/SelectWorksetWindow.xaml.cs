@@ -11,9 +11,9 @@ namespace BMCIModule
     /// <summary>
     /// Логика взаимодействия для SelectWorkset.xaml
     /// </summary>
-    public partial class SelectWorkset : Window
+    public partial class SelectWorksetWindow : Window
     {
-        public SelectWorkset()
+        public SelectWorksetWindow()
         {
             InitializeComponent();        
         }

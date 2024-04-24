@@ -2,7 +2,6 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using BMCIModule.Department;
-using BMCIModule.Models;
 using BMCIModule.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -19,13 +18,14 @@ namespace BMCIModule
         
     public class CreateWorkset:IExternalCommand
     {
-        
+        SelectWorksetViewModel SelectWorksetViewModel = new SelectWorksetViewModel();
+        SelectWorksetWindow viewModel = new SelectWorksetWindow();
+               
         public Result Execute (ExternalCommandData commanddata, ref  string message,ElementSet elements)
         {
             // Создание класса окна для Создания рабочих наборов
-            var viewModel = new SelectWorkset();
-            var SelectWorksetViewModel=new SelectWorksetViewModel();
-            
+            viewModel.DataContext = SelectWorksetViewModel;// не понятен для чего датаконтекст
+            SelectWorksetViewModel.Close = viewModel.Close;
 
 
             Document doc = commanddata.Application.ActiveUIDocument.Document;

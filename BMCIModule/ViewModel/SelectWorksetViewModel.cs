@@ -2,7 +2,7 @@
 using Autodesk.Revit.DB.Visual;
 using BMCIModule.Department;
 using BMCIModule.Infrastructure.Commands;
-using BMCIModule.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,18 +37,13 @@ namespace BMCIModule.ViewModel
         /// Пока не работает
         /// </summary>
         /// 
-
-        public RevitUtils _revitUtils;
-        public RevitUtils RevitUtils
-        {
-            get => _revitUtils;
-            set => Set(ref _revitUtils, value);
-        }
+               
+        internal Action Close;
         public ICommand CloseAplicationCommand {  get; } // Создание комманды
 
         private void OnCloseAplicationCommandExecuted(object p)
         {
-            Application.Current.Shutdown();
+            Close();
         }
 
         private bool CanCloseAplicationCommandExecute(object p) => true;

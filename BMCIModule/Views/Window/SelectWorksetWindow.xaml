@@ -1,4 +1,4 @@
-﻿<Window x:Class="BMCIModule.SelectWorkset"
+﻿<Window x:Class="BMCIModule.SelectWorksetWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -36,7 +36,8 @@
     <StackPanel Orientation="Vertical"
                 VerticalAlignment="Top"
                 Width="Auto"
-                Height="Auto">
+                Height="Auto"
+                >
         <Grid>
        <Grid.ColumnDefinitions>
             <ColumnDefinition/>
