@@ -14,7 +14,6 @@ namespace BMCIModule
 {
     delegate Workset SearchWorkset(IList<Workset> setWorkset,Document document);
     [Transaction(TransactionMode.Manual)]
-    //[RegenerationAttribute(RegenerationOption.Manual)]
         
     public class CreateWorkset:IExternalCommand
     {
