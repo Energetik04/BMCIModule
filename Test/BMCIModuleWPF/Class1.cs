@@ -21,11 +21,12 @@ namespace BMCIModuleWPF
         private bool CanSavePresetWorksetToXMLCommandExecute(object p) => true;
         private void OnSavePresetWorksetToXMLCommandExecute(object p)
         {
-            //List<Department> saveCollection = new List<Department>(SetDepartmentBMCI.departmentArray);
-            //XmlSerializer xmlFile = new XmlSerializer(typeof(List<Department>));
-            //StreamWriter file = new StreamWriter("saveCollectionXML.xml");
-            //xmlFile.Serialize(file, saveCollection);
-            //file.Close();
+            string path = @"C:\Users\rnosevich\Documents";
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Department>));
+            using (FileStream fs=new FileStream(path,FileMode.OpenOrCreate))
+            {
+                serializer.Serialize(fs, departmentCollection);
+            }
         }
 
         public ObservableCollection<Department> departmentCollection { get; }
@@ -36,6 +37,8 @@ namespace BMCIModuleWPF
             Application.Current.Shutdown();
         }
         private bool CanCloseAplicationCommandExecute(object p) => true;
+
+
         public Class1()
         {
             SetDepartmentBMCI setDepartmentBMCI = new SetDepartmentBMCI();

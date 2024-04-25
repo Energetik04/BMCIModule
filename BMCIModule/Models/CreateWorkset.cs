@@ -18,7 +18,7 @@ namespace BMCIModule
         
     public class CreateWorkset:IExternalCommand
     {
-        SelectWorksetViewModel SelectWorksetViewModel = new SelectWorksetViewModel();
+        static SelectWorksetViewModel SelectWorksetViewModel = new SelectWorksetViewModel();
         SelectWorksetWindow viewModel = new SelectWorksetWindow();
                
         public Result Execute (ExternalCommandData commanddata, ref  string message,ElementSet elements)

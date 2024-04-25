@@ -55,9 +55,9 @@ namespace BMCIModule.ViewModel
         /// </summary>
         public ICommand SavePresetWorksetToXMLCommand { get; }
         private bool CanSavePresetWorksetToXMLCommandExecute(object p) => true;
-        private void OnSavePresetWorksetToXMLCommandExecute(object p)
+        public void OnSavePresetWorksetToXMLCommandExecute(object p)
         {
-
+           
         }
         #endregion
 
