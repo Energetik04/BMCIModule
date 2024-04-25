@@ -21,7 +21,7 @@ namespace BMCIModuleWPF
         private bool CanSavePresetWorksetToXMLCommandExecute(object p) => true;
         private void OnSavePresetWorksetToXMLCommandExecute(object p)
         {
-            string path = @"C:\Users\rnosevich\Documents";
+            string path = @"D:\SamplePlugins\setWorkset.xml";
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Department>));
             using (FileStream fs=new FileStream(path,FileMode.OpenOrCreate))
             {

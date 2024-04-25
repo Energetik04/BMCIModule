@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Visual;
+using Autodesk.Revit.UI;
 using BMCIModule.Department;
 using BMCIModule.Infrastructure.Commands;
 using System;
@@ -57,7 +58,13 @@ namespace BMCIModule.ViewModel
         private bool CanSavePresetWorksetToXMLCommandExecute(object p) => true;
         public void OnSavePresetWorksetToXMLCommandExecute(object p)
         {
-           
+            string path = @"D:\SamplePlugins\setWorkset.xml";
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Department.Department>));
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                serializer.Serialize(fs, departmentCollection);
+            }
+            TaskDialog.Show("Сохранение","Сохранил файл состава рабочих наборов");
         }
         #endregion
 
