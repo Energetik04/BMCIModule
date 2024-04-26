@@ -14,9 +14,14 @@ namespace BMCIModule.Infrastructure.Commands
     {
         public string FilePath { get ; set ; }
 
+        public string FileExt { get ; set ; }
+
+        public string FileName { get ; set ; }
+
         public bool OpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.DefaultExt = FileExt;
             if (openFileDialog.ShowDialog() == true)
             {
                 FilePath=openFileDialog.FileName;
@@ -28,11 +33,13 @@ namespace BMCIModule.Infrastructure.Commands
         public bool SaveFileDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if(saveFileDialog.ShowDialog() == true)
-            {
+           if(saveFileDialog.ShowDialog() == true)
+           {
                 FilePath = saveFileDialog.FileName;
+                saveFileDialog.FileName = FileName;
+                saveFileDialog.DefaultExt = FileExt;
                 return true;
-            }
+           }
             return false;
         }
 

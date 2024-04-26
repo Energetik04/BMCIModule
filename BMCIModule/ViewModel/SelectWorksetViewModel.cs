@@ -52,15 +52,18 @@ namespace BMCIModule.ViewModel
 
         #region SaveFileXML
         /// <summary>
-        /// Сохраниене файла в формает xml
+        /// Сохраниене файла в формает xml (доработать проверку null)
         /// </summary>
         public ICommand SavePresetWorksetToXMLCommand { get; }
         private bool CanSavePresetWorksetToXMLCommandExecute(object p) => true;
         public void OnSavePresetWorksetToXMLCommandExecute(object p)
         {
-            string path = @"D:\SamplePlugins\setWorkset.xml";
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Department.Department>));
-            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            defaultDialogService.FileExt = ".xml";
+            defaultDialogService.FileName = "setPreset";
+            defaultDialogService.SaveFileDialog();
+            
+            using (FileStream fs = new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
             {
                 serializer.Serialize(fs, departmentCollection);
             }
@@ -69,18 +72,40 @@ namespace BMCIModule.ViewModel
         #endregion
 
 
+
+        #region OpenFileXML
+        public ICommand OpenPresetWorkserToXMLCommand { get; }
+
+        private bool CanOpenPresetWorkserToXMLCommandExecute(object p) => true;
+
+        public void OnOpenPresetWorkserToXMLCommandExecute(object p)
+        {
+            XmlSerializer deSerializer=new XmlSerializer(typeof(ObservableCollection<Department.Department>));
+            defaultDialogService.FileExt = ".xml";
+            using (FileStream fs=new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
+            {
+                ObservableCollection<Department.Department> newDepartmentCollection = deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>;
+            }
+        
+        }
+
+
+        #endregion
+
         #endregion
 
         #region Выбор рабочих наборов
         /// <summary>
         /// Окно выбора рабочих наборов
         /// </summary>
+        DefaultDialogService defaultDialogService =new DefaultDialogService();
         public ObservableCollection<Department.Department> departmentCollection { get; }// свойство коллекции департаментов
         public SelectWorksetViewModel()
         {
             departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
             CloseAplicationCommand = new RelayCommand(OnCloseAplicationCommandExecuted,CanCloseAplicationCommandExecute);// есть рабочая лошадка и по ее конструктору создаем команду
             SavePresetWorksetToXMLCommand = new RelayCommand(OnSavePresetWorksetToXMLCommandExecute, CanSavePresetWorksetToXMLCommandExecute);
+            OpenPresetWorkserToXMLCommand = new RelayCommand(OnOpenPresetWorkserToXMLCommandExecute, CanOpenPresetWorkserToXMLCommandExecute);
         }
         #endregion
     }
