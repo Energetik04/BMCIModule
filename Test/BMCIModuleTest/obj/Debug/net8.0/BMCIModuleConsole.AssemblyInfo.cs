@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BMCIModuleConsole")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7cb1ec56e0fee7e1c5427c3c456a4b1c5526bddc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2d5067d120bfc82d023c6dffb2e1797d690b9cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("BMCIModuleConsole")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BMCIModuleConsole")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

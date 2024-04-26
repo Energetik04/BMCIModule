@@ -5,10 +5,6 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMCIModule", "BMCIModule.csproj", "{EA28C660-34B8-4827-B74D-4F9D9BF61209}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMCIModuleConsole", "..\Test\BMCIModuleTest\BMCIModuleConsole.csproj", "{BC7211E8-ADA4-456C-8A5C-418F55B3B6DA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BMCIModuleWPF", "..\Test\BMCIModuleWPF\BMCIModuleWPF.csproj", "{613F1DA4-49A9-4B72-9D3B-35FAF75E14E6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{EA28C660-34B8-4827-B74D-4F9D9BF61209}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA28C660-34B8-4827-B74D-4F9D9BF61209}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA28C660-34B8-4827-B74D-4F9D9BF61209}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC7211E8-ADA4-456C-8A5C-418F55B3B6DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC7211E8-ADA4-456C-8A5C-418F55B3B6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC7211E8-ADA4-456C-8A5C-418F55B3B6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC7211E8-ADA4-456C-8A5C-418F55B3B6DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{613F1DA4-49A9-4B72-9D3B-35FAF75E14E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{613F1DA4-49A9-4B72-9D3B-35FAF75E14E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{613F1DA4-49A9-4B72-9D3B-35FAF75E14E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{613F1DA4-49A9-4B72-9D3B-35FAF75E14E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

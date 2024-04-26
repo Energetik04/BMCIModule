@@ -74,6 +74,9 @@ namespace BMCIModule.ViewModel
 
 
         #region OpenFileXML
+        /// <summary>
+        /// Открытие файла и воссоздание коллекции обратно
+        /// </summary>
         public ICommand OpenPresetWorkserToXMLCommand { get; }
 
         private bool CanOpenPresetWorkserToXMLCommandExecute(object p) => true;
@@ -82,14 +85,16 @@ namespace BMCIModule.ViewModel
         {
             XmlSerializer deSerializer=new XmlSerializer(typeof(ObservableCollection<Department.Department>));
             defaultDialogService.FileExt = ".xml";
+            defaultDialogService.OpenFileDialog();
             using (FileStream fs=new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
             {
                 ObservableCollection<Department.Department> newDepartmentCollection = deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>;
+                departmentCollection= new ObservableCollection<Department.Department>(newDepartmentCollection);
+                /*foreach(Department.Department newDepartment in newDepartmentCollection) 
+                {
+                }*/
             }
-        
         }
-
-
         #endregion
 
         #endregion
@@ -99,7 +104,12 @@ namespace BMCIModule.ViewModel
         /// Окно выбора рабочих наборов
         /// </summary>
         DefaultDialogService defaultDialogService =new DefaultDialogService();
-        public ObservableCollection<Department.Department> departmentCollection { get; }// свойство коллекции департаментов
+
+        // свойство коллекции департаментов
+        public ObservableCollection<Department.Department> departmentCollection 
+        { get;
+          set; 
+        }
         public SelectWorksetViewModel()
         {
             departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна

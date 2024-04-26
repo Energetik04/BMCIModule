@@ -33,11 +33,11 @@ namespace BMCIModule.Infrastructure.Commands
         public bool SaveFileDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-           if(saveFileDialog.ShowDialog() == true)
+            saveFileDialog.FileName = FileName;
+            saveFileDialog.DefaultExt = FileExt;
+           if (saveFileDialog.ShowDialog() == true)
            {
                 FilePath = saveFileDialog.FileName;
-                saveFileDialog.FileName = FileName;
-                saveFileDialog.DefaultExt = FileExt;
                 return true;
            }
             return false;

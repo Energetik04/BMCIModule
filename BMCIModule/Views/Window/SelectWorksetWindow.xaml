@@ -129,14 +129,14 @@
                         Content="Сохранить"
                         Command="{Binding SavePresetWorksetToXMLCommand}"/>
                 <Button Style="{StaticResource ButtonStyle}" 
-                        Content="Открыть"/>
+                        Content="Открыть"
+                        Command="{Binding OpenPresetWorkserToXMLCommand}"/>
                 <Button Style="{StaticResource ButtonStyle}" 
                         Content="Применить"
                         ClickMode="Press"/>
                 <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
                         Command="{Binding CloseAplicationCommand}"
-                        
                         >
 
                 </Button>
