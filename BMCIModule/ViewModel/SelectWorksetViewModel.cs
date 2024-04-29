@@ -61,13 +61,15 @@ namespace BMCIModule.ViewModel
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Department.Department>));
             defaultDialogService.FileExt = ".xml";
             defaultDialogService.FileName = "setPreset";
-            defaultDialogService.SaveFileDialog();
-            
-            using (FileStream fs = new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
+            //defaultDialogService.SaveFileDialog();
+            if (defaultDialogService.SaveFileDialog() == true)
             {
-                serializer.Serialize(fs, departmentCollection);
+                using (FileStream fs = new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
+                {
+                    serializer.Serialize(fs, departmentCollection);
+                }
+                TaskDialog.Show("Сохранение", "Сохранил файл состава рабочих наборов");
             }
-            TaskDialog.Show("Сохранение","Сохранил файл состава рабочих наборов");
         }
         #endregion
 
@@ -85,17 +87,18 @@ namespace BMCIModule.ViewModel
         {
             XmlSerializer deSerializer=new XmlSerializer(typeof(ObservableCollection<Department.Department>));
             defaultDialogService.FileExt = ".xml";
-            defaultDialogService.OpenFileDialog();
-            using (FileStream fs=new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
+            if (defaultDialogService.OpenFileDialog() == true)
             {
-               departmentCollection.Clear();
-               ObservableCollection<Department.Department> departmentCollectionTemp = new ObservableCollection<Department.Department>(deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>);
-                foreach(Department.Department department in departmentCollectionTemp)
+                using (FileStream fs = new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
                 {
-                    departmentCollection.Add(department);
+                    departmentCollection.Clear();
+                    ObservableCollection<Department.Department> departmentCollectionTemp = new ObservableCollection<Department.Department>(deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>);
+                    foreach (Department.Department department in departmentCollectionTemp)
+                    {
+                        departmentCollection.Add(department);
+                    }
                 }
             }
-
         }
         #endregion
 

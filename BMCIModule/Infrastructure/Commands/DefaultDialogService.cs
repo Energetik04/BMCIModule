@@ -37,8 +37,8 @@ namespace BMCIModule.Infrastructure.Commands
             saveFileDialog.DefaultExt = FileExt;
            if (saveFileDialog.ShowDialog() == true)
            {
-                FilePath = saveFileDialog.FileName;
-                return true;
+           FilePath = saveFileDialog.FileName;
+           return true;
            }
             return false;
         }

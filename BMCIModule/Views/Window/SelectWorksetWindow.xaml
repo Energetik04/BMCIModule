@@ -131,7 +131,7 @@
                 <Button Style="{StaticResource ButtonStyle}" 
                         Content="Открыть"
                         Command="{Binding OpenPresetWorkserToXMLCommand}"
-                        Click="Click_OpenPreset"/>
+                        />
                 <Button Style="{StaticResource ButtonStyle}" 
                         Content="Применить"/>
                 <Button Style="{StaticResource ButtonStyle}"
