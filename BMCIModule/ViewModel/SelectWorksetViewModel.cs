@@ -88,12 +88,14 @@ namespace BMCIModule.ViewModel
             defaultDialogService.OpenFileDialog();
             using (FileStream fs=new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
             {
-                ObservableCollection<Department.Department> newDepartmentCollection = deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>;
-                departmentCollection= new ObservableCollection<Department.Department>(newDepartmentCollection);
-                /*foreach(Department.Department newDepartment in newDepartmentCollection) 
+               departmentCollection.Clear();
+               ObservableCollection<Department.Department> departmentCollectionTemp = new ObservableCollection<Department.Department>(deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>);
+                foreach(Department.Department department in departmentCollectionTemp)
                 {
-                }*/
+                    departmentCollection.Add(department);
+                }
             }
+
         }
         #endregion
 
@@ -105,15 +107,22 @@ namespace BMCIModule.ViewModel
         /// </summary>
         DefaultDialogService defaultDialogService =new DefaultDialogService();
 
+        // поле коллекции департаментов
+        private ObservableCollection<Department.Department> _departmentCollection=new ObservableCollection<Department.Department>();
         // свойство коллекции департаментов
         public ObservableCollection<Department.Department> departmentCollection 
-        { get;
-          set; 
+        {   get => _departmentCollection;
+            set
+            {
+                Set(ref _departmentCollection, value);
+            } 
         }
+
+        
         public SelectWorksetViewModel()
         {
             departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
-            CloseAplicationCommand = new RelayCommand(OnCloseAplicationCommandExecuted,CanCloseAplicationCommandExecute);// есть рабочая лошадка и по ее конструктору создаем команду
+            CloseAplicationCommand = new RelayCommand(OnCloseAplicationCommandExecuted, CanCloseAplicationCommandExecute);// есть рабочая лошадка и по ее конструктору создаем команду
             SavePresetWorksetToXMLCommand = new RelayCommand(OnSavePresetWorksetToXMLCommandExecute, CanSavePresetWorksetToXMLCommandExecute);
             OpenPresetWorkserToXMLCommand = new RelayCommand(OnOpenPresetWorkserToXMLCommandExecute, CanOpenPresetWorkserToXMLCommandExecute);
         }

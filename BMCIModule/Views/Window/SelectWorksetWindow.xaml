@@ -50,11 +50,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="АСО">
-            <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark}"
+            <DataGrid ItemsSource="{Binding  departmentCollection[0].ListMark, UpdateSourceTrigger=PropertyChanged}"
                       Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
-                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
-                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding Name}" Width="*" />
+                    <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
@@ -63,7 +63,7 @@
             <DataGrid ItemsSource="{Binding  departmentCollection[1].ListMark}" 
                       Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >
-                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn  Binding="{Binding Name}" Width="*"/>
                     <DataGridCheckBoxColumn Binding="{Binding StatusMark}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
@@ -130,10 +130,10 @@
                         Command="{Binding SavePresetWorksetToXMLCommand}"/>
                 <Button Style="{StaticResource ButtonStyle}" 
                         Content="Открыть"
-                        Command="{Binding OpenPresetWorkserToXMLCommand}"/>
+                        Command="{Binding OpenPresetWorkserToXMLCommand}"
+                        Click="Click_OpenPreset"/>
                 <Button Style="{StaticResource ButtonStyle}" 
-                        Content="Применить"
-                        ClickMode="Press"/>
+                        Content="Применить"/>
                 <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
                         Command="{Binding CloseAplicationCommand}"
