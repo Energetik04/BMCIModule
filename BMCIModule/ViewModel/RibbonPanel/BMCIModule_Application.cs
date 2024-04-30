@@ -2,11 +2,8 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using adWin = Autodesk.Windows;
 
 namespace BMCIModule
 {
@@ -16,6 +13,7 @@ namespace BMCIModule
         static AddInId addInId = new AddInId(new Guid("F8AF5982-6FE6-4C62-8F79-E0B6FF252F73"));
         public Result OnStartup (UIControlledApplication application)
         {
+            //adWin.RibbonControl ribbon = adWin.ComponentManager.Ribbon;
             string namePlugin = "BMCIModule";
             string nameRibbon1 = "Координация";
             string  wayForApplication=@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll";
@@ -29,13 +27,13 @@ namespace BMCIModule
 
             void AddButtonCoordination(RibbonPanel panel) 
             {
-                /* путь к сборке продумать и продумать 
-             название видимое пользователям и добавить название класса*/
+                
+               /* путь к сборке продумать и продумать 
+               название видимое пользователям и добавить название класса*/
                 PushButtonData dataButtonCoordination = new PushButtonData("CoordinationButton", "Копирование координат", wayForApplication, "BMCIModule.CoordinationFile");
                 dataButtonCoordination.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
                 // путь к картинкам либо изменить либо пересмотреть 
                 dataButtonCoordination.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
-
 
                 // кнопка копирование осей
                 PushButtonData copyGridButtonData = new PushButtonData("CopyGridButton", "Копирование осей", wayForApplication, "BMCIModule.CopyGrids");
@@ -60,14 +58,6 @@ namespace BMCIModule
                 selectSetTagWorkset.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\CreateWorkSet.png"));
                 PushButton selectTagName = panelCoordination.AddItem(selectSetTagWorkset) as PushButton;
             }
-
-           
-
-
-
-
-
-
             return Result.Succeeded;
 
         }

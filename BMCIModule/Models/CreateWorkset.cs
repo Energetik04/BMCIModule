@@ -43,8 +43,22 @@ namespace BMCIModule
             {
                 //коллекция Department
                 ObservableCollection<Department.Department> GetDepartmentCollection = SelectWorksetViewModel.departmentCollection;
-
-
+                foreach(Department.Department departmentInCollection in GetDepartmentCollection)
+                {
+                    foreach(Mark GetMarkInDepartment in departmentInCollection.ListMark)
+                    {
+                        if (GetMarkInDepartment.StatusMark == true)
+                        {
+                            string baseName = "#BMCI - ВНЕШНЯЯ МОДЕЛЬ ";
+                            using (Transaction tr=new Transaction(doc,"Создание рабочих наборов")) 
+                            {
+                                tr.Start();
+                                Workset.Create(doc, baseName + GetMarkInDepartment.Name);
+                                tr.Commit();
+                            }
+                        }
+                    }
+                }
                 return Result.Succeeded;
             }
         }
