@@ -40,7 +40,7 @@ namespace BMCIModule.Infrastructure.Commands
            FilePath = saveFileDialog.FileName;
            return true;
            }
-            return false;
+           return false;
         }
 
         public void ShowMessage(string message)

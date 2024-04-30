@@ -21,7 +21,7 @@ namespace BMCIModule.ViewModel.Base
         {
             if(Equals(field,value)) return false;
             field = value;
-            OnProperyChanged();
+            OnProperyChanged(ProportyName);
             return true;
         }
 

@@ -91,12 +91,13 @@ namespace BMCIModule.ViewModel
             {
                 using (FileStream fs = new FileStream(defaultDialogService.FilePath, FileMode.OpenOrCreate))
                 {
-                    departmentCollection.Clear();
+                    //departmentCollection.Clear();
                     ObservableCollection<Department.Department> departmentCollectionTemp = new ObservableCollection<Department.Department>(deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>);
-                    foreach (Department.Department department in departmentCollectionTemp)
-                    {
-                        departmentCollection.Add(department);
-                    }
+                    departmentCollection= departmentCollectionTemp;
+                    //foreach (Department.Department department in departmentCollectionTemp)
+                    //{
+                    //    departmentCollection.Add(department);
+                    //}
                 }
             }
         }
@@ -120,8 +121,8 @@ namespace BMCIModule.ViewModel
                 Set(ref _departmentCollection, value);
             } 
         }
+        #endregion
 
-        
         public SelectWorksetViewModel()
         {
             departmentCollection = new ObservableCollection<Department.Department>(SetDepartmentBMCI.departmentArray);// необходимо обновление бинарника окна
@@ -129,6 +130,6 @@ namespace BMCIModule.ViewModel
             SavePresetWorksetToXMLCommand = new RelayCommand(OnSavePresetWorksetToXMLCommandExecute, CanSavePresetWorksetToXMLCommandExecute);
             OpenPresetWorkserToXMLCommand = new RelayCommand(OnOpenPresetWorkserToXMLCommandExecute, CanOpenPresetWorkserToXMLCommandExecute);
         }
-        #endregion
+     
     }
 }
