@@ -50,7 +50,7 @@ namespace BMCIModule
                         if (GetMarkInDepartment.StatusMark == true)
                         {
                             string baseName = "#BMCI - ВНЕШНЯЯ МОДЕЛЬ ";
-                            using (Transaction tr=new Transaction(doc,"Создание рабочих наборов")) 
+                            using (Transaction tr=new Transaction(doc,"Рабочий набор "+GetMarkInDepartment.Name)) 
                             {
                                 tr.Start();
                                 Workset.Create(doc, baseName + GetMarkInDepartment.Name);
