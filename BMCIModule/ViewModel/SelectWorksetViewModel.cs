@@ -103,6 +103,7 @@ namespace BMCIModule.ViewModel
         public ICommand ApplyAplicationCommand { get; }
         private void OnApplyAplicationCommandExecuted(object p)
         {
+           
             Close();
         }
 

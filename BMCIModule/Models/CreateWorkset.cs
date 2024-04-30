@@ -34,12 +34,19 @@ namespace BMCIModule
             //Фильтрация рабочих наборов
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
-            
-            bool? chek=viewModel.ShowDialog();
 
-            ObservableCollection<Department.Department> GetDepartmentCollection=SelectWorksetViewModel.departmentCollection;
+            if (viewModel.ShowDialog()==false)
+            {
+                return Result.Succeeded;
+            }
+            else
+            {
+                //коллекция Department
+                ObservableCollection<Department.Department> GetDepartmentCollection = SelectWorksetViewModel.departmentCollection;
 
-            return Result.Succeeded;
+
+                return Result.Succeeded;
+            }
         }
 
         public static Workset GetWorkset(IList<Workset> setWorkset, Document doc)

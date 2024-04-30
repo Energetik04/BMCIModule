@@ -134,10 +134,12 @@
                         />
                 <Button Style="{StaticResource ButtonStyle}" 
                         Content="Применить"
-                        Command="{Binding ApplyAplicationCommand}"/>
+                        Command="{Binding ApplyAplicationCommand}"
+                        Click="ClickApplyWindow"/>
                 <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
                         Command="{Binding CloseAplicationCommand}"
+                        Click="ClickCloseWindow"
                         >
 
                 </Button>

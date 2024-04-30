@@ -20,5 +20,15 @@ namespace BMCIModule
         {
             InitializeComponent();        
         }
+
+        private void ClickCloseWindow(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult=false;
+        }
+
+        private void ClickApplyWindow(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
     }
 }
