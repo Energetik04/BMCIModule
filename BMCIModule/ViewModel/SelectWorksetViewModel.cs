@@ -1,15 +1,9 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Visual;
-using Autodesk.Revit.UI;
+﻿using Autodesk.Revit.UI;
 using BMCIModule.Department;
 using BMCIModule.Infrastructure.Commands;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 
@@ -106,10 +100,10 @@ namespace BMCIModule.ViewModel
         /// Применение рабочих наборов
         /// </summary>
 
-        private ICommand ApplyAplicationCommand { get; }
+        public ICommand ApplyAplicationCommand { get; }
         private void OnApplyAplicationCommandExecuted(object p)
         {
-
+            Close();
         }
 
         private bool CanApplyAplicationCommandExecuted(object p) => true;

@@ -5,6 +5,7 @@ using BMCIModule.Department;
 using BMCIModule.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -17,7 +18,7 @@ namespace BMCIModule
         
     public class CreateWorkset:IExternalCommand
     {
-        static SelectWorksetViewModel SelectWorksetViewModel = new SelectWorksetViewModel();
+        SelectWorksetViewModel SelectWorksetViewModel = new SelectWorksetViewModel();
         SelectWorksetWindow viewModel = new SelectWorksetWindow();
                
         public Result Execute (ExternalCommandData commanddata, ref  string message,ElementSet elements)
@@ -34,7 +35,9 @@ namespace BMCIModule
             WorksetKindFilter setFilter = new WorksetKindFilter(WorksetKind.UserWorkset);
             IList<Workset> setWorkset=collectorWorkset.WherePasses(setFilter).ToWorksets();
             
-            viewModel.ShowDialog();
+            bool? chek=viewModel.ShowDialog();
+
+            ObservableCollection<Department.Department> GetDepartmentCollection=SelectWorksetViewModel.departmentCollection;
 
             return Result.Succeeded;
         }
