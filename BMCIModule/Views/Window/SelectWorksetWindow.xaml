@@ -133,7 +133,8 @@
                         Command="{Binding OpenPresetWorkserToXMLCommand}"
                         />
                 <Button Style="{StaticResource ButtonStyle}" 
-                        Content="Применить"/>
+                        Content="Применить"
+                        Command="{Binding ApplyAplicationCommand}"/>
                 <Button Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"
                         Command="{Binding CloseAplicationCommand}"

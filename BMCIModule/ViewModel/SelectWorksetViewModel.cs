@@ -73,8 +73,6 @@ namespace BMCIModule.ViewModel
         }
         #endregion
 
-
-
         #region OpenFileXML
         /// <summary>
         /// Открытие файла и воссоздание коллекции обратно
@@ -103,6 +101,22 @@ namespace BMCIModule.ViewModel
         }
         #endregion
 
+        #region Apply
+        /// <summary>
+        /// Применение рабочих наборов
+        /// </summary>
+
+        private ICommand ApplyAplicationCommand { get; }
+        private void OnApplyAplicationCommandExecuted(object p)
+        {
+
+        }
+
+        private bool CanApplyAplicationCommandExecuted(object p) => true;
+
+
+        #endregion
+
         #endregion
 
         #region Выбор рабочих наборов
@@ -129,6 +143,7 @@ namespace BMCIModule.ViewModel
             CloseAplicationCommand = new RelayCommand(OnCloseAplicationCommandExecuted, CanCloseAplicationCommandExecute);// есть рабочая лошадка и по ее конструктору создаем команду
             SavePresetWorksetToXMLCommand = new RelayCommand(OnSavePresetWorksetToXMLCommandExecute, CanSavePresetWorksetToXMLCommandExecute);
             OpenPresetWorkserToXMLCommand = new RelayCommand(OnOpenPresetWorkserToXMLCommandExecute, CanOpenPresetWorkserToXMLCommandExecute);
+            ApplyAplicationCommand = new RelayCommand(OnApplyAplicationCommandExecuted, CanApplyAplicationCommandExecuted);
         }
      
     }
