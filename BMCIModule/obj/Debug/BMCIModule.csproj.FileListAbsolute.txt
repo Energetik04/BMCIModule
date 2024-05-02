@@ -16,3 +16,4 @@ C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\BMCIMo
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.g.cs
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.baml
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll.config
