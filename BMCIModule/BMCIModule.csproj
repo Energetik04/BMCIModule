@@ -94,7 +94,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="Data\Appartunes\" />
     <Folder Include="icon\" />
   </ItemGroup>
   <ItemGroup>
