@@ -38,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 727,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -55,6 +55,23 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreateWorkset.cs",
+              "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\CreateWorkset.cs",
+              "RelativeDocumentMoniker": "Models\\CreateWorkset.cs",
+              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\CreateWorkset.cs",
+              "RelativeToolTip": "Models\\CreateWorkset.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAAxwFMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-30T05:06:22.249Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
               "Title": "CopyGrids.cs",
               "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\CopyGrids.cs",
@@ -64,25 +81,12 @@
               "ViewState": "AQIAAAkAAAAAAAAAAAAAADEAAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T06:21:38.883Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CreateWorkset.cs",
-              "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\CreateWorkset.cs",
-              "RelativeDocumentMoniker": "Models\\CreateWorkset.cs",
-              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Models\\CreateWorkset.cs*",
-              "RelativeToolTip": "Models\\CreateWorkset.cs*",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAACsAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-30T05:06:22.249Z",
-              "EditorCaption": ""
             }
           ]
         },
         {
           "DockedWidth": 505,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -95,7 +99,19 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACEAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-16T14:59:54.813Z",
-              "IsPinned": true,
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SelectWorksetWindow.xaml.cs",
+              "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Views\\Window\\SelectWorksetWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\Window\\SelectWorksetWindow.xaml.cs",
+              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Views\\Window\\SelectWorksetWindow.xaml.cs",
+              "RelativeToolTip": "Views\\Window\\SelectWorksetWindow.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-30T06:13:48.739Z",
               "EditorCaption": ""
             },
             {
@@ -109,19 +125,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T06:23:15.4Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SelectWorksetWindow.xaml.cs",
-              "DocumentMoniker": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Views\\Window\\SelectWorksetWindow.xaml.cs",
-              "RelativeDocumentMoniker": "Views\\Window\\SelectWorksetWindow.xaml.cs",
-              "ToolTip": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModule\\Views\\Window\\SelectWorksetWindow.xaml.cs*",
-              "RelativeToolTip": "Views\\Window\\SelectWorksetWindow.xaml.cs*",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-30T06:13:48.739Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
