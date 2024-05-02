@@ -18,7 +18,8 @@ namespace BMCIModule
     {
         public SelectWorksetWindow()
         {
-            InitializeComponent();        
+            InitializeComponent();
+            Topmost = true;
         }
 
         private void ClickCloseWindow(object sender, RoutedEventArgs e)

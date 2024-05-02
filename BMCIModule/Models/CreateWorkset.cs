@@ -41,6 +41,7 @@ namespace BMCIModule
             }
             else
             {
+                
                 //коллекция Department
                 ObservableCollection<Department.Department> GetDepartmentCollection = SelectWorksetViewModel.departmentCollection;
                 foreach(Department.Department departmentInCollection in GetDepartmentCollection)
@@ -75,11 +76,8 @@ namespace BMCIModule
                     flag = true;
                     return worksetLevelAndGrid = workset;
                 }
-            
             }
             return worksetLevelAndGrid = Workset.Create(doc, worksetLevelAndGridName);
-
         }
-
     }
 }
