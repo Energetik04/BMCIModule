@@ -17,3 +17,5 @@ C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\Genera
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.g.cs
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.baml
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll.config
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\Data\Apparatus\ApparatusForElectrical.mdf
+C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\Data\Apparatus\ApparatusForElectrical_log.ldf
