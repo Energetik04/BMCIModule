@@ -35,6 +35,7 @@ namespace BMCIModule
                 TaskDialogResult tresult = taskDialogGrid.Show();
                 if ( tresult==TaskDialogResult.CommandLink3 )
                 {
+#pragma warning disable CS0168 // Переменная объявлена, но не используется
                     try
                     {
                         foreach (Element element1 in rvtLink)
@@ -51,6 +52,7 @@ namespace BMCIModule
                     {
                         return Result.Succeeded;
                     }
+#pragma warning restore CS0168 // Переменная объявлена, но не используется
                 }
                 else
                 {

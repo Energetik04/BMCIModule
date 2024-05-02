@@ -67,7 +67,9 @@ namespace BMCIModule
         public static Workset GetWorkset(IList<Workset> setWorkset, Document doc)
         {
             string worksetLevelAndGridName = "#BMCI - ОБЩИЕ УРОВНИ И СЕТКИ";
+#pragma warning disable CS0219 // Переменная назначена, но ее значение не используется
             bool flag = false;
+#pragma warning restore CS0219 // Переменная назначена, но ее значение не используется
             Workset worksetLevelAndGrid;
             foreach (Workset workset in setWorkset)
             {
