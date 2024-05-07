@@ -86,7 +86,7 @@ namespace BMCIModule.ViewModel
                     //departmentCollection.Clear();
                     ObservableCollection<Department.Department> departmentCollectionTemp = new ObservableCollection<Department.Department>(deSerializer.Deserialize(fs) as ObservableCollection<Department.Department>);
                     departmentCollection= departmentCollectionTemp;
-                    //foreach (Department.Department department in departmentCollectionTemp)
+                    //foreach (Department.Department department in departmentCollectionTemp) альтернативынй метод по перебору всей коллекции
                     //{
                     //    departmentCollection.Add(department);
                     //}
