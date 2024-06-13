@@ -16,8 +16,6 @@ C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\x86\sqlceme40.dll
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\x86\sqlceqp40.dll
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\x86\sqlcese40.dll
-C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\Data\Apparatus\ApparatusForElectrical.mdf
-C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\Data\Apparatus\ApparatusForElectrical_log.ldf
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\BMCIModule.dll.config
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\BMCIModule.dll
 C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\x64\Release\BMCIModule.pdb

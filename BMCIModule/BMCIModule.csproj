@@ -162,6 +162,7 @@
     <Compile Include="Infrastructure\Commands\DefaultDialogService.cs" />
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
     <Compile Include="Infrastructure\Interface\Base\IDialogService.cs" />
+    <Compile Include="Models\CreateFloorDXF.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
