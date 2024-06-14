@@ -3,7 +3,6 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
 using System.Windows.Media.Imaging;
-using adWin = Autodesk.Windows;
 
 namespace BMCIModule
 {
@@ -57,6 +56,17 @@ namespace BMCIModule
                 selectSetTagWorkset.ToolTip = "Создание рабочих набором путем выбора марок комплектов";
                 selectSetTagWorkset.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\CreateWorkSet.png"));
                 PushButton selectTagName = panelCoordination.AddItem(selectSetTagWorkset) as PushButton;
+
+                PushButtonData createFloorDxf = new PushButtonData("CreateFloorDxf", "Топоповерхность", wayForApplication, "BMCIModule.CreateFloorDXF");
+                createFloorDxf.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
+                // путь к картинкам либо изменить либо пересмотреть 
+                createFloorDxf.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                PushButton create = panelCoordination.AddItem(createFloorDxf) as PushButton;
+
+
+
+
+
             }
             return Result.Succeeded;
 

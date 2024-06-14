@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\
+D:\BMCIModule\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\
 BMCIModuleTest
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModuleTest\App.xaml
+D:\BMCIModule\BMCIModule\BMCIModuleTest\App.xaml
 1-462505347
 
 7-940972018
-198915248976
+198-1509178875
 SelectWorkset.xaml;
 
-True
+False
 

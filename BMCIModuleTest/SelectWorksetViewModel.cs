@@ -9,7 +9,6 @@ namespace BMCIModuleTest
 {
     internal class SelectWorksetViewModel
     {
-        static void Main() { }
         public ObservableCollection<Department> departmentCollections { get; }
         #region Марки
         static ICollection<Mark> ETO = new List<Mark>

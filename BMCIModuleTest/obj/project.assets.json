@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModuleTest\\BMCIModuleTest.csproj",
+      "projectUniqueName": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\BMCIModuleTest.csproj",
       "projectName": "BMCIModuleTest",
-      "projectPath": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModuleTest\\BMCIModuleTest.csproj",
+      "projectPath": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\BMCIModuleTest.csproj",
       "packagesPath": "C:\\Users\\rnosevich\\.nuget\\packages\\",
-      "outputPath": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BMCIModule\\BMCIModuleTest\\obj\\",
+      "outputPath": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rnosevich\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,6 +28,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -69,7 +70,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
