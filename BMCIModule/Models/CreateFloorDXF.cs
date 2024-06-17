@@ -39,6 +39,13 @@ namespace BMCIModule
             Reference choiceTopographyRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента (топоповерхность)");
             Element selectTopography=doc.GetElement(choiceTopographyRef);
 
+            Options op=doc.Application.Create.NewGeometryOptions();
+            GeometryObject topFace=selectFloor.get_Geometry(op);
+                var geo = topFace.IsElementGeometry;
+                Solid solidFloor=topFace as Solid;
+                EdgeArray edges = new EdgeArray();
+                //edges=(topFace as Solid).Edges;
+
             if(selectFloor != null && selectTopography!=null)
             {
                     IList<XYZ> boundaryPointSurface=(selectTopography as TopographySurface).GetBoundaryPoints(); // точки границы топоповерхности
