@@ -40,11 +40,20 @@ namespace BMCIModule
             Element selectTopography=doc.GetElement(choiceTopographyRef);
 
             Options op=doc.Application.Create.NewGeometryOptions();
-            GeometryObject topFace=selectFloor.get_Geometry(op);
-                var geo = topFace.IsElementGeometry;
-                Solid solidFloor=topFace as Solid;
-                EdgeArray edges = new EdgeArray();
-                //edges=(topFace as Solid).Edges;
+            GeometryElement topFace=selectFloor.get_Geometry(op);
+                List<GeometryObject> list= new List<GeometryObject>();
+                foreach (GeometryObject geometryObject in topFace)// вытянул перечислением фигуры которые внутри
+                {
+                    if(geometryObject is Solid)
+                    {
+                        list.Add(geometryObject);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    
+                }
 
             if(selectFloor != null && selectTopography!=null)
             {
