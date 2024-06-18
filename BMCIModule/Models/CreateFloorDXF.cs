@@ -53,6 +53,7 @@ namespace BMCIModule
                         continue;
                     }
                 }
+                // модумать над сложными полами и переборке этих полов 
                 Solid solid = list[0] as Solid;
                 Face topFaceSolid=GetTopFace(solid);
 
@@ -61,6 +62,11 @@ namespace BMCIModule
                     IList<XYZ> boundaryPointSurface=(selectTopography as TopographySurface).GetBoundaryPoints(); // точки границы топоповерхности
                     IList<XYZ> interiorPoint= (selectTopography as TopographySurface).GetInteriorPoints(); //точки входящие внутрь поверхности
                     IList<XYZ> allPoints = (selectTopography as TopographySurface).GetPoints();//точки все=сумма двух листов точек выше
+
+
+
+
+
                     SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
                     slabFloor.Enable();// тут что-то не так 
                     foreach (XYZ point in boundaryPointSurface)
