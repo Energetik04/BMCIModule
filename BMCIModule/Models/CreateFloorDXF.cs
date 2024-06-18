@@ -39,7 +39,7 @@ namespace BMCIModule
             Reference choiceTopographyRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента (топоповерхность)");
             Element selectTopography=doc.GetElement(choiceTopographyRef);
 
-            Options op=doc.Application.Create.NewGeometryOptions();
+            Options op=doc.Application.Create.NewGeometryOptions();// Определить Options для объекта
             GeometryElement topFace=selectFloor.get_Geometry(op);
                 List<GeometryObject> list= new List<GeometryObject>();
                 foreach (GeometryObject geometryObject in topFace)// вытянул перечислением фигуры которые внутри
@@ -56,14 +56,30 @@ namespace BMCIModule
                 // модумать над сложными полами и переборке этих полов 
                 Solid solid = list[0] as Solid;
                 Face topFaceSolid=GetTopFace(solid);
+                IList<CurveLoop> edgeArraySolid = topFaceSolid.GetEdgesAsCurveLoops(); // ребра грани
+
 
             if(selectFloor != null && selectTopography!=null)
             {
+
                     IList<XYZ> boundaryPointSurface=(selectTopography as TopographySurface).GetBoundaryPoints(); // точки границы топоповерхности
                     IList<XYZ> interiorPoint= (selectTopography as TopographySurface).GetInteriorPoints(); //точки входящие внутрь поверхности
                     IList<XYZ> allPoints = (selectTopography as TopographySurface).GetPoints();//точки все=сумма двух листов точек выше
-
-
+                    foreach(XYZ point in interiorPoint)
+                    {
+                        foreach(CurveLoop edgeSolid in edgeArraySolid)
+                        {
+                            List<double> SquareTriangle = new List<double>();
+                            foreach (Line lineEdge in edgeSolid)
+                            {
+                                if (lineEdge.IsBound == true)
+                                {
+                                   SquareTriangle.Add(GetTriangle(lineEdge, point));
+                                }
+                            }
+                        }
+                    }
+                    
 
 
 
@@ -95,6 +111,23 @@ namespace BMCIModule
                 }
             }
             return topFace;
+        }
+
+        public double GetTriangle(Line edge, XYZ point) // ошибка тут, замыкание в foreach
+        {
+            List<XYZ> pointTriangle= new List<XYZ>();
+            foreach(XYZ getPointTriangle in pointTriangle)
+            {
+                pointTriangle.Add(getPointTriangle);
+            }
+            pointTriangle.Add(point);
+            XYZ pointA = pointTriangle[0];
+            XYZ pointB = pointTriangle[1];
+            XYZ pointC=pointTriangle[2];
+
+            double SquareTriangle;
+            SquareTriangle = 0.5*(pointA.X*(pointB.Y-pointC.Y)+pointB.X*(pointC.Y-pointA.Y)+pointC.X*(pointA.Y-pointB.Y));
+            return SquareTriangle;
         }
     }
 }
