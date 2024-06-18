@@ -80,15 +80,13 @@ namespace BMCIModule
                         }
                     }
                     
-
-
-
-                    SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
+                    /*SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
                     slabFloor.Enable();// тут что-то не так 
                     foreach (XYZ point in boundaryPointSurface)
                     {
                         slabFloor.DrawPoint(point);
-                    }
+                    }*/
+
             }
             tr.Commit();
             }
