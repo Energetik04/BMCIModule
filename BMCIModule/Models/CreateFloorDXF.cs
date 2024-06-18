@@ -46,14 +46,15 @@ namespace BMCIModule
                 {
                     if(geometryObject is Solid)
                     {
-                        list.Add(geometryObject);
+                        list.Add(geometryObject);// потом подумать и разобраться с количеством (но тут 1 фигура)
                     }
                     else
                     {
                         continue;
                     }
-                    
                 }
+                Solid solid = list[0] as Solid;
+                Face topFaceSolid=GetTopFace(solid);
 
             if(selectFloor != null && selectTopography!=null)
             {
@@ -73,5 +74,21 @@ namespace BMCIModule
             return Result.Succeeded;
         }
 
+
+        public Face GetTopFace(Solid solid)
+        {
+            FaceArray faceSolid=solid.Faces;
+            Face topFace=null;
+            XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
+            foreach (Face face in faceSolid)
+            {
+                
+                if((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) //строковое сравнение векторов(надо немного продумать)
+                {
+                    topFace = face;
+                }
+            }
+            return topFace;
+        }
     }
 }
