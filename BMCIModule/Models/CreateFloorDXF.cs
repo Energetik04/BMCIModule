@@ -6,6 +6,8 @@ using Autodesk.Revit.UI.Selection;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +29,7 @@ namespace BMCIModule
             {
                 tr.Start();
             TaskDialog.Show("Выбор элемента","Выберите Пол/Перекрытие");
-            // хринилище выбранного элемента
+            // хранилище выбранного элемента
             Selection choiceFloor =uidoc.Selection;
             // ссылка на объект
             Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента (пол/перекрытие)");
@@ -80,6 +82,7 @@ namespace BMCIModule
                         XYZ pointProjection = new XYZ(point.X, point.Y, 0.000000000);// надо тут посмотреть от разных поверхностей
                         foreach (CurveLoop edgeSolid in edgeArraySolid)
                         {
+                            VisiblePointInRegion(edgeSolid, pointProjection);
                             foreach (Line lineEdge in edgeSolid)
                             {
                                 if (lineEdge.IsBound == true)
@@ -127,6 +130,7 @@ namespace BMCIModule
             return topFace;
         }
 
+        // ошибка в расчете площади
         public double GetTriangle(Line edge, XYZ point) // ошибка тут, замыкание в foreach
         {
             List<XYZ> pointTriangle= new List<XYZ>();
@@ -139,6 +143,61 @@ namespace BMCIModule
             double SquareTriangle;
             SquareTriangle = (pointA.X*(pointB.Y-pointC.Y)+pointB.X*(pointC.Y-pointA.Y)+pointC.X*(pointA.Y-pointB.Y))/2;
             return SquareTriangle;
+        }
+
+        // пролбуме через регион
+        public void VisiblePointInRegion(CurveLoop edgeSolid, XYZ point)
+        {
+            IList<XYZ> pointLine = new List<XYZ>();
+            GraphicsPath graphicsPath = new GraphicsPath();
+            foreach (var line in edgeSolid)
+            {
+                graphicsPath.AddLine((float) line.GetEndPoint(0).X, (float) line.GetEndPoint(0).Y, (float) line.GetEndPoint(1).X, (float) line.GetEndPoint(1).Y);
+                pointLine.Add(line.GetEndPoint(0));
+                //pointLine.Add(line.GetEndPoint(1));
+            }
+            //for (int i = 0; i < pointLine.Count; i++)
+            //{
+            //    for (int j = i+1; j < pointLine.Count-1; j++)
+            //    {
+            //        if (pointLine[i].IsAlmostEqualTo(pointLine[j]) == true) pointLine.RemoveAt(j); // Equals тут не работает 
+            //    }
+            //}
+            //pointLine.Add(point);
+
+            PointF[] pointF=new PointF[pointLine.Count];
+            byte[] bytes = new byte[pointLine.Count];
+            int i = 0;
+            foreach (var f in pointLine)
+            {
+                pointF[i] = new PointF((float)f.X, (float)f.Y);
+                if (i == 0)
+                {
+                    bytes[i] = (byte) PathPointType.Start;
+                }
+                else
+
+                {
+                    if(i != bytes.Length - 1)
+                    {
+                        bytes[i] = (byte) PathPointType.PathMarker;
+                    }
+                    else
+                    {
+                        if (i == bytes.Length-1)
+                        {
+                            bytes[i] = 128;
+                        }
+                    }
+                    
+                }
+                i++;
+            }
+            
+            
+            Region region = new Region(graphicsPath);
+
+            if(region.IsVisible((float)point.X, (float)point.Y)==true);
         }
     }
 }
