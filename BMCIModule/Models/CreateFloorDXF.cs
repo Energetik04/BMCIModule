@@ -72,14 +72,10 @@ namespace BMCIModule
                 {
                     foreach (XYZ point in verticesDXF)
                     {
-                        XYZ pointProjection = new XYZ(point.X, point.Y, 0.000000000);// надо тут посмотреть от разных поверхностей
                         foreach (CurveLoop edgeSolid in edgeArraySolid)
                         {
-                            if(VisiblePointInRegion(edgeSolid, pointProjection)==true) IsInterior.Add(point);
-                            
-                            
+                            if(VisiblePointInRegion(edgeSolid, point)==true) IsInterior.Add(point);
                         }
-                       
                     }
                     /*SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
                     slabFloor.Enable();// тут что-то не так 
@@ -101,7 +97,6 @@ namespace BMCIModule
             XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
             foreach (Face face in faceSolid)
             {
-                
                 if((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) //строковое сравнение векторов(надо немного продумать)
                 {
                     topFace = face;
