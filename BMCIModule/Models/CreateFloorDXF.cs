@@ -66,38 +66,20 @@ namespace BMCIModule
                 Mesh gerMesh=null;
                 foreach(var element in geoInstanceInstace) 
                 { if (element is Mesh)  gerMesh=(Mesh)element; }
-                IList<XYZ> verticesDXF =gerMesh.Vertices;// вершиы вытащить получилось 
-
-
-
-                //IList<XYZ> boundaryPointSurface = (selectTopography as TopographySurface).GetBoundaryPoints(); // точки границы топоповерхности
-                //IList<XYZ> interiorPoint = (selectTopography as TopographySurface).GetInteriorPoints(); //точки входящие внутрь поверхности
-                //IList<XYZ> allPoints = (selectTopography as TopographySurface).GetPoints();//точки все=сумма двух листов точек выше
+                IList<XYZ> verticesDXF =gerMesh.Vertices;// вершиы DXF, не пугаться
                 IList<XYZ> IsInterior = new List<XYZ>();
                 if (selectFloor != null && selectTopography!=null)
                 {
-                    List<double> SquareTriangle = new List<double>();
                     foreach (XYZ point in verticesDXF)
                     {
                         XYZ pointProjection = new XYZ(point.X, point.Y, 0.000000000);// надо тут посмотреть от разных поверхностей
                         foreach (CurveLoop edgeSolid in edgeArraySolid)
                         {
-                            VisiblePointInRegion(edgeSolid, pointProjection);
-                            foreach (Line lineEdge in edgeSolid)
-                            {
-                                if (lineEdge.IsBound == true)
-                                {
-                                   SquareTriangle.Add(GetTriangle(lineEdge, pointProjection));
-                                }
-                            }
+                            if(VisiblePointInRegion(edgeSolid, pointProjection)==true) IsInterior.Add(point);
+                            
+                            
                         }
-                        double sumSquareTriangle=0;
-                        for(int i = 0; i < SquareTriangle.Count; i++)
-                        {
-                            sumSquareTriangle+= SquareTriangle[i];
-                        }
-                        if (sumSquareTriangle == topFaceSolid.Area) IsInterior.Add(point);
-                        SquareTriangle.Clear();
+                       
                     }
                     /*SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
                     slabFloor.Enable();// тут что-то не так 
@@ -109,10 +91,8 @@ namespace BMCIModule
                 TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
             }
-            
             return Result.Succeeded;
         }
-
 
         public Face GetTopFace(Solid solid)
         {
@@ -130,74 +110,18 @@ namespace BMCIModule
             return topFace;
         }
 
-        // ошибка в расчете площади
-        public double GetTriangle(Line edge, XYZ point) // ошибка тут, замыкание в foreach
-        {
-            List<XYZ> pointTriangle= new List<XYZ>();
-            pointTriangle.Add(new XYZ(edge.GetEndPoint(0).X, edge.GetEndPoint(0).Y, edge.GetEndPoint(0).Z));
-            pointTriangle.Add(new XYZ(edge.GetEndPoint(1).X, edge.GetEndPoint(1).Y, edge.GetEndPoint(1).Z));
-            pointTriangle.Add(point);
-            XYZ pointA = pointTriangle[0];
-            XYZ pointB = pointTriangle[1];
-            XYZ pointC=pointTriangle[2];
-            double SquareTriangle;
-            SquareTriangle = (pointA.X*(pointB.Y-pointC.Y)+pointB.X*(pointC.Y-pointA.Y)+pointC.X*(pointA.Y-pointB.Y))/2;
-            return SquareTriangle;
-        }
-
-        // пролбуме через регион
-        public void VisiblePointInRegion(CurveLoop edgeSolid, XYZ point)
+       // пролбуме через регион
+        public bool VisiblePointInRegion(CurveLoop edgeSolid, XYZ point)
         {
             IList<XYZ> pointLine = new List<XYZ>();
             GraphicsPath graphicsPath = new GraphicsPath();
             foreach (var line in edgeSolid)
             {
                 graphicsPath.AddLine((float) line.GetEndPoint(0).X, (float) line.GetEndPoint(0).Y, (float) line.GetEndPoint(1).X, (float) line.GetEndPoint(1).Y);
-                pointLine.Add(line.GetEndPoint(0));
-                //pointLine.Add(line.GetEndPoint(1));
             }
-            //for (int i = 0; i < pointLine.Count; i++)
-            //{
-            //    for (int j = i+1; j < pointLine.Count-1; j++)
-            //    {
-            //        if (pointLine[i].IsAlmostEqualTo(pointLine[j]) == true) pointLine.RemoveAt(j); // Equals тут не работает 
-            //    }
-            //}
-            //pointLine.Add(point);
-
-            PointF[] pointF=new PointF[pointLine.Count];
-            byte[] bytes = new byte[pointLine.Count];
-            int i = 0;
-            foreach (var f in pointLine)
-            {
-                pointF[i] = new PointF((float)f.X, (float)f.Y);
-                if (i == 0)
-                {
-                    bytes[i] = (byte) PathPointType.Start;
-                }
-                else
-
-                {
-                    if(i != bytes.Length - 1)
-                    {
-                        bytes[i] = (byte) PathPointType.PathMarker;
-                    }
-                    else
-                    {
-                        if (i == bytes.Length-1)
-                        {
-                            bytes[i] = 128;
-                        }
-                    }
-                    
-                }
-                i++;
-            }
-            
-            
             Region region = new Region(graphicsPath);
-
-            if(region.IsVisible((float)point.X, (float)point.Y)==true);
+            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
+            return false;
         }
     }
 }
