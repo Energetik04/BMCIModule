@@ -36,7 +36,7 @@ namespace BMCIModule
             // поиск элемента по ссылке
             Element selectFloor =doc.GetElement(choiceFloorRef);
 
-            TaskDialog.Show("Выбор элемента", "Выберите Топоповерхность");
+            TaskDialog.Show("Выбор элемента", "Выберите DXF файл");
 
             Reference choiceTopographyRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента");
             Element selectTopography=doc.GetElement(choiceTopographyRef);
