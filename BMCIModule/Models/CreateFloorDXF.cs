@@ -6,6 +6,7 @@ using Autodesk.Revit.UI.Selection;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -77,12 +78,25 @@ namespace BMCIModule
                             if(VisiblePointInRegion(edgeSolid, point)==true) IsInterior.Add(point);
                         }
                     }
-                    /*SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
-                    slabFloor.Enable();// тут что-то не так 
-                    foreach (XYZ point in boundaryPointSurface)
+
+                    
+                    SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
+                    slabFloor.Enable();// тут что-то не так
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+                    //int count = 0;
+                    foreach (XYZ point in IsInterior)
                     {
+                        //count++;
                         slabFloor.DrawPoint(point);
-                    }*/
+                        //if(count==1000) break;
+                    }
+
+                    sw.Stop();
+                    TimeSpan ts = sw.Elapsed;
+                    string elapsedTime=string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                    TaskDialog.Show("Время выполнения", elapsedTime);
                 }
                 TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
