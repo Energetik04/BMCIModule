@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
+using Autodesk.Revit.DB.Analysis;
+using Autodesk.Revit.DB.Structure;
 
 namespace BMCIModule
 {
@@ -98,6 +100,8 @@ namespace BMCIModule
                     ts.Milliseconds / 10);
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 }
+
+                CreateAnalysisResult(selectFloor.GetAnalyticalModel(),doc);
                 TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
             }
@@ -131,6 +135,13 @@ namespace BMCIModule
             Region region = new Region(graphicsPath);
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
+        }
+
+        public void CreateAnalysisResult(AnalyticalModel model,Document document)
+        {
+            SpatialFieldManager spm=SpatialFieldManager.CreateSpatialFieldManager(document.ActiveView,1105);
+
+
         }
     }
 }
