@@ -80,28 +80,21 @@ namespace BMCIModule
                             if(VisiblePointInRegion(edgeSolid, point)==true) IsInterior.Add(point);
                         }
                     }
-
-                    
+                    // редактирование плиты, но много времени занимает выполнение
                     SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
-                    slabFloor.Enable();// тут что-то не так
-                    Stopwatch sw = new Stopwatch();
+                    slabFloor.Enable();// открываем на редактирование
+                    Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                     sw.Start();
-                    //int count = 0;
                     foreach (XYZ point in IsInterior)
                     {
-                        //count++;
                         slabFloor.DrawPoint(point);
-                        //if(count==1000) break;
                     }
-
                     sw.Stop();
                     TimeSpan ts = sw.Elapsed;
                     string elapsedTime=string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 }
-
-                CreateAnalysisResult(selectFloor.GetAnalyticalModel(),doc);
                 TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
             }
@@ -112,7 +105,7 @@ namespace BMCIModule
         {
             FaceArray faceSolid=solid.Faces;
             Face topFace=null;
-            XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
+            XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000); // с ветором 1 , для того чтобы вытащить парраллельно оси Z 
             foreach (Face face in faceSolid)
             {
                 if((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) //строковое сравнение векторов(надо немного продумать)

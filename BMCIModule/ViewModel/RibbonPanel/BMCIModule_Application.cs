@@ -4,6 +4,8 @@ using Autodesk.Revit.UI;
 using System;
 using System.Windows.Media.Imaging;
 
+
+// Нужно добавить регионы
 namespace BMCIModule
 {
     [Transaction(TransactionMode.Manual)]
@@ -61,11 +63,14 @@ namespace BMCIModule
                 createFloorDxf.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
                 // путь к картинкам либо изменить либо пересмотреть 
                 createFloorDxf.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
-                PushButton create = panelCoordination.AddItem(createFloorDxf) as PushButton;
+                PushButton createFloorDxfButton = panelCoordination.AddItem(createFloorDxf) as PushButton;
 
-
-
-
+                
+                PushButtonData createAnalysisFloor = new PushButtonData("createAnalysisFloor", "Анализ пола", wayForApplication, "BMCIModule.СreateAnalysisFloor");
+                createAnalysisFloor.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
+                // путь к картинкам либо изменить либо пересмотреть 
+                createAnalysisFloor.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                PushButton createAnalysisFloorButton = panelCoordination.AddItem(createAnalysisFloor) as PushButton;
 
             }
             return Result.Succeeded;
