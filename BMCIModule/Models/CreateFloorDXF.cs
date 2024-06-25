@@ -79,7 +79,9 @@ namespace BMCIModule
                 IList<XYZ> IsInterior = new List<XYZ>();
                 */
 
-                if (selectFloor != null && selectTopography!=null)
+
+
+                if (selectFloor != null)
                 {
                     foreach (XYZ point in verticesDXF)
                     {
@@ -103,7 +105,7 @@ namespace BMCIModule
                     ts.Milliseconds / 10);
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 }
-                TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
+                //TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
             }
             return Result.Succeeded;
