@@ -5,6 +5,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Microsoft.Identity.Client;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -55,8 +56,16 @@ namespace BMCIModule
             using (Transaction tr=new Transaction(doc,"Редактивроание плиты")) 
             {
                 tr.Start();
+
+
+
+
+
                 // находим верхнюю грань
                 Face getTopFace=GetTopFace(selectFloor, doc);
+                Point(getTopFace);
+
+
 
                 IList<CurveLoop> edgeArraySolid = getTopFace.GetEdgesAsCurveLoops(); // ребра грани
 
@@ -161,6 +170,22 @@ namespace BMCIModule
             return false;
         }
 
-        
+        public List<XYZ> Point(Face face)
+        {
+            List<XYZ> point = new List<XYZ>();
+
+            IList< CurveLoop >  listCurve = new List<CurveLoop>(face.GetEdgesAsCurveLoops());
+
+
+            foreach (var curve in listCurve)
+            {
+                foreach (var line in curve)
+                {
+                    point.Add(line.GetEndPoint(0));
+                }
+            }
+
+            return point;
+        }
     }
 }
