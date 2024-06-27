@@ -63,6 +63,7 @@ namespace BMCIModule
 
                 // находим верхнюю грань
                 Face getTopFace=GetTopFace(selectFloor, doc);
+                getTopFace.Triangulate();
                 Point(getTopFace);
 
 
@@ -90,7 +91,7 @@ namespace BMCIModule
 
 
 
-                if (selectFloor != null)
+               /* if (selectFloor != null)
                 {
                     foreach (XYZ point in verticesDXF)
                     {
@@ -113,7 +114,7 @@ namespace BMCIModule
                     string elapsedTime=string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                     TaskDialog.Show("Время выполнения", elapsedTime);
-                }
+                }*/
                 //TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
             }
