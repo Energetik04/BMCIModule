@@ -47,7 +47,7 @@ namespace BMCIModule
             Mesh triangulate = topFace.Triangulate(1);// триангулировал, получил сетку треугольников грубых
             int numberTriangle = triangulate.NumTriangles;
             // проверить точки входящие в треугольник
-            GeneratePointInSurface(topFace, triangulate);
+            GeneratePointInSurface(topFace, triangulate,ref doc);
 
             #endregion
 
@@ -138,7 +138,7 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        public void GeneratePointInSurface(Face topface,Mesh triangulate)
+        public void GeneratePointInSurface(Face topface,Mesh triangulate, ref Document doc)
         {
             HashSet<XYZ> pointCurve=new HashSet<XYZ>();
             XYZ xMin, yMin;
@@ -163,7 +163,7 @@ namespace BMCIModule
                 if (point.Y < yMin.Y) yMin = point;
             }
             
-            const double stepMin=0.65d; // шаг заполнения точками
+            const double stepMin=1.25d; // шаг заполнения точками
             /*
             var amountStepX=Math.Abs((xMax.X-xMin.X)/stepMin);
             var amountStepY=Math.Abs((yMax.Y-yMin.Y)/stepMin);
@@ -203,7 +203,16 @@ namespace BMCIModule
             {
                 if (VisiblePointInRegion(curveLoop[0],point)) pointRevit.Add(new XYZ(point.X, point.Y, 0));
             }
-            
+
+            using (Transaction tr=new Transaction(doc))
+            {
+                tr.Start();
+                foreach (XYZ point in pointRevit)
+                {
+                    Autodesk.Revit.DB.Point.Create(point);
+                }
+                tr.Commit();
+            }
         }
     }
 
