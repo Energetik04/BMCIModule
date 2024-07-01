@@ -59,7 +59,7 @@ namespace BMCIModule
                 selectSetTagWorkset.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\CreateWorkSet.png"));
                 PushButton selectTagName = panelCoordination.AddItem(selectSetTagWorkset) as PushButton;
 
-                PushButtonData createFloorDxf = new PushButtonData("CreateFloorDxf", "Топоповерхность", wayForApplication, "BMCIModule.CreateFloorDXF");
+                PushButtonData createFloorDxf = new PushButtonData("CreateFloorCloudPoint", "Топоповерхность", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
                 createFloorDxf.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
                 // путь к картинкам либо изменить либо пересмотреть 
                 createFloorDxf.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
