@@ -197,14 +197,11 @@ namespace BMCIModule
                 }
                 offset=!offset;
             }
-
+            IList<CurveLoop> curveLoop = topface.GetEdgesAsCurveLoops();
+            ICollection<XYZ> pointRevit = new List<XYZ>();
             foreach (var point in pointGenerate)
             {
-                ICollection<XYZ> pointRevit=new List<XYZ>();
-                IList<CurveLoop> curveLoop = topface.GetEdgesAsCurveLoops();
-
                 if (VisiblePointInRegion(curveLoop[0],point)) pointRevit.Add(new XYZ(point.X, point.Y, 0));
-
             }
             
         }
