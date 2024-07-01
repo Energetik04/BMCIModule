@@ -7,6 +7,7 @@ using Autodesk.Revit.UI.Selection;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using Microsoft.Identity.Client;
 using Point = Autodesk.Revit.DB.Point;
 
 namespace BMCIModule
@@ -113,7 +114,30 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
+        public bool VisiblePointInRegion(CurveLoop edgeSolid, Point point)
+        {
+            IList<XYZ> pointLine = new List<XYZ>();
+            GraphicsPath graphicsPath = new GraphicsPath();
+            foreach (var line in edgeSolid)
+            {
+                graphicsPath.AddLine((float)line.GetEndPoint(0).X, (float)line.GetEndPoint(0).Y, (float)line.GetEndPoint(1).X, (float)line.GetEndPoint(1).Y);
+            }
+            Region region = new Region(graphicsPath);
+            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
+            return false;
+        }
+        public bool VisiblePointInRegion(MeshTriangle triangle, Point point)
+        {
+            IList<XYZ> pointLine = new List<XYZ>();
+            GraphicsPath graphicsPath = new GraphicsPath();
 
+            graphicsPath.AddLine((float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y, (float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y);
+            graphicsPath.AddLine((float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y, (float)triangle.get_Vertex(2).X, (float)triangle.get_Vertex(2).Y);
+            graphicsPath.AddLine((float)triangle.get_Vertex(2).X, (float)triangle.get_Vertex(2).Y, (float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y);
+            Region region = new Region(graphicsPath);
+            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
+            return false;
+        }
         public void GeneratePointInSurface(Face topface,Mesh triangulate)
         {
             HashSet<XYZ> pointCurve=new HashSet<XYZ>();
@@ -138,8 +162,9 @@ namespace BMCIModule
                 if (point.X < xMin.X) xMin = point;
                 if (point.Y < yMin.Y) yMin = point;
             }
-
-            const double stepMin=0.5d; // шаг заполнения точками
+            
+            const double stepMin=0.65d; // шаг заполнения точками
+            /*
             var amountStepX=Math.Abs((xMax.X-xMin.X)/stepMin);
             var amountStepY=Math.Abs((yMax.Y-yMin.Y)/stepMin);
 
@@ -157,6 +182,45 @@ namespace BMCIModule
             {
                 VisiblePointInRegion(triangulate.get_Triangle(0),point);
             }
+            */
+            List<BMCIModule.Point> pointGenerate=new List<BMCIModule.Point>();
+            double heightTriangle = Math.Sqrt(3) / 2 * stepMin;
+            bool offset=false;
+
+            for (int i=0 ; i <(int)(Math.Abs(yMax.Y-yMin.Y)/heightTriangle)+1; i++)
+            {
+                for (int j = 0; j <(int)(Math.Abs((xMax.X - xMin.X) / stepMin))+1 ; j++)
+                {
+                    double posX = xMin.X + stepMin*j - (offset ? stepMin / 2 : 0);
+                    double posY = yMin.Y + heightTriangle*i;
+                    pointGenerate.Add(new Point(posX,posY));
+                }
+                offset=!offset;
+            }
+
+            foreach (var point in pointGenerate)
+            {
+                ICollection<XYZ> pointRevit=new List<XYZ>();
+                IList<CurveLoop> curveLoop = topface.GetEdgesAsCurveLoops();
+
+                if (VisiblePointInRegion(curveLoop[0],point)) pointRevit.Add(new XYZ(point.X, point.Y, 0));
+
+            }
+            
         }
     }
+
+    public class Point
+    {
+        public double X;
+        public double Y;
+
+        public Point(double x, double y)
+        {
+            X=x; Y=y;
+        }
+    }
+
+    
+
 }
