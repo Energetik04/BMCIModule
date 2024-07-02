@@ -47,10 +47,22 @@ namespace BMCIModule
             Mesh triangulate = topFace.Triangulate(1);// триангулировал, получил сетку треугольников грубых
             int numberTriangle = triangulate.NumTriangles;
             // проверить точки входящие в треугольник
-            GeneratePointInSurface(topFace, triangulate,ref doc);
+            ICollection<XYZ> pointRevit=GeneratePointInSurface(topFace, triangulate);
 
+            
+            
             #endregion
-
+            using (Transaction tr = new Transaction(doc,"поехали"))
+            {
+                tr.Start();
+                
+                foreach (XYZ point in pointRevit)
+                {
+                    var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки 
+                    directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки 
+                }
+                tr.Commit();
+            }
 
 
             //Проверить в какую сторону вращается вектора
@@ -90,18 +102,6 @@ namespace BMCIModule
             }
             return topFace;
         }
-
-        public bool GetDirection(Face topFace)
-        {
-            IList<CurveLoop> loop = new List<CurveLoop>(topFace.GetEdgesAsCurveLoops());
-            foreach (var line in loop)
-            {
-                
-            }
-
-            return true;
-        }
-
         public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)
         {
             IList<XYZ> pointLine = new List<XYZ>();
@@ -114,7 +114,7 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        public bool VisiblePointInRegion(CurveLoop edgeSolid, Point point)
+        public bool VisiblePointInRegion(CurveLoop edgeSolid, Point point)// не очень рабочий метод через регион, есть фальш точки, скорее всего что-то ретяется при переходе из double в float
         {
             IList<XYZ> pointLine = new List<XYZ>();
             GraphicsPath graphicsPath = new GraphicsPath();
@@ -138,7 +138,7 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        public void GeneratePointInSurface(Face topface,Mesh triangulate, ref Document doc)
+        public ICollection<XYZ> GeneratePointInSurface(Face topface,Mesh triangulate)
         {
             HashSet<XYZ> pointCurve=new HashSet<XYZ>();
             XYZ xMin, yMin;
@@ -204,15 +204,7 @@ namespace BMCIModule
                 if (VisiblePointInRegion(curveLoop[0],point)) pointRevit.Add(new XYZ(point.X, point.Y, 0));
             }
 
-            using (Transaction tr=new Transaction(doc))
-            {
-                tr.Start();
-                foreach (XYZ point in pointRevit)
-                {
-                    Autodesk.Revit.DB.Point.Create(point);
-                }
-                tr.Commit();
-            }
+            return pointRevit;
         }
     }
 
