@@ -60,8 +60,7 @@ namespace BMCIModule
                 foreach (XYZ point in pointRevit)
                 {
                     //проверка на попадание точки в регион
-                    
-                    
+
                     var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки 
                     directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки 
                 }
@@ -95,10 +94,8 @@ namespace BMCIModule
             XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000); // с ветором 1 , для того чтобы вытащить парраллельно оси Z 
             foreach (Face face in faceSolid)
             {
-                if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) //строковое сравнение векторов(надо немного продумать)
-                {
-                    topFace = face;
-                }
+                //строковое сравнение векторов(надо немного продумать)
+                if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) {topFace = face;}
             }
             return topFace;
         }
