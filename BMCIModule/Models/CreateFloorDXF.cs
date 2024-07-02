@@ -70,7 +70,7 @@ namespace BMCIModule
 
                 IList<CurveLoop> edgeArraySolid = getTopFace.GetEdgesAsCurveLoops(); // ребра грани
 
-                /* Не нужный кусок работы с DXF
+                 //Не нужный кусок работы с DXF
                 GeometryElement geo = selectTopography.get_Geometry(new Options());
                 GeometryInstance geoInstance=null;
                 foreach(var element in geo)
@@ -87,11 +87,11 @@ namespace BMCIModule
                 { if (element is Mesh)  gerMesh=(Mesh)element; }
                 IList<XYZ> verticesDXF =gerMesh.Vertices;// вершиы DXF, не пугаться
                 IList<XYZ> IsInterior = new List<XYZ>();
-                */
+                
 
 
 
-               /* if (selectFloor != null)
+                if (selectFloor != null)
                 {
                     foreach (XYZ point in verticesDXF)
                     {
@@ -102,6 +102,7 @@ namespace BMCIModule
                     }
                     // редактирование плиты, но много времени занимает выполнение
                     SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
+                    
                     slabFloor.Enable();// открываем на редактирование
                     Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                     sw.Start();
@@ -114,7 +115,7 @@ namespace BMCIModule
                     string elapsedTime=string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                     TaskDialog.Show("Время выполнения", elapsedTime);
-                }*/
+                }
                 //TaskDialog.Show("Количество точек", IsInterior.Count.ToString());
                 tr.Commit();
             }

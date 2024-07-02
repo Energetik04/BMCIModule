@@ -1,14 +1,12 @@
-﻿using System;
-using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.Attributes;
+﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
+using System.Collections.ObjectModel;
 using System.Drawing;
-using Microsoft.Identity.Client;
-using Point = Autodesk.Revit.DB.Point;
+using System.Drawing.Drawing2D;
 
 namespace BMCIModule
 {
@@ -17,9 +15,13 @@ namespace BMCIModule
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var app=commandData.Application;// пользовательский интерфейс
+            #region Document and Interface
+
+            var app = commandData.Application;// пользовательский интерфейс
             var uidoc = app.ActiveUIDocument;// активный документ
-            var doc=uidoc.Document;// сам документ
+            var doc = uidoc.Document;// сам документ
+            
+            #endregion
 
             #region SelectFloor
 
@@ -40,37 +42,35 @@ namespace BMCIModule
             
             #endregion
             */
+
             //Получить Верхнюю грань
             Face topFace=GetTopFace(selectFloor, doc);
-
             #region Триангуляция
-            Mesh triangulate = topFace.Triangulate(1);// триангулировал, получил сетку треугольников грубых
-            int numberTriangle = triangulate.NumTriangles;
-            // проверить точки входящие в треугольник
-            ICollection<XYZ> pointRevit=GeneratePointInSurface(topFace, triangulate);
 
+            double stepMin = 1.5d;
+            // создаю сетку точек, так же их нужно проверить
+            ICollection<XYZ> pointRevit=GeneratePointInSurface(topFace,stepMin);
             
-            
+            ICollection<XYZ> pointInFace = new List<XYZ>();
+
             #endregion
             using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
-                
                 foreach (XYZ point in pointRevit)
                 {
+                    //проверка на попадание точки в регион
+                    
+                    
                     var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки 
                     directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки 
                 }
                 tr.Commit();
             }
-
-
-            //Проверить в какую сторону вращается вектора
-
-
             return Result.Succeeded;
         }
 
+        //получение верхней грани, только если пол плоский
         public Face GetTopFace(Element selectFloor, Document doc)
         {
             #region Options
@@ -102,6 +102,7 @@ namespace BMCIModule
             }
             return topFace;
         }
+
         public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)
         {
             IList<XYZ> pointLine = new List<XYZ>();
@@ -138,9 +139,18 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        public ICollection<XYZ> GeneratePointInSurface(Face topface,Mesh triangulate)
+
+
+        public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin)
         {
-            HashSet<XYZ> pointCurve=new HashSet<XYZ>();
+            //лютая фигня, нужно убрать 
+            // триангулировал поверхность, детализация высокая
+            Mesh triangulate = topface.Triangulate(1);
+            // количество треугольников
+            int numberTriangle = triangulate.NumTriangles;
+
+            var Z = (topface.GetSurface() as Plane).Origin.Z; // Z плоскости от точки расчета
+            ICollection<XYZ> pointCurve=new Collection<XYZ>();
             XYZ xMin, yMin;
             XYZ xMax, yMax;
             xMax = new XYZ(double.MinValue, 0, 0);
@@ -162,38 +172,18 @@ namespace BMCIModule
                 if (point.X < xMin.X) xMin = point;
                 if (point.Y < yMin.Y) yMin = point;
             }
-            
-            const double stepMin=1.25d; // шаг заполнения точками
-            /*
-            var amountStepX=Math.Abs((xMax.X-xMin.X)/stepMin);
-            var amountStepY=Math.Abs((yMax.Y-yMin.Y)/stepMin);
-
-            ICollection<XYZ> points = new List<XYZ>();
-            for (int i = 0; i < amountStepX;i++)
-            {
-                XYZ pointRandom;
-                for (int j = 0; j < amountStepY; j++)
-                {
-                    pointRandom = new XYZ(xMin.X + stepMin * i, yMin.Y + stepMin * j, 0);
-                    points.Add(pointRandom);
-                }
-            }
-            foreach (var point in points)
-            {
-                VisiblePointInRegion(triangulate.get_Triangle(0),point);
-            }
-            */
+           
             List<BMCIModule.Point> pointGenerate=new List<BMCIModule.Point>();
-            double heightTriangle = Math.Sqrt(3) / 2 * stepMin;
+            double heightTriangle = (Math.Sqrt(3)) * stepMin/2.0d;
             bool offset=false;
 
-            for (int i=0 ; i <(int)(Math.Abs(yMax.Y-yMin.Y)/heightTriangle)+1; i++)
+            for (int i=0 ; i <=(int)(Math.Abs(yMax.Y-yMin.Y)/heightTriangle); i++)
             {
-                for (int j = 0; j <(int)(Math.Abs((xMax.X - xMin.X) / stepMin))+1 ; j++)
+                for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X) / stepMin)); j++)
                 {
                     double posX = xMin.X + stepMin*j - (offset ? stepMin / 2 : 0);
                     double posY = yMin.Y + heightTriangle*i;
-                    pointGenerate.Add(new Point(posX,posY));
+                    pointGenerate.Add(new Point(posX,posY,Z));
                 }
                 offset=!offset;
             }
@@ -201,24 +191,26 @@ namespace BMCIModule
             ICollection<XYZ> pointRevit = new List<XYZ>();
             foreach (var point in pointGenerate)
             {
-                if (VisiblePointInRegion(curveLoop[0],point)) pointRevit.Add(new XYZ(point.X, point.Y, 0));
+                pointRevit.Add(new XYZ(point.X, point.Y, point.Z));
             }
-
             return pointRevit;
         }
     }
 
     public class Point
     {
-        public double X;
-        public double Y;
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
-        public Point(double x, double y)
+        public Point() { }
+
+
+        public Point(double x, double y, double z)
         {
-            X=x; Y=y;
+            X= x;
+            Y= y;
+            Z= z;
         }
     }
-
-    
-
 }
