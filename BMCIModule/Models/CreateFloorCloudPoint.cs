@@ -50,14 +50,13 @@ namespace BMCIModule
             double stepMin = 1.5d;
             // создаю сетку точек, так же их нужно проверить
             ICollection<XYZ> pointRevit=GeneratePointInSurface(topFace,stepMin);
-            
-            ICollection<XYZ> pointInFace = new List<XYZ>();
+            ICollection<XYZ> newCollection= new List<XYZ>(PointInFigure(pointRevit,topFace));
 
             #endregion
             using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
-                foreach (XYZ point in pointRevit)
+                foreach (XYZ point in newCollection)
                 {
                     //проверка на попадание точки в регион
 
@@ -102,7 +101,6 @@ namespace BMCIModule
 
         public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)
         {
-            IList<XYZ> pointLine = new List<XYZ>();
             GraphicsPath graphicsPath = new GraphicsPath();
 
              graphicsPath.AddLine((float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y, (float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y);
@@ -137,15 +135,35 @@ namespace BMCIModule
             return false;
         }
 
+        public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace)
+        {
+            Mesh trMesh = topFace.Triangulate(1);
+            int numberTriangle = trMesh.NumTriangles;
 
+            foreach (var point in points)
+            {
+                for (int i = 0; i < numberTriangle; i++)
+                {
+                    MeshTriangle triangleMEsh=trMesh.get_Triangle(i);
+                    if(VisiblePointInRegion(triangleMEsh,point)==false)
+                    {
+                        points.Remove(point);
+                    }
+                }
+            }
+            return points;
+        }
+
+        /*public bool CheckHits(XYZ point, MeshTriangle triangle)
+        {
+            XYZ vertexA = triangle.get_Vertex(0);
+            XYZ vertexB = triangle.get_Vertex(1);
+            XYZ vertexC=triangle.get_Vertex(2);
+
+
+        }*/
         public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin)
         {
-            //лютая фигня, нужно убрать 
-            // триангулировал поверхность, детализация высокая
-            Mesh triangulate = topface.Triangulate(1);
-            // количество треугольников
-            int numberTriangle = triangulate.NumTriangles;
-
             var Z = (topface.GetSurface() as Plane).Origin.Z; // Z плоскости от точки расчета
             ICollection<XYZ> pointCurve=new Collection<XYZ>();
             XYZ xMin, yMin;
@@ -170,7 +188,7 @@ namespace BMCIModule
                 if (point.Y < yMin.Y) yMin = point;
             }
            
-            List<BMCIModule.Point> pointGenerate=new List<BMCIModule.Point>();
+            List<XYZ> pointGenerate=new List<XYZ>();
             double heightTriangle = (Math.Sqrt(3)) * stepMin/2.0d;
             bool offset=false;
 
@@ -178,13 +196,12 @@ namespace BMCIModule
             {
                 for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X) / stepMin)); j++)
                 {
-                    double posX = xMin.X + stepMin*j - (offset ? stepMin / 2 : 0);
+                    double posX = xMin.X + stepMin*j + (offset ? stepMin / 2 : 0);
                     double posY = yMin.Y + heightTriangle*i;
-                    pointGenerate.Add(new Point(posX,posY,Z));
+                    pointGenerate.Add(new XYZ(posX,posY,Z));
                 }
                 offset=!offset;
             }
-            IList<CurveLoop> curveLoop = topface.GetEdgesAsCurveLoops();
             ICollection<XYZ> pointRevit = new List<XYZ>();
             foreach (var point in pointGenerate)
             {
@@ -193,7 +210,7 @@ namespace BMCIModule
             return pointRevit;
         }
     }
-
+    // почистить класс
     public class Point
     {
         public double X { get; set; }
