@@ -121,7 +121,7 @@ namespace BMCIModule
             return topFace;
         }
 
-        public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)
+        public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником.
         {
             GraphicsPath graphicsPath = new GraphicsPath();
 
@@ -132,31 +132,7 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        /*public bool VisiblePointInRegion(CurveLoop edgeSolid, Point point)// не очень рабочий метод через регион, есть фальш точки, скорее всего что-то ретяется при переходе из double в float
-        {
-            IList<XYZ> pointLine = new List<XYZ>();
-            GraphicsPath graphicsPath = new GraphicsPath();
-            foreach (var line in edgeSolid)
-            {
-                graphicsPath.AddLine((float)line.GetEndPoint(0).X, (float)line.GetEndPoint(0).Y, (float)line.GetEndPoint(1).X, (float)line.GetEndPoint(1).Y);
-            }
-            Region region = new Region(graphicsPath);
-            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
-            return false;
-        }
-        public bool VisiblePointInRegion(MeshTriangle triangle, Point point)
-        {
-            IList<XYZ> pointLine = new List<XYZ>();
-            GraphicsPath graphicsPath = new GraphicsPath();
-
-            graphicsPath.AddLine((float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y, (float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y);
-            graphicsPath.AddLine((float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y, (float)triangle.get_Vertex(2).X, (float)triangle.get_Vertex(2).Y);
-            graphicsPath.AddLine((float)triangle.get_Vertex(2).X, (float)triangle.get_Vertex(2).Y, (float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y);
-            Region region = new Region(graphicsPath);
-            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
-            return false;
-        }*/
-
+        
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace)
         {
             List<XYZ> pointReturn=new List<XYZ>();
@@ -185,15 +161,7 @@ namespace BMCIModule
             }
             return pointReturn;
         }
-
-        /*public bool CheckHits(XYZ point, MeshTriangle triangle)
-        {
-            XYZ vertexA = triangle.get_Vertex(0);
-            XYZ vertexB = triangle.get_Vertex(1);
-            XYZ vertexC=triangle.get_Vertex(2);
-
-
-        }*/
+        
         public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin)
         {
             var Z = (topface.GetSurface() as Plane).Origin.Z; // Z плоскости от точки расчета
@@ -237,7 +205,7 @@ namespace BMCIModule
             ICollection<XYZ> pointRevit = new List<XYZ>();
             foreach (var point in pointGenerate)
             {
-                pointRevit.Add(new XYZ(point.X, point.Y, 0.000000000));
+                pointRevit.Add(new XYZ(point.X, point.Y, 0.000000000));// изменить координату Z, так как в первой итерации эта координата из плиты.
             }
             return pointRevit;
         }
