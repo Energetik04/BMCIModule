@@ -3,7 +3,6 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections;
 using System.Collections.Generic;

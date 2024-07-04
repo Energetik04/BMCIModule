@@ -211,7 +211,7 @@ namespace BMCIModule
         }
     }
     // почистить класс
-    public class Point
+    public class Point // переписать поинт, сделать наследуемым от XYZ и расписать по теории графов 
     {
         public double X { get; set; }
         public double Y { get; set; }

@@ -6,9 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-
 
 
 namespace BMCIModule
