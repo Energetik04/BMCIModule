@@ -5,6 +5,7 @@ using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -47,22 +48,43 @@ namespace BMCIModule
             Face topFace=GetTopFace(selectFloor, doc);
             #region Триангуляция
 
-            double stepMin = 1.5d;
+            double stepMin = 3.28d;
             // создаю сетку точек, так же их нужно проверить
             ICollection<XYZ> pointRevit=GeneratePointInSurface(topFace,stepMin);
-            ICollection<XYZ> newCollection= new List<XYZ>(PointInFigure(pointRevit,topFace));
+            ICollection<XYZ> collection = PointInFigure(pointRevit, topFace);
 
             #endregion
             using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
-                foreach (XYZ point in newCollection)
+                foreach (XYZ point in collection)
                 {
                     //проверка на попадание точки в регион
 
                     var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки 
                     directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки 
                 }
+                tr.Commit();
+            }
+
+            TaskDialog.Show("Количяество точек",collection.Count.ToString());
+            using (Transaction tr = new Transaction(doc, "поехали в плиту"))
+            {
+                tr.Start();
+                    SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
+
+                    slabFloor.Enable();// открываем на редактирование
+                    Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+                    sw.Start();
+                    foreach (XYZ point in collection)
+                    {
+                        slabFloor.DrawPoint(point);
+                    }
+                    sw.Stop();
+                    TimeSpan ts = sw.Elapsed;
+                    string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+                        ts.Milliseconds / 10);
+                    TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
             }
             return Result.Succeeded;
@@ -110,7 +132,7 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        public bool VisiblePointInRegion(CurveLoop edgeSolid, Point point)// не очень рабочий метод через регион, есть фальш точки, скорее всего что-то ретяется при переходе из double в float
+        /*public bool VisiblePointInRegion(CurveLoop edgeSolid, Point point)// не очень рабочий метод через регион, есть фальш точки, скорее всего что-то ретяется при переходе из double в float
         {
             IList<XYZ> pointLine = new List<XYZ>();
             GraphicsPath graphicsPath = new GraphicsPath();
@@ -133,25 +155,35 @@ namespace BMCIModule
             Region region = new Region(graphicsPath);
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
-        }
+        }*/
 
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace)
         {
+            List<XYZ> pointReturn=new List<XYZ>();
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
-
+            int countMiss = 0;
             foreach (var point in points)
             {
                 for (int i = 0; i < numberTriangle; i++)
                 {
-                    MeshTriangle triangleMEsh=trMesh.get_Triangle(i);
-                    if(VisiblePointInRegion(triangleMEsh,point)==false)
+                    if (countMiss < numberTriangle)
                     {
-                        points.Remove(point);
+                        MeshTriangle triangleMEsh = trMesh.get_Triangle(i);
+                        if (VisiblePointInRegion(triangleMEsh, point) == true)
+                        {
+                            pointReturn.Add(point);
+                            break;
+                        }
+                        else
+                        {
+                            countMiss++;
+                        }
                     }
                 }
+                countMiss = 0;
             }
-            return points;
+            return pointReturn;
         }
 
         /*public bool CheckHits(XYZ point, MeshTriangle triangle)
@@ -198,14 +230,14 @@ namespace BMCIModule
                 {
                     double posX = xMin.X + stepMin*j + (offset ? stepMin / 2 : 0);
                     double posY = yMin.Y + heightTriangle*i;
-                    pointGenerate.Add(new XYZ(posX,posY,Z));
+                    pointGenerate.Add(new XYZ(posX,posY,0.000000000));
                 }
                 offset=!offset;
             }
             ICollection<XYZ> pointRevit = new List<XYZ>();
             foreach (var point in pointGenerate)
             {
-                pointRevit.Add(new XYZ(point.X, point.Y, point.Z));
+                pointRevit.Add(new XYZ(point.X, point.Y, 0.000000000));
             }
             return pointRevit;
         }
