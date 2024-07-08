@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Windows.Media;
 
 namespace BMCIModule
 {
@@ -80,6 +82,26 @@ namespace BMCIModule
                     {
                         slabFloor.DrawPoint(point);
                     }
+                    //
+                    SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
+                    /*SlabShapeVertexArrayIterator arrayIterator = vertexArray.ForwardIterator();
+                    foreach (SlabShapeVertex vertex in vertexArray)
+                    {
+                        while (arrayIterator.Current!=null)
+                        {
+                            if ((vertex.Position.X == (arrayIterator.Current as SlabShapeVertex).Position.X + stepMin)|| (vertex.Position.Y == (arrayIterator.Current as SlabShapeVertex).Position.Y + stepMin/2))
+                            {
+                                slabFloor.DrawSplitLine((arrayIterator.Current as SlabShapeVertex), vertex);
+                                arrayIterator.MoveNext();
+                            }
+                            else
+                            {
+                                arrayIterator.MoveNext();
+                            }
+                        }
+                    }*/
+                    
+                        //
                     sw.Stop();
                     TimeSpan ts = sw.Elapsed;
                     string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
@@ -121,17 +143,52 @@ namespace BMCIModule
             return topFace;
         }
 
-        public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником.
+        public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
         {
             GraphicsPath graphicsPath = new GraphicsPath();
 
-             graphicsPath.AddLine((float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y, (float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y);
+             graphicsPath.AddLine((float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y, (float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y);//очень тупой мув из double В float перегонять
              graphicsPath.AddLine((float)triangle.get_Vertex(1).X, (float)triangle.get_Vertex(1).Y, (float)triangle.get_Vertex(2).X, (float)triangle.get_Vertex(2).Y);
              graphicsPath.AddLine((float)triangle.get_Vertex(2).X, (float)triangle.get_Vertex(2).Y, (float)triangle.get_Vertex(0).X, (float)triangle.get_Vertex(0).Y);
             Region region = new Region(graphicsPath);
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
+
+        /*public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)// с треугольником пока не получается
+        {
+            var t1 = (triangle.get_Vertex(0).X - point.X) * (triangle.get_Vertex(0).Y - point.Y) - (triangle.get_Vertex(1).X - point.X) * (triangle.get_Vertex(1).Y - point.Y);
+            var t2 = (triangle.get_Vertex(1).X - point.X) * (triangle.get_Vertex(1).Y - point.Y) - (triangle.get_Vertex(2).X - point.X) * (triangle.get_Vertex(2).Y - point.Y);
+            var t3 = (triangle.get_Vertex(2).X - point.X) * (triangle.get_Vertex(2).Y - point.Y) - (triangle.get_Vertex(0).X - point.X) * (triangle.get_Vertex(0).Y - point.Y);
+            var t12= (triangle.get_Vertex(0).X - triangle.get_Vertex(2).X) * (triangle.get_Vertex(0).Y - triangle.get_Vertex(2).Y) - (triangle.get_Vertex(1).X - triangle.get_Vertex(2).X) * (triangle.get_Vertex(1).Y - triangle.get_Vertex(2).Y);
+            var t22= (triangle.get_Vertex(1).X - triangle.get_Vertex(0).X) * (triangle.get_Vertex(1).Y - triangle.get_Vertex(0).Y) - (triangle.get_Vertex(2).X - triangle.get_Vertex(0).X) * (triangle.get_Vertex(2).Y - triangle.get_Vertex(0).Y);
+            var t32= (triangle.get_Vertex(2).X - triangle.get_Vertex(1).X) * (triangle.get_Vertex(2).Y - triangle.get_Vertex(1).Y) - (triangle.get_Vertex(0).X - triangle.get_Vertex(1).X) * (triangle.get_Vertex(0).Y - triangle.get_Vertex(1).Y);
+
+            if ((t1>0&&t12>0)||(t1<0&&t12<0))
+            {
+                if ((t2 > 0 && t22 > 0) || (t2 < 0 && t22 < 0))
+                {
+                    if ((t3 > 0 && t32 > 0) || (t3 < 0 && t32 < 0))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+        }*/
+
         
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace)
         {
@@ -162,9 +219,8 @@ namespace BMCIModule
             return pointReturn;
         }
         
-        public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin)
+        public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin) // Высоту прописать
         {
-            var Z = (topface.GetSurface() as Plane).Origin.Z; // Z плоскости от точки расчета
             ICollection<XYZ> pointCurve=new Collection<XYZ>();
             XYZ xMin, yMin;
             XYZ xMax, yMax;
@@ -198,24 +254,63 @@ namespace BMCIModule
                 {
                     double posX = xMin.X + stepMin*j + (offset ? stepMin / 2 : 0);
                     double posY = yMin.Y + heightTriangle*i;
-                    pointGenerate.Add(new XYZ(posX,posY,0.000000000));
+                    pointGenerate.Add(new XYZ(posX,posY,(topface as PlanarFace).Origin.Z));
                 }
                 offset=!offset;
             }
-            ICollection<XYZ> pointRevit = new List<XYZ>();
-            foreach (var point in pointGenerate)
-            {
-                pointRevit.Add(new XYZ(point.X, point.Y, 0.000000000));// изменить координату Z, так как в первой итерации эта координата из плиты.
-            }
-            return pointRevit;
+            return pointGenerate;
         }
+
+        public ICollection<XYZ> GeneratePointCollection(Face topface)
+        {
+            ICollection<XYZ> pointCurve = new Collection<XYZ>();
+            double stepMin=1.25d;
+            XYZ xMin, yMin;
+            XYZ xMax, yMax;
+            xMax = new XYZ(double.MinValue, 0, 0);
+            yMax = new XYZ(0, double.MinValue, 0);
+            xMin = new XYZ(double.MaxValue, 0, 0);
+            yMin = new XYZ(0, double.MaxValue, 0);
+            foreach (var curve in topface.GetEdgesAsCurveLoops())
+            {
+                foreach (var line in curve)
+                {
+                    pointCurve.Add(line.GetEndPoint(0));
+                }
+            }
+            //координаты минимума и максимума 
+            foreach (var point in pointCurve)
+            {
+                if (point.X > xMax.X) xMax = point;
+                if (point.Y > yMax.Y) yMax = point;
+                if (point.X < xMin.X) xMin = point;
+                if (point.Y < yMin.Y) yMin = point;
+            }
+
+            List<XYZ> pointGenerate = new List<XYZ>();
+            double heightTriangle = (Math.Sqrt(3)) * stepMin / 2.0d;
+            bool offset = false;
+
+            for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle); i++)
+            {
+                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X) / stepMin)); j++)
+                {
+                    double posX = xMin.X + stepMin * j + (offset ? stepMin / 2 : 0);
+                    double posY = yMin.Y + heightTriangle * i;
+                    pointGenerate.Add(new XYZ(posX, posY, (topface as PlanarFace).Origin.Z));
+                }
+                offset = !offset;
+            }
+
+            return pointGenerate;
+        }
+
+        public void isInFigureWithBorders(){}
     }
     // почистить класс
-    public class Point // переписать поинт, сделать наследуемым от XYZ и расписать по теории графов 
+    /*public class Point:XYZ // переписать поинт, сделать наследуемым от XYZ и расписать по теории графов 
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        
 
         public Point() { }
 
@@ -226,5 +321,5 @@ namespace BMCIModule
             Y= y;
             Z= z;
         }
-    }
+    }*/
 }
