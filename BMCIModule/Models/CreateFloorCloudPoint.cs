@@ -3,13 +3,16 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Media;
+using Autodesk.Revit.DB.Mechanical;
 
 namespace BMCIModule
 {
@@ -52,9 +55,9 @@ namespace BMCIModule
 
             double stepMin = 3.28d;
             // создаю сетку точек, так же их нужно проверить
-            ICollection<XYZ> pointRevit= GeneratePointCollection(topFace,stepMin);
-            ICollection<XYZ> collection = PointInFigure(pointRevit, topFace);
-
+            ICollection<XYZ> pointRevit= GeneratePointCollection(topFace,ref stepMin);
+            ICollection<XYZ> collection = PointInFigure(pointRevit, topFace,ref stepMin);
+            // подумать крепко что делать с коллекцией точе
             #endregion
             using (Transaction tr = new Transaction(doc,"поехали"))
             {
@@ -81,6 +84,34 @@ namespace BMCIModule
                     foreach (XYZ point in collection)
                     {
                         slabFloor.DrawPoint(point);
+                    }
+
+                    SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
+                    //var vertexIterator = vertexArray.ForwardIterator() as VertexIterator;
+                    foreach (SlabShapeVertex vertex in vertexArray)
+                    {
+                        foreach (var vertexCurrentArray in vertexArray)
+                        {
+                            //while (vertexIterator.MoveNext())
+                            //{
+                            double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
+                            var vertexCurrent = vertexCurrentArray as SlabShapeVertex;//(vertexIterator as VertexIterator).Current as SlabShapeVertex;
+                            if ((Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin+0.1*stepMin || Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin - 0.1 * stepMin)
+                                &&((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.1 * hight || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.1 * hight || vertex.Position.Y==vertexCurrent.Position.Y)))
+                                /*((vertexCurrent.Position.X == vertex.Position.X + stepMin) ||
+                                 (vertexCurrent.Position.X == vertex.Position.X - stepMin) ||
+                                 (vertexCurrent.Position.X == vertex.Position.X - stepMin / 2d))
+                                && ((vertexCurrent.Position.Y == vertex.Position.Y - (Math.Sqrt(3)) * stepMin / 2.0d) ||
+                                    (vertexCurrent.Position.Y ==
+                                     vertex.Position.Y + (Math.Sqrt(3)) * stepMin / 2.0d)) ||
+                                (vertexCurrent.Position.Y == vertex.Position.Y)*/
+                                
+                            {
+                                slabFloor.DrawSplitLine(vertex, vertexCurrent);
+                            }
+                            //}
+                            // vertexIterator.Reset();
+                        }
                     }
                     sw.Stop();
                     TimeSpan ts = sw.Elapsed;
@@ -135,9 +166,8 @@ namespace BMCIModule
             return false;
         }
         
-        public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace)
+        public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace,ref double stepMin)
         {
-            double stepMin = 3.28d;
             List<XYZ> pointReturn=new List<XYZ>();
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
@@ -162,42 +192,6 @@ namespace BMCIModule
                 }
                 countMiss = 0;
             }
-
-            /*double dragpX=0, dragpY=0;
-            foreach (var point in points)
-            {
-                ICollection<XYZ> pointCollection = new List<XYZ>();
-                foreach (var pointC in points)
-                {
-                    if (((pointC.X == point.X + 3.28d) || (pointC.X == point.X - 3.28d) || (pointC.X == point.X - 3.28d/2d))&& ((pointC.Y == point.Y + (Math.Sqrt(3)) * stepMin / 2.0d) || (pointC.Y == point.Y - (Math.Sqrt(3)) * stepMin / 2.0d) || (pointC.Y == point.Y)))
-                    {
-                        pointCollection.Add(pointC);
-                    }
-                }
-
-                foreach (var pointHexMesh in pointCollection)
-                {
-
-                    for (int i = 0; i < numberTriangle; i++)
-                    {
-                        if (countMiss < numberTriangle)
-                        {
-                            MeshTriangle triangleMEsh = trMesh.get_Triangle(i);
-                            if (VisiblePointInRegion(triangleMEsh, pointHexMesh) == true)
-                            {
-                                dragpX = dragpX + pointHexMesh.X;
-                                dragpY = dragpY + pointHexMesh.Y;
-
-                            }
-                            else
-                            {
-                                countMiss++;
-                            }
-                        }
-                    }
-
-            }*/
-
             return pointReturn;
         }
         
@@ -243,10 +237,9 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        public ICollection<XYZ> GeneratePointCollection(Face topface,double stepmin)
+        public ICollection<XYZ> GeneratePointCollection(Face topface,ref double stepmin)
         {
             ICollection<XYZ> pointCurve = new Collection<XYZ>();
-            double stepMin=1.25d;
             XYZ xMin, yMin;
             XYZ xMax, yMax;
             xMax = new XYZ(double.MinValue, 0, 0);
@@ -270,14 +263,14 @@ namespace BMCIModule
             }
 
             List<XYZ> pointGenerate = new List<XYZ>();
-            double heightTriangle = (Math.Sqrt(3)) * stepMin / 2.0d;
+            double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
 
             for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle); i++)
             {
-                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X) / stepMin)); j++)
+                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X) / stepmin)); j++)
                 {
-                    double posX = xMin.X + stepMin * j + (offset ? stepMin / 2 : 0);
+                    double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
                     pointGenerate.Add(new XYZ(posX, posY, (topface as PlanarFace).Origin.Z));
                 }
@@ -286,6 +279,140 @@ namespace BMCIModule
             return pointGenerate;
         }
 
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //попытка соединить внутрянку
+        public Point addOrGetPoint(Dictionary<int, Point> graph, int value)
+        {
+            if (value == -1) return null;
+            Point pointGraph;
+            if (graph.TryGetValue(value,out pointGraph)) return pointGraph;
+            Point addPoint = new Point(value);
+            graph.Add(value,addPoint);
+            return addPoint;
+        }
+
+        //генерация графа
+        public Dictionary<int, Point> createGraph(int[][] graphData)
+        {
+            Dictionary<int, Point> graph = new Dictionary<int, Point>();
+            foreach (var VARIABLE in graphData)
+            {
+                Point getPoint = addOrGetPoint(graph, VARIABLE[0]);
+                Point adjacentPoint = addOrGetPoint(graph, VARIABLE[1]);
+                if(adjacentPoint==null) continue;
+                Edge edge = new Edge(adjacentPoint, VARIABLE[2]);
+                getPoint.edges.Add(edge);
+                adjacentPoint.parenst.Add(getPoint,edge);
+            }
+
+            return graph;
+        }
     }
-    
+
+
+    public class Point:XYZ
+    {
+        public int value { get; set; }// ключ узла может быть любой тип данных
+        public Point(double x,double y,double z)//создание узка из точки
+        {
+            new XYZ(x,y,z);
+        }
+        public HashSet<Edge> edges=new HashSet<Edge>();//ребра из узла
+        public Dictionary<Point,Edge> parenst=new Dictionary<Point,Edge>();//словарь который содержит список родителей 
+        public Point(int value)
+        {
+            this.value=value;
+        }
+    }
+
+    public class Edge
+    {
+        public Point pointEdge;
+        public int stepMin;
+
+        public Edge(Point pointEdge, int stepMin)
+        {
+            this.pointEdge = pointEdge;
+            this.stepMin = stepMin;
+        }
+    }
+
+    /*public class VertexIterator : SlabShapeVertexArrayIterator
+    {
+        readonly SlabShapeVertex[] _vertexArray;
+        int _index = -1;
+
+        public VertexIterator(SlabShapeVertex[] vertexArray)
+        {
+            _vertexArray = vertexArray;
+        }
+
+        public override object Current
+        {
+            get
+            {
+                return _vertexArray[_index];
+            }
+        }
+        public override bool MoveNext()
+        {
+            _index++;
+            return _index < _vertexArray.Length;
+        }
+
+        public override void Reset()
+        {
+            _index = -1;
+        }
+
+        internal override void deleteIterator()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override SlabShapeVertex fromIterator()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool hasIterator()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool incrementIterator()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void newIterator()
+        {
+            throw new NotImplementedException();
+        }
+    }*/
 }
