@@ -52,7 +52,7 @@ namespace BMCIModule
 
             double stepMin = 3.28d;
             // создаю сетку точек, так же их нужно проверить
-            ICollection<XYZ> pointRevit=GeneratePointInSurface(topFace,stepMin);
+            ICollection<XYZ> pointRevit= GeneratePointCollection(topFace,stepMin);
             ICollection<XYZ> collection = PointInFigure(pointRevit, topFace);
 
             #endregion
@@ -82,26 +82,6 @@ namespace BMCIModule
                     {
                         slabFloor.DrawPoint(point);
                     }
-                    //
-                    SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
-                    /*SlabShapeVertexArrayIterator arrayIterator = vertexArray.ForwardIterator();
-                    foreach (SlabShapeVertex vertex in vertexArray)
-                    {
-                        while (arrayIterator.Current!=null)
-                        {
-                            if ((vertex.Position.X == (arrayIterator.Current as SlabShapeVertex).Position.X + stepMin)|| (vertex.Position.Y == (arrayIterator.Current as SlabShapeVertex).Position.Y + stepMin/2))
-                            {
-                                slabFloor.DrawSplitLine((arrayIterator.Current as SlabShapeVertex), vertex);
-                                arrayIterator.MoveNext();
-                            }
-                            else
-                            {
-                                arrayIterator.MoveNext();
-                            }
-                        }
-                    }*/
-                    
-                        //
                     sw.Stop();
                     TimeSpan ts = sw.Elapsed;
                     string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
@@ -154,44 +134,10 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-
-        /*public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)// с треугольником пока не получается
-        {
-            var t1 = (triangle.get_Vertex(0).X - point.X) * (triangle.get_Vertex(0).Y - point.Y) - (triangle.get_Vertex(1).X - point.X) * (triangle.get_Vertex(1).Y - point.Y);
-            var t2 = (triangle.get_Vertex(1).X - point.X) * (triangle.get_Vertex(1).Y - point.Y) - (triangle.get_Vertex(2).X - point.X) * (triangle.get_Vertex(2).Y - point.Y);
-            var t3 = (triangle.get_Vertex(2).X - point.X) * (triangle.get_Vertex(2).Y - point.Y) - (triangle.get_Vertex(0).X - point.X) * (triangle.get_Vertex(0).Y - point.Y);
-            var t12= (triangle.get_Vertex(0).X - triangle.get_Vertex(2).X) * (triangle.get_Vertex(0).Y - triangle.get_Vertex(2).Y) - (triangle.get_Vertex(1).X - triangle.get_Vertex(2).X) * (triangle.get_Vertex(1).Y - triangle.get_Vertex(2).Y);
-            var t22= (triangle.get_Vertex(1).X - triangle.get_Vertex(0).X) * (triangle.get_Vertex(1).Y - triangle.get_Vertex(0).Y) - (triangle.get_Vertex(2).X - triangle.get_Vertex(0).X) * (triangle.get_Vertex(2).Y - triangle.get_Vertex(0).Y);
-            var t32= (triangle.get_Vertex(2).X - triangle.get_Vertex(1).X) * (triangle.get_Vertex(2).Y - triangle.get_Vertex(1).Y) - (triangle.get_Vertex(0).X - triangle.get_Vertex(1).X) * (triangle.get_Vertex(0).Y - triangle.get_Vertex(1).Y);
-
-            if ((t1>0&&t12>0)||(t1<0&&t12<0))
-            {
-                if ((t2 > 0 && t22 > 0) || (t2 < 0 && t22 < 0))
-                {
-                    if ((t3 > 0 && t32 > 0) || (t3 < 0 && t32 < 0))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-
-        }*/
-
         
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace)
         {
+            double stepMin = 3.28d;
             List<XYZ> pointReturn=new List<XYZ>();
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
@@ -216,6 +162,42 @@ namespace BMCIModule
                 }
                 countMiss = 0;
             }
+
+            /*double dragpX=0, dragpY=0;
+            foreach (var point in points)
+            {
+                ICollection<XYZ> pointCollection = new List<XYZ>();
+                foreach (var pointC in points)
+                {
+                    if (((pointC.X == point.X + 3.28d) || (pointC.X == point.X - 3.28d) || (pointC.X == point.X - 3.28d/2d))&& ((pointC.Y == point.Y + (Math.Sqrt(3)) * stepMin / 2.0d) || (pointC.Y == point.Y - (Math.Sqrt(3)) * stepMin / 2.0d) || (pointC.Y == point.Y)))
+                    {
+                        pointCollection.Add(pointC);
+                    }
+                }
+
+                foreach (var pointHexMesh in pointCollection)
+                {
+
+                    for (int i = 0; i < numberTriangle; i++)
+                    {
+                        if (countMiss < numberTriangle)
+                        {
+                            MeshTriangle triangleMEsh = trMesh.get_Triangle(i);
+                            if (VisiblePointInRegion(triangleMEsh, pointHexMesh) == true)
+                            {
+                                dragpX = dragpX + pointHexMesh.X;
+                                dragpY = dragpY + pointHexMesh.Y;
+
+                            }
+                            else
+                            {
+                                countMiss++;
+                            }
+                        }
+                    }
+
+            }*/
+
             return pointReturn;
         }
         
@@ -261,7 +243,7 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        public ICollection<XYZ> GeneratePointCollection(Face topface)
+        public ICollection<XYZ> GeneratePointCollection(Face topface,double stepmin)
         {
             ICollection<XYZ> pointCurve = new Collection<XYZ>();
             double stepMin=1.25d;
@@ -301,25 +283,9 @@ namespace BMCIModule
                 }
                 offset = !offset;
             }
-
             return pointGenerate;
         }
 
-        public void isInFigureWithBorders(){}
     }
-    // почистить класс
-    /*public class Point:XYZ // переписать поинт, сделать наследуемым от XYZ и расписать по теории графов 
-    {
-        
-
-        public Point() { }
-
-
-        public Point(double x, double y, double z)
-        {
-            X= x;
-            Y= y;
-            Z= z;
-        }
-    }*/
+    
 }
