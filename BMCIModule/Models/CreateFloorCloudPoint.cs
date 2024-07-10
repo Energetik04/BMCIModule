@@ -51,29 +51,35 @@ namespace BMCIModule
 
             //Получить Верхнюю грань
             Face topFace=GetTopFace(selectFloor, doc);
+
             #region Триангуляция
 
-            double stepMin = 3.28d;
+            double stepMin = 1d;
             // создаю сетку точек, так же их нужно проверить
             ICollection<XYZ> pointRevit= GeneratePointCollection(topFace,ref stepMin);
             ICollection<XYZ> collection = PointInFigure(pointRevit, topFace,ref stepMin);
             // подумать крепко что делать с коллекцией точе
             #endregion
-            using (Transaction tr = new Transaction(doc,"поехали"))
+
+            #region Визуализация точками
+
+            /*using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
                 foreach (XYZ point in collection)
                 {
                     //проверка на попадание точки в регион
 
-                    var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки 
-                    directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки 
+                    var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки
+                    directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки
                 }
                 tr.Commit();
-            }
-
+            }*/
+            
+            #endregion
+            
             TaskDialog.Show("Количяество точек",collection.Count.ToString());
-            using (Transaction tr = new Transaction(doc, "поехали в плиту"))
+            using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
                     SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
@@ -85,38 +91,39 @@ namespace BMCIModule
                     {
                         slabFloor.DrawPoint(point);
                     }
-
+                    double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
                     SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
-                    //var vertexIterator = vertexArray.ForwardIterator() as VertexIterator;
+                    Dictionary<int, SlabShapeCreaseArray> tableHashSet = new Dictionary<int, SlabShapeCreaseArray>();
                     foreach (SlabShapeVertex vertex in vertexArray)
                     {
+                        int count = 0;
+                        
                         foreach (var vertexCurrentArray in vertexArray)
                         {
-                            //while (vertexIterator.MoveNext())
-                            //{
-                            double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
-                            var vertexCurrent = vertexCurrentArray as SlabShapeVertex;//(vertexIterator as VertexIterator).Current as SlabShapeVertex;
+                            var vertexCurrent = vertexCurrentArray as SlabShapeVertex;
                             if ((Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin+0.1*stepMin || Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin - 0.1 * stepMin)
-                                &&((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.1 * hight || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.1 * hight || vertex.Position.Y==vertexCurrent.Position.Y)))
-                                /*((vertexCurrent.Position.X == vertex.Position.X + stepMin) ||
-                                 (vertexCurrent.Position.X == vertex.Position.X - stepMin) ||
-                                 (vertexCurrent.Position.X == vertex.Position.X - stepMin / 2d))
-                                && ((vertexCurrent.Position.Y == vertex.Position.Y - (Math.Sqrt(3)) * stepMin / 2.0d) ||
-                                    (vertexCurrent.Position.Y ==
-                                     vertex.Position.Y + (Math.Sqrt(3)) * stepMin / 2.0d)) ||
-                                (vertexCurrent.Position.Y == vertex.Position.Y)*/
-                                
+                                &&((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.1 * hight || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.1 * hight || vertex.Position.Y==vertexCurrent.Position.Y))) 
                             {
-                                slabFloor.DrawSplitLine(vertex, vertexCurrent);
+                                count ++;
+                                int sumHashCrease = vertex.GetHashCode() + vertexCurrent.GetHashCode();// очень стремный момент с суммой хэшей
+                                if (!tableHashSet.ContainsKey(sumHashCrease))
+                                {
+                                    SlabShapeCreaseArray drawSplitLine = slabFloor.DrawSplitLine(vertex, vertexCurrent);
+                                    tableHashSet.Add(sumHashCrease,drawSplitLine);
+                                }
+                                if (count == 6)
+                                {
+                                    break;
+                                }
                             }
-                            //}
-                            // vertexIterator.Reset();
                         }
                     }
                     sw.Stop();
+                    //время выполение
                     TimeSpan ts = sw.Elapsed;
                     string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                         ts.Milliseconds / 10);
+
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
             }
@@ -165,6 +172,11 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
+
+        public bool VisiblePointInRegion(ref Face topFace, ref XYZ point)
+        {
+            return false;
+        }
         
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace,ref double stepMin)
         {
@@ -194,7 +206,6 @@ namespace BMCIModule
             }
             return pointReturn;
         }
-        
         public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin) // Высоту прописать
         {
             ICollection<XYZ> pointCurve=new Collection<XYZ>();
@@ -219,16 +230,14 @@ namespace BMCIModule
                 if (point.X < xMin.X) xMin = point;
                 if (point.Y < yMin.Y) yMin = point;
             }
-           
             List<XYZ> pointGenerate=new List<XYZ>();
             double heightTriangle = (Math.Sqrt(3)) * stepMin/2.0d;
             bool offset=false;
-
             for (int i=0 ; i <=(int)(Math.Abs(yMax.Y-yMin.Y)/heightTriangle); i++)
             {
                 for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X) / stepMin)); j++)
                 {
-                    double posX = xMin.X + stepMin*j + (offset ? stepMin / 2 : 0);
+                    double posX = xMin.X + stepMin*j - (offset ? stepMin / 2d : 0);
                     double posY = yMin.Y + heightTriangle*i;
                     pointGenerate.Add(new XYZ(posX,posY,(topface as PlanarFace).Origin.Z));
                 }
@@ -361,58 +370,4 @@ namespace BMCIModule
             this.stepMin = stepMin;
         }
     }
-
-    /*public class VertexIterator : SlabShapeVertexArrayIterator
-    {
-        readonly SlabShapeVertex[] _vertexArray;
-        int _index = -1;
-
-        public VertexIterator(SlabShapeVertex[] vertexArray)
-        {
-            _vertexArray = vertexArray;
-        }
-
-        public override object Current
-        {
-            get
-            {
-                return _vertexArray[_index];
-            }
-        }
-        public override bool MoveNext()
-        {
-            _index++;
-            return _index < _vertexArray.Length;
-        }
-
-        public override void Reset()
-        {
-            _index = -1;
-        }
-
-        internal override void deleteIterator()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override SlabShapeVertex fromIterator()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override bool hasIterator()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override bool incrementIterator()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override void newIterator()
-        {
-            throw new NotImplementedException();
-        }
-    }*/
 }
