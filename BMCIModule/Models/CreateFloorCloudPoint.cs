@@ -173,10 +173,10 @@ namespace BMCIModule
             return false;
         }
 
-        public bool VisiblePointInRegion(ref Face topFace, ref XYZ point)
+        /*public bool VisiblePointInRegion(ref Face topFace, ref XYZ point)
         {
             return false;
-        }
+        }*/
         
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace,ref double stepMin)
         {
@@ -270,11 +270,9 @@ namespace BMCIModule
                 if (point.X < xMin.X) xMin = point;
                 if (point.Y < yMin.Y) yMin = point;
             }
-
             List<XYZ> pointGenerate = new List<XYZ>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
-
             for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle); i++)
             {
                 for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X) / stepmin)); j++)
@@ -288,7 +286,36 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        
+        public class Point : XYZ
+        {
+            public double X { get; set ; }
+            public double Y { get; set; }
+            public double Z { get; set; }
+            public int _enumPoint { get; set; }
+            public XYZ point { get; set; }
+
+            public ICollection<Point> pointForHex;
+
+            public Point(double x, double y, double z)
+            {
+                point=new XYZ(x, y, z);
+            }
+            public enum isInFigureWithBorders:int
+            {
+                inBorders=0,
+                iNFigure=1,
+                outFigure=2
+            }
+
+            //проверка попадания точек в фигуру
+
+
+            public XYZ PointTransfer(XYZ transferCoordination)
+            {
+                XYZ transferPoint = new XYZ(transferCoordination.X,transferCoordination.Y,transferCoordination.Z);
+                return transferPoint;
+            }
+        }
 
 
 
@@ -315,7 +342,7 @@ namespace BMCIModule
 
 
         //попытка соединить внутрянку
-        public Point addOrGetPoint(Dictionary<int, Point> graph, int value)
+        /*public Point addOrGetPoint(Dictionary<int, Point> graph, int value)
         {
             if (value == -1) return null;
             Point pointGraph;
@@ -368,6 +395,6 @@ namespace BMCIModule
         {
             this.pointEdge = pointEdge;
             this.stepMin = stepMin;
-        }
+        }*/
     }
 }
