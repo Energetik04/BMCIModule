@@ -13,6 +13,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Media;
 using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.PointClouds;
+using PointCollection = Autodesk.Revit.DB.PointClouds.PointCollection;
 
 namespace BMCIModule
 {
@@ -35,10 +37,11 @@ namespace BMCIModule
             Selection choiceFloor = uidoc.Selection;
             Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
             Element selectFloor = doc.GetElement(choiceFloorRef);
+            ElementId selectFloorId = selectFloor.Id;
 
 
             #endregion
-            /*
+            
             #region SelectPointCloud
 
             TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
@@ -47,7 +50,7 @@ namespace BMCIModule
             Element selectPointCloud = doc.GetElement(choicePointCloudRef);
             
             #endregion
-            */
+            
 
             //Получить Верхнюю грань
             Face topFace=GetTopFace(selectFloor, doc);
@@ -119,6 +122,7 @@ namespace BMCIModule
                         }
                     }
                     sw.Stop();
+                   
                     //время выполение
                     TimeSpan ts = sw.Elapsed;
                     string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
@@ -126,6 +130,38 @@ namespace BMCIModule
 
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
+            }
+
+            using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
+            {
+                tr2.Start();
+                Options op = new Options();// default setting
+                List<GeometryObject> list = new List<GeometryObject>();
+                Element selectorNewFloor = doc.GetElement(selectFloorId);
+                foreach (var instance in selectorNewFloor.get_Geometry(op))
+                {
+                    if (instance is Solid) list.Add(instance);
+                }
+
+                Solid solid = list[0] as Solid;
+                FaceArray faceArray = solid.Faces;
+                XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
+                List<Face> topFaceArray = new List<Face>();
+                foreach (Face face in faceArray)
+                {
+                    if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) topFaceArray.Add(face); // не доходят все точки 
+                }
+                // Надо словарь юзать и сопоставить значение Face и Plane
+                PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
+                IList<Plane> faceToPlane = new List<Plane>();
+                foreach (var faceToPlaneFace in topFaceArray)
+                {
+                    faceToPlane.Add(faceToPlaneFace.GetSurface() as Plane);
+                }
+
+                PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 200);
+                tr2.Commit();
             }
             return Result.Succeeded;
         }
