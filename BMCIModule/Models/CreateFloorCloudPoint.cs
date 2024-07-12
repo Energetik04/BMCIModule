@@ -146,21 +146,83 @@ namespace BMCIModule
                 Solid solid = list[0] as Solid;
                 FaceArray faceArray = solid.Faces;
                 XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
+                XYZ normalNegative = new XYZ(0.000000000, 0.000000000, -1.000000000);
                 List<Face> topFaceArray = new List<Face>();
                 foreach (Face face in faceArray)
                 {
                     if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) topFaceArray.Add(face); // не доходят все точки 
                 }
-                // Надо словарь юзать и сопоставить значение Face и Plane
+                List<Face> bottomFaceArray = new List<Face>();
+                double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
+                double zMax=selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
                 PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
-                IList<Plane> faceToPlane = new List<Plane>();
-                foreach (var faceToPlaneFace in topFaceArray)
+                IList<PointCollection> collectionPointCollection = new List<PointCollection>();
+                foreach (Face face in topFaceArray)
                 {
-                    faceToPlane.Add(faceToPlaneFace.GetSurface() as Plane);
+                    CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
+                    List<XYZ> pointMeshMax= new List<XYZ>();
+                    List<XYZ> pointMeshMin=new List<XYZ>();
+                    foreach (Line getLine in curve)
+                    {
+                        pointMeshMax.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMax));
+                        pointMeshMin.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMin));
+                    }
+                    Plane planeMaxHeight = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMax[2]);
+                    Plane planeMinHeight = Plane.CreateByThreePoints(pointMeshMin[0], pointMeshMin[1], pointMeshMin[2]);
+                    IList<Plane> faceToPlane= new List<Plane>();
+                    faceToPlane.Add(planeMaxHeight);
+                    faceToPlane.Add(planeMinHeight);
+                    PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
+                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 200);
+                    collectionPointCollection.Add(pointCollection);
                 }
 
-                PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
-                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 200);
+                /*//нерабочая дрысня
+                foreach (Face remainsFace in faceArray)
+                {
+                        if (topFaceArray.Contains(remainsFace))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if ((remainsFace as PlanarFace).FaceNormal.ToString().Equals(normalNegative.ToString()))
+                            {
+                                bottomFaceArray.Add(remainsFace);
+                            }
+                        }
+                }
+                Dictionary<Face,Face> dictionaryFace= new Dictionary<Face,Face>();
+                foreach (var getTopFace in topFaceArray)
+                {
+                    foreach (var getBottomFace in bottomFaceArray)
+                    {
+                        int count = 0;
+                        if ((((getTopFace as PlanarFace).Origin.X == (getBottomFace as PlanarFace).Origin.X) &&
+                             ((getTopFace as PlanarFace).Origin.Y == (getBottomFace as PlanarFace).Origin.Y)))
+                        {
+                            var topFaceCurveLoop = getTopFace.GetEdgesAsCurveLoops();
+                            var bottomFaceCurveLoop= getBottomFace.GetEdgesAsCurveLoops();
+                            var topFaceGetCurveLoop = topFaceCurveLoop[0];
+                            var bottomFaceGetCurveLoop = bottomFaceCurveLoop[0];
+                            foreach (Line topLine in topFaceGetCurveLoop)
+                            {
+                                foreach (Line bottomLine in bottomFaceGetCurveLoop)
+                                {
+                                    if (((topLine.Origin.X==bottomLine.Origin.X))&&((topLine.Direction.X==bottomLine.Direction.X) && (topLine.Direction.Y==bottomLine.Direction.Y)))
+                                    {
+                                        count++;
+                                    }
+                                }
+                                if (count == topFaceGetCurveLoop.Count())
+                                {
+                                    dictionaryFace.Add(getTopFace,getBottomFace);
+                                }
+                            }
+                        }
+                    }
+                }*/
+                // Надо словарь юзать и сопоставить значение Face и Plane
                 tr2.Commit();
             }
             return Result.Succeeded;
