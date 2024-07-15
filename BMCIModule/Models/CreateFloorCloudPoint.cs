@@ -3,16 +3,11 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Windows.Media;
-using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.PointClouds;
 using PointCollection = Autodesk.Revit.DB.PointClouds.PointCollection;
 
@@ -167,11 +162,30 @@ namespace BMCIModule
                         pointMeshMax.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMax));
                         pointMeshMin.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMin));
                     }
+                    //плоскости фигуры по 3 точкам
                     Plane planeMaxHeight = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMax[2]);
                     Plane planeMinHeight = Plane.CreateByThreePoints(pointMeshMin[0], pointMeshMin[1], pointMeshMin[2]);
+                    Plane figurebokovina1=Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMin[0]);
+                    Plane figurebokovina2 = Plane.CreateByThreePoints(pointMeshMax[1], pointMeshMax[2], pointMeshMin[1]);
+                    Plane figurebokovina3 = Plane.CreateByThreePoints(pointMeshMax[2], pointMeshMax[0], pointMeshMin[2]);
+
+                    XYZ reversNormalMaxheight =new XYZ(planeMaxHeight.Normal.X,planeMaxHeight.Normal.Y,planeMaxHeight.Normal.Z*-1);
+
+                    XYZ reversNormalFigureBokovina1=new XYZ(figurebokovina1.Normal.X,figurebokovina1.Normal.Y,-1*figurebokovina1.Normal.Z);
+                    XYZ reversNormalFigureBokovina2 = new XYZ(figurebokovina2.Normal.X, figurebokovina2.Normal.Y, -1 * figurebokovina2.Normal.Z);
+                    XYZ reversNormalFigureBokovina3 = new XYZ(figurebokovina3.Normal.X, figurebokovina3.Normal.Y, -1 * figurebokovina3.Normal.Z);
+
+                    Plane reversFigureBokovina1=Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina1,figurebokovina1.Origin);
+                    Plane reversFigureBokovina2 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina2, figurebokovina2.Origin);
+                    Plane reversFigureBokovina3 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina3, figurebokovina3.Origin);
+
+                    Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
                     IList<Plane> faceToPlane= new List<Plane>();
-                    faceToPlane.Add(planeMaxHeight);
+                    faceToPlane.Add(reversPlaneMaxHeight);
                     faceToPlane.Add(planeMinHeight);
+                    faceToPlane.Add(reversFigureBokovina1);
+                    faceToPlane.Add(reversFigureBokovina2);
+                    faceToPlane.Add(reversFigureBokovina3);
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                     PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 200);
                     collectionPointCollection.Add(pointCollection);
