@@ -130,6 +130,8 @@ namespace BMCIModule
             using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
                 tr2.Start();
+                Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+                sw.Start();
                 Options op = new Options();// default setting
                 List<GeometryObject> list = new List<GeometryObject>();
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
@@ -187,56 +189,16 @@ namespace BMCIModule
                     faceToPlane.Add(reversFigureBokovina2);
                     faceToPlane.Add(reversFigureBokovina3);
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
-                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 200);
+                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 500);
                     collectionPointCollection.Add(pointCollection);
                 }
+                sw.Stop();
+                TimeSpan ts = sw.Elapsed;
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
 
-                /*//нерабочая дрысня
-                foreach (Face remainsFace in faceArray)
-                {
-                        if (topFaceArray.Contains(remainsFace))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            if ((remainsFace as PlanarFace).FaceNormal.ToString().Equals(normalNegative.ToString()))
-                            {
-                                bottomFaceArray.Add(remainsFace);
-                            }
-                        }
-                }
-                Dictionary<Face,Face> dictionaryFace= new Dictionary<Face,Face>();
-                foreach (var getTopFace in topFaceArray)
-                {
-                    foreach (var getBottomFace in bottomFaceArray)
-                    {
-                        int count = 0;
-                        if ((((getTopFace as PlanarFace).Origin.X == (getBottomFace as PlanarFace).Origin.X) &&
-                             ((getTopFace as PlanarFace).Origin.Y == (getBottomFace as PlanarFace).Origin.Y)))
-                        {
-                            var topFaceCurveLoop = getTopFace.GetEdgesAsCurveLoops();
-                            var bottomFaceCurveLoop= getBottomFace.GetEdgesAsCurveLoops();
-                            var topFaceGetCurveLoop = topFaceCurveLoop[0];
-                            var bottomFaceGetCurveLoop = bottomFaceCurveLoop[0];
-                            foreach (Line topLine in topFaceGetCurveLoop)
-                            {
-                                foreach (Line bottomLine in bottomFaceGetCurveLoop)
-                                {
-                                    if (((topLine.Origin.X==bottomLine.Origin.X))&&((topLine.Direction.X==bottomLine.Direction.X) && (topLine.Direction.Y==bottomLine.Direction.Y)))
-                                    {
-                                        count++;
-                                    }
-                                }
-                                if (count == topFaceGetCurveLoop.Count())
-                                {
-                                    dictionaryFace.Add(getTopFace,getBottomFace);
-                                }
-                            }
-                        }
-                    }
-                }*/
-                // Надо словарь юзать и сопоставить значение Face и Plane
+                TaskDialog.Show("Время выполнения", elapsedTime);
+                
                 tr2.Commit();
             }
             return Result.Succeeded;
