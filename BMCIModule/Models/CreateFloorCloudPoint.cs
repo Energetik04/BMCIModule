@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using Autodesk.Revit.DB.PointClouds;
 using PointCollection = Autodesk.Revit.DB.PointClouds.PointCollection;
 
@@ -153,7 +154,7 @@ namespace BMCIModule
                 double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
                 double zMax=selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
                 PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
-                IList<PointCollection> collectionPointCollection = new List<PointCollection>();
+                IList<List<XYZ>> collectionPointCollection = new List<List<XYZ>>();
                 foreach (Face face in topFaceArray)
                 {
                     CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
@@ -189,8 +190,11 @@ namespace BMCIModule
                     faceToPlane.Add(reversFigureBokovina2);
                     faceToPlane.Add(reversFigureBokovina3);
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
-                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001, 500);
-                    collectionPointCollection.Add(pointCollection);
+                    Transform pointTransform = pcInstance.GetTotalTransform();
+
+                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001,500);
+                    var variable=pointCollection.Select(x => pointTransform.OfPoint((XYZ) x)).ToList();
+                    collectionPointCollection.Add(variable);
                 }
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
