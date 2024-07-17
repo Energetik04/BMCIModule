@@ -95,3 +95,4 @@ D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInput
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
+D:\BMCIModule\BMCIModule\BMCIModule\bin\Debug\UIFramework.dll

@@ -192,7 +192,7 @@ namespace BMCIModule
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                     Transform pointTransform = pcInstance.GetTotalTransform();
 
-                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001,500);
+                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001,500);// как-будто надо увеличить количество точек
                     var variable=pointCollection.Select(x => pointTransform.OfPoint((XYZ) x)).ToList();
                     collectionPointCollection.Add(variable);
                 }
