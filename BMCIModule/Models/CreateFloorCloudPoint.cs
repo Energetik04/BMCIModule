@@ -250,12 +250,6 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-
-        /*public bool VisiblePointInRegion(ref Face topFace, ref XYZ point)
-        {
-            return false;
-        }*/
-        
         public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace,ref double stepMin)
         {
             List<XYZ> pointReturn=new List<XYZ>();
@@ -366,9 +360,9 @@ namespace BMCIModule
 
         public class Point : XYZ
         {
-            public double X { get; set ; }
-            public double Y { get; set; }
-            public double Z { get; set; }
+            double X { get; set ; }
+            double Y { get; set; }
+            double Z { get; set; }
             public int _enumPoint { get; set; }
             public XYZ point { get; set; }
 

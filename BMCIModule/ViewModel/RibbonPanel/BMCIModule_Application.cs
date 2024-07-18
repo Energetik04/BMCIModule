@@ -38,13 +38,13 @@ namespace BMCIModule
 
             AW.RibbonControl ribbon = AW.ComponentManager.Ribbon;
             // картинку на фон кнопок
-            ImageSource imgbg = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logo.png"));
+            ImageSource imgbg = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logov2.png"));
             ImageBrush picBrush = new ImageBrush();
             picBrush.ImageSource = imgbg;
             picBrush.AlignmentX = AlignmentX.Center;
             picBrush.AlignmentY = AlignmentY.Center;
             picBrush.Stretch = Stretch.None;
-            picBrush.TileMode = TileMode.FlipXY;
+            picBrush.TileMode = TileMode.None;
 
             //градиент цвет панели
             LinearGradientBrush gradientBrush = new LinearGradientBrush();
@@ -65,6 +65,7 @@ namespace BMCIModule
                         {
                             //panel.ResizeItemWidthPriority;
                             panel.CustomPanelBackground = picBrush;
+                            panel.ResizeStyle = AW.RibbonResizeStyles.NeverHideText;
                         }
                         //panel.CustomPanelBackground = picBrush; // use your picture
                         //panel.CustomPanelBackground 
