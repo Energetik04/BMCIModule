@@ -154,6 +154,7 @@
     <Compile Include="Infrastructure\Interface\Base\IDialogService.cs" />
     <Compile Include="Models\CreateFloorCloudPoint.cs" />
     <Compile Include="Models\CreateFloorDXF.cs" />
+    <Compile Include="Models\PointInFigureWithBorders.cs" />
     <Compile Include="Models\СreateAnalysisFloor.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

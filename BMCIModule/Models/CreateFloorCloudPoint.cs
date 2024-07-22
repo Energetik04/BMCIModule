@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using Autodesk.Revit.DB.PointClouds;
+using BMCIModule.Models;
 using PointCollection = Autodesk.Revit.DB.PointClouds.PointCollection;
 
 namespace BMCIModule
@@ -55,9 +56,10 @@ namespace BMCIModule
 
             double stepMin = 1d;
             // создаю сетку точек, так же их нужно проверить
-            ICollection<XYZ> pointRevit= GeneratePointCollection(topFace,ref stepMin);
-            ICollection<XYZ> collection = PointInFigure(pointRevit, topFace,ref stepMin);
-            // подумать крепко что делать с коллекцией точе
+            ICollection<Point> pointRevit= GeneratePointCollection(topFace,ref stepMin);
+            ICollection<Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
+
+            // теперь нужно перебрать все точки по HEX и начать проверку - потом перенос + точка супер-позиции
             #endregion
 
             #region Визуализация точками
@@ -86,10 +88,10 @@ namespace BMCIModule
                     slabFloor.Enable();// открываем на редактирование
                     Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                     sw.Start();
-                    foreach (XYZ point in collection)
+                    /*foreach (XYZ point in collection)
                     {
                         slabFloor.DrawPoint(point);
-                    }
+                    }*/
                     double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
                     SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
                     Dictionary<int, SlabShapeCreaseArray> tableHashSet = new Dictionary<int, SlabShapeCreaseArray>();
@@ -127,7 +129,7 @@ namespace BMCIModule
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
             }
-
+            
             using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
                 tr2.Start();
@@ -230,7 +232,7 @@ namespace BMCIModule
             Solid solid = list[0] as Solid;
             FaceArray faceSolid = solid.Faces;
             Face topFace = null;
-            XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000); // с ветором 1 , для того чтобы вытащить парраллельно оси Z 
+            XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000); // с вектором 1 , для того чтобы вытащить парраллельно оси Z 
             foreach (Face face in faceSolid)
             {
                 //строковое сравнение векторов(надо немного продумать)
@@ -239,7 +241,9 @@ namespace BMCIModule
             return topFace;
         }
 
-        public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
+
+        //скорее всего мусор
+        /*public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
         {
             GraphicsPath graphicsPath = new GraphicsPath();
 
@@ -249,14 +253,26 @@ namespace BMCIModule
             Region region = new Region(graphicsPath);
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
-        }
-        public ICollection<XYZ> PointInFigure(ICollection<XYZ> points, Face topFace,ref double stepMin)
+        }*/
+        public ICollection<Point> IsInFigureWithBorders(ICollection<Point> points, Face topFace,ref double stepMin)
         {
-            List<XYZ> pointReturn=new List<XYZ>();
-            Mesh trMesh = topFace.Triangulate(1);
-            int numberTriangle = trMesh.NumTriangles;
-            int countMiss = 0;
+            List<Point> pointReturn=new List<Point>();
+            //Mesh trMesh = topFace.Triangulate(1);
+            //int numberTriangle = trMesh.NumTriangles;
+            //int countMiss = 0;
+            
+
             foreach (var point in points)
+            {
+                UV point2d=new UV(point.X,point.Y);
+                if (topFace.IsInside(point2d))
+                {
+                    pointReturn.Add(point);
+                }
+            }
+
+
+            /*foreach (var point in points)
             {
                 for (int i = 0; i < numberTriangle; i++)
                 {
@@ -275,50 +291,11 @@ namespace BMCIModule
                     }
                 }
                 countMiss = 0;
-            }
+            }*/
             return pointReturn;
         }
-        public ICollection<XYZ> GeneratePointInSurface(Face topface,double stepMin) // Высоту прописать
-        {
-            ICollection<XYZ> pointCurve=new Collection<XYZ>();
-            XYZ xMin, yMin;
-            XYZ xMax, yMax;
-            xMax = new XYZ(double.MinValue, 0, 0);
-            yMax = new XYZ(0, double.MinValue, 0);
-            xMin = new XYZ(double.MaxValue, 0, 0);
-            yMin = new XYZ(0, double.MaxValue, 0);
-            foreach (var curve in topface.GetEdgesAsCurveLoops())
-            {
-                foreach (var line in curve)
-                {
-                    pointCurve.Add(line.GetEndPoint(0));
-                }
-            }
-            //координаты минимума и максимума 
-            foreach (var point in pointCurve)
-            {
-                if (point.X > xMax.X) xMax = point;
-                if (point.Y > yMax.Y) yMax = point;
-                if (point.X < xMin.X) xMin = point;
-                if (point.Y < yMin.Y) yMin = point;
-            }
-            List<XYZ> pointGenerate=new List<XYZ>();
-            double heightTriangle = (Math.Sqrt(3)) * stepMin/2.0d;
-            bool offset=false;
-            for (int i=0 ; i <=(int)(Math.Abs(yMax.Y-yMin.Y)/heightTriangle); i++)
-            {
-                for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X) / stepMin)); j++)
-                {
-                    double posX = xMin.X + stepMin*j - (offset ? stepMin / 2d : 0);
-                    double posY = yMin.Y + heightTriangle*i;
-                    pointGenerate.Add(new XYZ(posX,posY,(topface as PlanarFace).Origin.Z));
-                }
-                offset=!offset;
-            }
-            return pointGenerate;
-        }
-
-        public ICollection<XYZ> GeneratePointCollection(Face topface,ref double stepmin)
+        
+        public ICollection<Point> GeneratePointCollection(Face topface,ref double stepmin)
         {
             ICollection<XYZ> pointCurve = new Collection<XYZ>();
             XYZ xMin, yMin;
@@ -342,7 +319,7 @@ namespace BMCIModule
                 if (point.X < xMin.X) xMin = point;
                 if (point.Y < yMin.Y) yMin = point;
             }
-            List<XYZ> pointGenerate = new List<XYZ>();
+            List<Point> pointGenerate = new List<Point>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
             for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle); i++)
@@ -351,38 +328,61 @@ namespace BMCIModule
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
-                    pointGenerate.Add(new XYZ(posX, posY, (topface as PlanarFace).Origin.Z));
+                    pointGenerate.Add(new Point(posX, posY, (topface as PlanarFace).Origin.Z));
                 }
                 offset = !offset;
+            }
+            double stepMinForLinq = stepmin;
+            foreach (var point in pointGenerate)
+            {
+                var pointCollection = pointGenerate
+                    //.Where(X=>((X.X+ stepMinForLinq == point.X)||(X.X- stepMinForLinq == point.X))&&((X.Y+ heightTriangle==point.Y)||(X.Y - heightTriangle==point.Y)));
+                    .Where(x => ((Math.Abs(x.X - point.X) <= stepMinForLinq + 0.01 * stepMinForLinq) ||
+                                 (Math.Abs(x.X - point.X) <= stepMinForLinq - 0.01 * stepMinForLinq))
+                                && ((Math.Abs(x.Y - point.Y) <= heightTriangle + 0.01 * heightTriangle) ||
+                                    (Math.Abs(x.Y - point.Y) <= heightTriangle - 0.01 * heightTriangle)||(x.Y==point.Y))&&(x.Equals(point)==false));
+                foreach (var pointToHex in pointCollection)
+                {
+                    point.pointForHex.Add(pointToHex);
+                }
             }
             return pointGenerate;
         }
 
-        public class Point : XYZ
+        public class Point
         {
-            double X { get; set ; }
-            double Y { get; set; }
-            double Z { get; set; }
-            public int _enumPoint { get; set; }
-            public XYZ point { get; set; }
+            public double X { get; set ; }
+            public double Y { get; set; }
+            public double Z { get; set; }
 
-            public ICollection<Point> pointForHex;
+            PointInFigureWithBorders GetPointPosition=PointInFigureWithBorders.notDetected;
+
+            public PointInFigureWithBorders getPointPosition 
+            {
+                get
+                {
+                    return GetPointPosition;
+                }
+                set
+                {
+                    GetPointPosition=value;
+                }
+
+            }
+            public ICollection<Point> pointForHex=new List<Point>();
 
             public Point(double x, double y, double z)
             {
-                point=new XYZ(x, y, z);
-            }
-            public enum isInFigureWithBorders:int
-            {
-                inBorders=0,
-                iNFigure=1,
-                outFigure=2
+                X = x;
+                Y = y;
+                Z = z;
             }
 
-            //проверка попадания точек в фигуру
 
 
-            public XYZ PointTransfer(XYZ transferCoordination)
+
+           //проверка попадания точек в фигуру
+           public XYZ PointTransfer(XYZ transferCoordination)
             {
                 XYZ transferPoint = new XYZ(transferCoordination.X,transferCoordination.Y,transferCoordination.Z);
                 return transferPoint;
