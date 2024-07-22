@@ -9,7 +9,7 @@ namespace BMCIModule.Models
     public enum PointInFigureWithBorders:int
     {
         notDetected = 0,
-        iNFigure = 1,
+        inFigure = 1,
         outFigure = 2,
         inBorders = 3,
     }

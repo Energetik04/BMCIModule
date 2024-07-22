@@ -243,7 +243,7 @@ namespace BMCIModule
 
 
         //скорее всего мусор
-        /*public bool VisiblePointInRegion(MeshTriangle triangle, XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
+        public bool VisiblePointInRegion(MeshTriangle triangle, Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
         {
             GraphicsPath graphicsPath = new GraphicsPath();
 
@@ -253,26 +253,58 @@ namespace BMCIModule
             Region region = new Region(graphicsPath);
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
-        }*/
+        }
         public ICollection<Point> IsInFigureWithBorders(ICollection<Point> points, Face topFace,ref double stepMin)
         {
             List<Point> pointReturn=new List<Point>();
-            //Mesh trMesh = topFace.Triangulate(1);
-            //int numberTriangle = trMesh.NumTriangles;
-            //int countMiss = 0;
-            
-
-            foreach (var point in points)
+            Mesh trMesh = topFace.Triangulate(1);
+            int numberTriangle = trMesh.NumTriangles;
+            int countMiss = 0;
+            //Не рабочая ерунда, зациклена очень херово
+            //XYZ neighbourPoinbt;
+            /*foreach (var point in points)
             {
-                UV point2d=new UV(point.X,point.Y);
-                if (topFace.IsInside(point2d))
+                if (topFace.IsInside(new UV(point.X, point.Y)))
                 {
-                    pointReturn.Add(point);
+                    point.getPointPosition = PointInFigureWithBorders.inFigure;
+                }
+                else
+                {
+                    point.getPointPosition=PointInFigureWithBorders.outFigure;
                 }
             }
-
-
-            /*foreach (var point in points)
+            foreach (var point in points)
+            {
+                int countInFigure = 0;
+                if (point.getPointPosition == PointInFigureWithBorders.notDetected)
+                {
+                    foreach (var neighPoint in point.pointForHex)
+                    {
+                        if (neighPoint.getPointPosition == PointInFigureWithBorders.notDetected &&
+                            topFace.IsInside(new UV(neighPoint.X, neighPoint.Y)) == true)
+                        {
+                            neighPoint.getPointPosition = PointInFigureWithBorders.inFigure;
+                            points.Where(x => x.Equals(neighPoint)).Select(x =>
+                                x.getPointPosition = PointInFigureWithBorders.inFigure);
+                            countInFigure++;
+                        }
+                        else
+                        {
+                            if (neighPoint.getPointPosition == PointInFigureWithBorders.notDetected &&
+                                topFace.IsInside(new UV(neighPoint.X, neighPoint.Y)) == false)
+                            {
+                                neighPoint.getPointPosition = PointInFigureWithBorders.outFigure;
+                                points.Where(x => x.Equals(neighPoint)).Select(x =>
+                                    x.getPointPosition = PointInFigureWithBorders.outFigure);
+                            }
+                        }
+                    }
+                    
+                    
+                }
+            }*/
+            
+            foreach (var point in points)
             {
                 for (int i = 0; i < numberTriangle; i++)
                 {
@@ -281,17 +313,19 @@ namespace BMCIModule
                         MeshTriangle triangleMEsh = trMesh.get_Triangle(i);
                         if (VisiblePointInRegion(triangleMEsh, point) == true)
                         {
-                            pointReturn.Add(point);
+                            point.getPointPosition = PointInFigureWithBorders.inFigure;
                             break;
                         }
                         else
                         {
+                            point.getPointPosition = PointInFigureWithBorders.outFigure;
                             countMiss++;
                         }
                     }
                 }
                 countMiss = 0;
-            }*/
+            }
+
             return pointReturn;
         }
         
@@ -369,7 +403,7 @@ namespace BMCIModule
                 }
 
             }
-            public ICollection<Point> pointForHex=new List<Point>();
+            public HashSet<Point> pointForHex=new HashSet<Point>();
 
             public Point(double x, double y, double z)
             {
