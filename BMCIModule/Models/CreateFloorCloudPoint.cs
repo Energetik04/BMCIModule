@@ -11,7 +11,6 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
-using PointCollection = Autodesk.Revit.DB.PointClouds.PointCollection;
 
 namespace BMCIModule
 {
@@ -260,49 +259,7 @@ namespace BMCIModule
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
             int countMiss = 0;
-            //Не рабочая ерунда, зациклена очень херово
-            //XYZ neighbourPoinbt;
-            /*foreach (var point in points)
-            {
-                if (topFace.IsInside(new UV(point.X, point.Y)))
-                {
-                    point.getPointPosition = PointInFigureWithBorders.inFigure;
-                }
-                else
-                {
-                    point.getPointPosition=PointInFigureWithBorders.outFigure;
-                }
-            }
-            foreach (var point in points)
-            {
-                int countInFigure = 0;
-                if (point.getPointPosition == PointInFigureWithBorders.notDetected)
-                {
-                    foreach (var neighPoint in point.pointForHex)
-                    {
-                        if (neighPoint.getPointPosition == PointInFigureWithBorders.notDetected &&
-                            topFace.IsInside(new UV(neighPoint.X, neighPoint.Y)) == true)
-                        {
-                            neighPoint.getPointPosition = PointInFigureWithBorders.inFigure;
-                            points.Where(x => x.Equals(neighPoint)).Select(x =>
-                                x.getPointPosition = PointInFigureWithBorders.inFigure);
-                            countInFigure++;
-                        }
-                        else
-                        {
-                            if (neighPoint.getPointPosition == PointInFigureWithBorders.notDetected &&
-                                topFace.IsInside(new UV(neighPoint.X, neighPoint.Y)) == false)
-                            {
-                                neighPoint.getPointPosition = PointInFigureWithBorders.outFigure;
-                                points.Where(x => x.Equals(neighPoint)).Select(x =>
-                                    x.getPointPosition = PointInFigureWithBorders.outFigure);
-                            }
-                        }
-                    }
-                    
-                    
-                }
-            }*/
+
             
             foreach (var point in points)
             {
@@ -326,7 +283,32 @@ namespace BMCIModule
                 countMiss = 0;
             }
 
+            points.Select(x => x.getPointPosition=ChangeStatusPoint(x,ref topFace));
+
             return pointReturn;
+        }
+
+        public PointInFigureWithBorders ChangeStatusPoint(Point point, ref Face topFace)
+        {
+            IList<CurveLoop> curveArray = topFace.GetEdgesAsCurveLoops();
+            foreach (var curveLoop in curveArray)
+            {
+                foreach (var curve  in curveLoop)
+                {
+                    
+                    if ((point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) * (curve.GetEndPoint(1).Y.DoubleToNumbers(3) - curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
+                        ((curve.GetEndPoint(1).X.DoubleToNumbers(3) - curve.GetEndPoint(0).X.DoubleToNumbers(3))*(point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3))) == 0)
+                    {
+                        return PointInFigureWithBorders.inBorders;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            return point.getPointPosition;
         }
         
         public ICollection<Point> GeneratePointCollection(Face topface,ref double stepmin)
@@ -362,7 +344,7 @@ namespace BMCIModule
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
-                    pointGenerate.Add(new Point(posX, posY, (topface as PlanarFace).Origin.Z));
+                    pointGenerate.Add(new Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), (topface as PlanarFace).Origin.Z));
                 }
                 offset = !offset;
             }
@@ -407,23 +389,13 @@ namespace BMCIModule
 
             public Point(double x, double y, double z)
             {
-                X = x;
+                X =x;
                 Y = y;
                 Z = z;
             }
-
-
-
-
-           //проверка попадания точек в фигуру
-           public XYZ PointTransfer(XYZ transferCoordination)
-            {
-                XYZ transferPoint = new XYZ(transferCoordination.X,transferCoordination.Y,transferCoordination.Z);
-                return transferPoint;
-            }
         }
 
-
+        
 
 
 
@@ -502,5 +474,17 @@ namespace BMCIModule
             this.pointEdge = pointEdge;
             this.stepMin = stepMin;
         }*/
+    }
+    public static class ExtensionDouble
+    {
+        public static double DoubleToNumbers(this double ob, int i)
+        {
+            string str=ob.ToString();
+            string[] strArray=str.Split(',');
+            char[] chr = strArray[1].ToCharArray(0,i);
+            string mantisa = new string(chr);
+            string strNew = strArray[0] + "," +mantisa;
+            return Convert.ToDouble(strNew);
+        }
     }
 }
