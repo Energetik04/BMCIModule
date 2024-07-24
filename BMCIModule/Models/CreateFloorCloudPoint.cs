@@ -101,8 +101,9 @@ namespace BMCIModule
                         foreach (var vertexCurrentArray in vertexArray)
                         {
                             var vertexCurrent = vertexCurrentArray as SlabShapeVertex;
-                            if ((Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin+0.1*stepMin || Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin - 0.1 * stepMin)
-                                &&((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.1 * hight || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.1 * hight || vertex.Position.Y==vertexCurrent.Position.Y))) 
+                            //5 мм погрешность по поиску соседней точке 
+                            if ((Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin+0.016 || Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin - 0.016)
+                                &&((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.016 || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.016 || vertex.Position.Y==vertexCurrent.Position.Y))) 
                             {
                                 count ++;
                                 int sumHashCrease = vertex.GetHashCode() + vertexCurrent.GetHashCode();// очень стремный момент с суммой хэшей
