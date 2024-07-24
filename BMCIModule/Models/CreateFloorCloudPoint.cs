@@ -432,6 +432,7 @@ namespace BMCIModule
                     XYZ endPoint1 = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
                     XYZ endPoint2 = new XYZ(superPositionX,superPositionY,getPointToMovie.Z);
                     //XYZ convertGetPointToMovie = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
+                    //метод полная херумпула, потому что непонятно что выдает
                     var line=Line.CreateUnbound(endPoint1, endPoint2);
                     foreach (var curveLoop in topFace.GetEdgesAsCurveLoops())
                     {
