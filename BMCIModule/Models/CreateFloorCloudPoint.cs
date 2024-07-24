@@ -57,27 +57,28 @@ namespace BMCIModule
             // создаю сетку точек, так же их нужно проверить
             ICollection<Point> pointRevit= GeneratePointCollection(topFace,ref stepMin);
             ICollection<Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
+            MovieOutFigurePointInBorders(ref collection,ref topFace);
 
             // теперь нужно перебрать все точки по HEX и начать проверку - потом перенос + точка супер-позиции
             #endregion
 
             #region Визуализация точками
 
-            /*using (Transaction tr = new Transaction(doc,"поехали"))
+            using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
-                foreach (XYZ point in collection)
+                foreach (Point point in collection)
                 {
                     //проверка на попадание точки в регион
-
+                    XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
                     var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки
-                    directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(point) });// размещение обощенной модели точки
+                    directShape.SetShape(new List<GeometryObject>(){ Autodesk.Revit.DB.Point.Create(convertPoint) });// размещение обощенной модели точки
                 }
                 tr.Commit();
-            }*/
-            
+            }
+
             #endregion
-            
+
             TaskDialog.Show("Количяество точек",collection.Count.ToString());
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
@@ -87,10 +88,11 @@ namespace BMCIModule
                     slabFloor.Enable();// открываем на редактирование
                     Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                     sw.Start();
-                    /*foreach (XYZ point in collection)
+                    foreach (Point point in collection)
                     {
-                        slabFloor.DrawPoint(point);
-                    }*/
+                        XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
+                        slabFloor.DrawPoint(convertPoint);
+                    }
                     double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
                     SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
                     Dictionary<int, SlabShapeCreaseArray> tableHashSet = new Dictionary<int, SlabShapeCreaseArray>();
@@ -288,7 +290,8 @@ namespace BMCIModule
             {
                 point.getPointPosition = ChangeStatusPoint(point, ref topFace);
             }
-            return pointReturn;
+            //return pointReturn;
+            return points;
         }
 
         public PointInFigureWithBorders ChangeStatusPoint(Point point, ref Face topFace)
@@ -401,6 +404,69 @@ namespace BMCIModule
                 X =x;
                 Y = y;
                 Z = z;
+            }
+        }
+
+        public void MovieOutFigurePointInBorders(ref ICollection<Point> pointCollection,ref Face topFace)
+        {
+            var pointCollectionOutFigure=pointCollection.Where(x => x.getPointPosition == PointInFigureWithBorders.outFigure);
+            double superPositionX=0;
+            double superPositionY=0;
+            double superPositionZ=0;
+            int countPointInFigure = 0;
+            foreach (var point in pointCollection)
+            {
+                if (point.getPointPosition == PointInFigureWithBorders.inFigure)
+                {
+                    countPointInFigure++;
+                    superPositionX = superPositionX + point.X;
+                    superPositionY = superPositionY + point.Y;
+                }
+            }
+            superPositionX = superPositionX / countPointInFigure;
+            superPositionY=superPositionY / countPointInFigure;
+            foreach (var getPointToMovie in pointCollection)
+            {
+                if (getPointToMovie.getPointPosition == PointInFigureWithBorders.outFigure)
+                {
+                    XYZ endPoint1 = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
+                    XYZ endPoint2 = new XYZ(superPositionX,superPositionY,getPointToMovie.Z);
+                    //XYZ convertGetPointToMovie = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
+                    var line=Line.CreateUnbound(endPoint1, endPoint2);
+                    foreach (var curveLoop in topFace.GetEdgesAsCurveLoops())
+                    {
+                        foreach (var curve in curveLoop)
+                        {
+                            //разобрать  с результатом
+                            IntersectionResultArray resultArray = new IntersectionResultArray();
+                            var result = curve.Intersect(line, out resultArray);
+                            //List<double> distanceIntersectPoint=new List<double>();
+                            if (resultArray == null && result==SetComparisonResult.Disjoint)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                foreach (var getResult in resultArray)
+                                {
+                                    var getResultIntersectionResult = getResult as IntersectionResult;
+                                    var intersectPoint = getResultIntersectionResult.XYZPoint;
+                                    if (intersectPoint == null)
+                                    {
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        getPointToMovie.getPointPosition = PointInFigureWithBorders.moviePointFromOutFigure;
+                                        getPointToMovie.X = intersectPoint.X;
+                                        getPointToMovie.Y = intersectPoint.Y;
+                                    }
+                                }
+                            }
+                           
+                        }
+                    }
+                }
             }
         }
         
