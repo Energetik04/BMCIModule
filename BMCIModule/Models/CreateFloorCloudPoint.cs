@@ -282,9 +282,11 @@ namespace BMCIModule
                 }
                 countMiss = 0;
             }
-
-            points.Select(x => x.getPointPosition=ChangeStatusPoint(x,ref topFace));
-
+            //points.Select(x => x.getPointPosition=ChangeStatusPoint(x,ref topFace)); Линк запрос сделал слепок, а его надо быдо бы отдельно переработать
+            foreach (var point in points)
+            {
+                point.getPointPosition = ChangeStatusPoint(point, ref topFace);
+            }
             return pointReturn;
         }
 
@@ -295,9 +297,15 @@ namespace BMCIModule
             {
                 foreach (var curve  in curveLoop)
                 {
-                    
-                    if ((point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) * (curve.GetEndPoint(1).Y.DoubleToNumbers(3) - curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
-                        ((curve.GetEndPoint(1).X.DoubleToNumbers(3) - curve.GetEndPoint(0).X.DoubleToNumbers(3))*(point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3))) == 0)
+                    XYZ pointA = curve.GetEndPoint(0);
+                    XYZ pointB = curve.GetEndPoint(1);
+                    double vecScalyar = (point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
+                                        (curve.GetEndPoint(1).Y.DoubleToNumbers(3) -
+                                         curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
+                                        ((curve.GetEndPoint(1).X.DoubleToNumbers(3) -
+                                          curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
+                                         (point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3)));
+                    if (vecScalyar == 0)
                     {
                         return PointInFigureWithBorders.inBorders;
                     }
@@ -394,31 +402,7 @@ namespace BMCIModule
                 Z = z;
             }
         }
-
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //попытка соединить внутрянку
         /*public Point addOrGetPoint(Dictionary<int, Point> graph, int value)
         {
