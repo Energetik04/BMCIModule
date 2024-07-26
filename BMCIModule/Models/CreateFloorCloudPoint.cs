@@ -52,8 +52,8 @@ namespace BMCIModule
             Face topFace=GetTopFace(selectFloor, doc);
 
             #region Триангуляция
-
-            double stepMin = 1d;
+            
+            double stepMin = 1.75d;
             // создаю сетку точек, так же их нужно проверить
             ICollection<Point> pointRevit= GeneratePointCollection(topFace,ref stepMin);
             ICollection<Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
@@ -85,8 +85,8 @@ namespace BMCIModule
 
             #endregion
 
-            //TaskDialog.Show("Количество точек",collection.Count.ToString());
-            /*using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
+            TaskDialog.Show("Количество точек",collection.Count.ToString());
+            using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
                     SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
@@ -136,8 +136,8 @@ namespace BMCIModule
 
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
-            }*/
-            
+            }
+
             /*using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
                 tr2.Start();
