@@ -11,6 +11,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
+using System.Runtime;
+using System.Windows.Media;
 
 namespace BMCIModule
 {
@@ -85,7 +87,7 @@ namespace BMCIModule
 
             #endregion
 
-            TaskDialog.Show("Количество точек",collection.Count.ToString());
+            /*TaskDialog.Show("Количество точек",collection.Count.ToString());
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
@@ -136,7 +138,7 @@ namespace BMCIModule
 
                     TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
-            }
+            }*/
 
             /*using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
@@ -262,14 +264,50 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
+
+        public bool VisiblePointInRegion(ref Face topface, Point point)
+        {
+
+            XYZ originRay = new XYZ(point.X, point.Y, point.Z);
+            XYZ directionRay = new XYZ((double.MaxValue - originRay.X).DoubleToNumbers(2), originRay.Y, (double.MaxValue - originRay.Z).DoubleToNumbers(2));
+            var line = Line.CreateUnbound(originRay, directionRay);
+            List<XYZ> pointCross = new List<XYZ>();
+            foreach (var curveLoop in topface.GetEdgesAsCurveLoops())
+            {
+                foreach (var curve in curveLoop)
+                {
+                    //разобрать  с результатом
+                    var result = curve.Intersect(line, out IntersectionResultArray resultArray);
+                    //List<double> distanceIntersectPoint=new List<double>();
+                    if (result == SetComparisonResult.Overlap)
+                    {
+                        foreach (var getResult in resultArray)
+                        {
+                            var getResultIntersectionResult = getResult as IntersectionResult;
+                            var intersectPoint = getResultIntersectionResult.XYZPoint;
+                            pointCross.Add(intersectPoint);
+                            if (intersectPoint == null)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+            if (pointCross.Count >= 2)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         public ICollection<Point> IsInFigureWithBorders(ICollection<Point> points, Face topFace,ref double stepMin)
         {
-            List<Point> pointReturn=new List<Point>();
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
             int countMiss = 0;
-
-            
             foreach (var point in points)
             {
                 for (int i = 0; i < numberTriangle; i++)
@@ -277,7 +315,7 @@ namespace BMCIModule
                     if (countMiss < numberTriangle)
                     {
                         MeshTriangle triangleMEsh = trMesh.get_Triangle(i);
-                        if (VisiblePointInRegion(triangleMEsh, point) == true)
+                        if (VisiblePointInRegion(ref topFace, point) == true)
                         {
                             point.getPointPosition = PointInFigureWithBorders.inFigure;
                             break;
@@ -291,12 +329,10 @@ namespace BMCIModule
                 }
                 countMiss = 0;
             }
-            //points.Select(x => x.getPointPosition=ChangeStatusPoint(x,ref topFace)); Линк запрос сделал слепок, а его надо быдо бы отдельно переработать
             foreach (var point in points)
             {
                 point.getPointPosition = ChangeStatusPoint(point, ref topFace);
             }
-            //return pointReturn;
             return points;
         }
 
@@ -354,11 +390,11 @@ namespace BMCIModule
                 if (point.Y < yMin.Y) yMin = point;
             }
             List<Point> pointGenerate = new List<Point>();
-            double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
+            double heightTriangle = ((Math.Sqrt(3)) * stepmin / 2.0d).DoubleToNumbers(2);
             bool offset = false;
-            for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle); i++)
+            for (int i = 0; i <= (int)((Math.Abs(yMax.Y - yMin.Y))+1 / heightTriangle); i++)
             {
-                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X) / stepmin)); j++)
+                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X)+1 / stepmin)); j++)
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
@@ -429,15 +465,14 @@ namespace BMCIModule
                     superPositionY = superPositionY + point.Y;
                 }
             }
-            superPositionX = superPositionX / countPointInFigure;
-            superPositionY=superPositionY / countPointInFigure;
+            superPositionX = (superPositionX / countPointInFigure).DoubleToNumbers(2);
+            superPositionY=(superPositionY / countPointInFigure).DoubleToNumbers(2);
             foreach (var getPointToMovie in pointCollection)
             {
                 if (getPointToMovie.getPointPosition == PointInFigureWithBorders.outFigure)
                 {
                     XYZ origin = new XYZ(superPositionX,superPositionY,superPositionZ);
-                    XYZ direction = new XYZ(getPointToMovie.X-origin.X,getPointToMovie.X-origin.X,getPointToMovie.Z-origin.Z);
-                    //XYZ convertGetPointToMovie = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
+                    XYZ direction = new XYZ((getPointToMovie.X-origin.X).DoubleToNumbers(2),(getPointToMovie.Y-origin.Y).DoubleToNumbers(2),(getPointToMovie.Z-origin.Z).DoubleToNumbers(2));
                     //метод полная херумпула, потому что непонятно что выдает
                     var line=Line.CreateUnbound(origin, direction);
                     List<XYZ> pointCross=new List<XYZ>();
@@ -459,22 +494,15 @@ namespace BMCIModule
                                         {
                                             continue;
                                         }
-                                        else
-                                        {
-                                            //getPointToMovie.getPointPosition = PointInFigureWithBorders.moviePointFromOutFigure;
-                                            //getPointToMovie.X = intersectPoint.X;
-                                            //getPointToMovie.Y = intersectPoint.Y;
-                                        }
                                     }
                                 }
                         }
                     }
                     XYZ convertPoint = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
-                    XYZ tempPoint = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
+                    XYZ tempPoint = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
                     foreach (var intersectPoint in pointCross)
                     {
-                        double minValue = convertPoint.DistanceTo(tempPoint);
-                        if (intersectPoint.DistanceTo(convertPoint) >= minValue)
+                        if (intersectPoint.DistanceTo(convertPoint)<=convertPoint.DistanceTo(tempPoint))
                         {
                             tempPoint = intersectPoint;
                         }
@@ -495,63 +523,7 @@ namespace BMCIModule
                 }
             }
         }
-        
-        //попытка соединить внутрянку
-        /*public Point addOrGetPoint(Dictionary<int, Point> graph, int value)
-        {
-            if (value == -1) return null;
-            Point pointGraph;
-            if (graph.TryGetValue(value,out pointGraph)) return pointGraph;
-            Point addPoint = new Point(value);
-            graph.Add(value,addPoint);
-            return addPoint;
-        }
-
-        //генерация графа
-        public Dictionary<int, Point> createGraph(int[][] graphData)
-        {
-            Dictionary<int, Point> graph = new Dictionary<int, Point>();
-            foreach (var VARIABLE in graphData)
-            {
-                Point getPoint = addOrGetPoint(graph, VARIABLE[0]);
-                Point adjacentPoint = addOrGetPoint(graph, VARIABLE[1]);
-                if(adjacentPoint==null) continue;
-                Edge edge = new Edge(adjacentPoint, VARIABLE[2]);
-                getPoint.edges.Add(edge);
-                adjacentPoint.parenst.Add(getPoint,edge);
-            }
-
-            return graph;
-        }
-    }
-
-
-    public class Point:XYZ
-    {
-        public int value { get; set; }// ключ узла может быть любой тип данных
-        public Point(double x,double y,double z)//создание узка из точки
-        {
-            new XYZ(x,y,z);
-        }
-        public HashSet<Edge> edges=new HashSet<Edge>();//ребра из узла
-        public Dictionary<Point,Edge> parenst=new Dictionary<Point,Edge>();//словарь который содержит список родителей 
-        public Point(int value)
-        {
-            this.value=value;
-        }
-    }
-
-    public class Edge
-    {
-        public Point pointEdge;
-        public int stepMin;
-
-        public Edge(Point pointEdge, int stepMin)
-        {
-            this.pointEdge = pointEdge;
-            this.stepMin = stepMin;
-        }*/
-
+       
     }
     public static class ExtensionDouble
     {
