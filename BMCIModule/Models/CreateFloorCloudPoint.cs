@@ -446,7 +446,7 @@ namespace BMCIModule
             List<Point> pointGenerate = new List<Point>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
-            for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle); i++)
+            for (int i = 0; i <= ((int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle))+1; i++)
             {
                 for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X)/ stepmin)); j++)
                 {
