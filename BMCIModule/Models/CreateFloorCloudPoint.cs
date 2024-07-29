@@ -9,10 +9,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Threading.Tasks;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
-using System.Runtime;
-using System.Windows.Media;
 
 namespace BMCIModule
 {
@@ -57,7 +56,7 @@ namespace BMCIModule
             
             double stepMin = 1.75d;
             // создаю сетку точек, так же их нужно проверить
-            ICollection<Point> pointRevit= GeneratePointCollection(topFace,ref stepMin);
+            ICollection<Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
             ICollection<Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
             MovieOutFigurePointInBorders(ref collection,ref topFace);
             #endregion
@@ -86,61 +85,66 @@ namespace BMCIModule
             }
 
             #endregion
+            TaskDialog.Show("Количество точек",collection.Count.ToString());
 
-            /*TaskDialog.Show("Количество точек",collection.Count.ToString());
+            #region Построение ребер на поверхности
+            Dictionary<XYZ,Point> dictionaryConvertPoint=new Dictionary<XYZ,Point>();
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
-                    SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
+                SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
 
-                    slabFloor.Enable();// открываем на редактирование
-                    Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
-                    sw.Start();
-                    foreach (Point point in collection)
+                slabFloor.Enable();// открываем на редактирование
+                Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+                sw.Start();
+                foreach (Point point in collection)
+                {
+                    XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
+                    dictionaryConvertPoint.Add(convertPoint,point);
+                    slabFloor.DrawPoint(convertPoint);
+                }
+                double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
+                SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
+                Dictionary<int, SlabShapeCreaseArray> tableHashSet = new Dictionary<int, SlabShapeCreaseArray>();
+                foreach (SlabShapeVertex vertex in vertexArray)
+                {
+                    int count = 0;
+
+                    foreach (var vertexCurrentArray in vertexArray)
                     {
-                        XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
-                        slabFloor.DrawPoint(convertPoint);
-                    }
-                    double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
-                    SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
-                    Dictionary<int, SlabShapeCreaseArray> tableHashSet = new Dictionary<int, SlabShapeCreaseArray>();
-                    foreach (SlabShapeVertex vertex in vertexArray)
-                    {
-                        int count = 0;
-                        
-                        foreach (var vertexCurrentArray in vertexArray)
+                        var vertexCurrent = vertexCurrentArray as SlabShapeVertex;
+                        //5 мм погрешность по поиску соседней точке 
+                        if ((Math.Abs(vertex.Position.X - vertexCurrent.Position.X) <= stepMin + 0.016 || Math.Abs(vertex.Position.X - vertexCurrent.Position.X) <= stepMin - 0.016)
+                            && ((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.016 || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.016 || vertex.Position.Y == vertexCurrent.Position.Y)))
                         {
-                            var vertexCurrent = vertexCurrentArray as SlabShapeVertex;
-                            //5 мм погрешность по поиску соседней точке 
-                            if ((Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin+0.016 || Math.Abs(vertex.Position.X - vertexCurrent.Position.X)<=stepMin - 0.016)
-                                &&((Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight + 0.016 || Math.Abs(vertex.Position.Y - vertexCurrent.Position.Y) <= hight - 0.016 || vertex.Position.Y==vertexCurrent.Position.Y))) 
+                            count++;
+                            int sumHashCrease = vertex.GetHashCode() + vertexCurrent.GetHashCode();// очень стремный момент с суммой хэшей
+                            if (!tableHashSet.ContainsKey(sumHashCrease))
                             {
-                                count ++;
-                                int sumHashCrease = vertex.GetHashCode() + vertexCurrent.GetHashCode();// очень стремный момент с суммой хэшей
-                                if (!tableHashSet.ContainsKey(sumHashCrease))
-                                {
-                                    SlabShapeCreaseArray drawSplitLine = slabFloor.DrawSplitLine(vertex, vertexCurrent);
-                                    tableHashSet.Add(sumHashCrease,drawSplitLine);
-                                }
-                                if (count == 6)
-                                {
-                                    break;
-                                }
+                                SlabShapeCreaseArray drawSplitLine = slabFloor.DrawSplitLine(vertex, vertexCurrent);
+                                tableHashSet.Add(sumHashCrease, drawSplitLine);
+                            }
+                            if (count == 6)
+                            {
+                                break;
                             }
                         }
                     }
-                    sw.Stop();
-                   
-                    //время выполение
-                    TimeSpan ts = sw.Elapsed;
-                    string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
-                        ts.Milliseconds / 10);
+                }
+                sw.Stop();
+                //время выполение
+                TimeSpan ts = sw.Elapsed;
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
 
-                    TaskDialog.Show("Время выполнения", elapsedTime);
+                TaskDialog.Show("Время выполнения", elapsedTime);
                 tr.Commit();
-            }*/
+            }
 
-            /*using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
+            #endregion
+
+
+            using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
                 tr2.Start();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
@@ -166,7 +170,7 @@ namespace BMCIModule
                 double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
                 double zMax=selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
                 PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
-                IList<List<XYZ>> collectionPointCollection = new List<List<XYZ>>();
+                Dictionary<Face,List<XYZ>> collectionPointCollection = new Dictionary<Face, List<XYZ>>();
                 foreach (Face face in topFaceArray)
                 {
                     CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
@@ -184,7 +188,7 @@ namespace BMCIModule
                     Plane figurebokovina2 = Plane.CreateByThreePoints(pointMeshMax[1], pointMeshMax[2], pointMeshMin[1]);
                     Plane figurebokovina3 = Plane.CreateByThreePoints(pointMeshMax[2], pointMeshMax[0], pointMeshMin[2]);
 
-                    XYZ reversNormalMaxheight =new XYZ(planeMaxHeight.Normal.X,planeMaxHeight.Normal.Y,planeMaxHeight.Normal.Z*-1);
+                    XYZ reversNormalMaxheight =new XYZ(planeMaxHeight.Normal.X,planeMaxHeight.Normal.Y,planeMaxHeight.Normal.Z*(-1));
 
                     XYZ reversNormalFigureBokovina1=new XYZ(figurebokovina1.Normal.X,figurebokovina1.Normal.Y,-1*figurebokovina1.Normal.Z);
                     XYZ reversNormalFigureBokovina2 = new XYZ(figurebokovina2.Normal.X, figurebokovina2.Normal.Y, -1 * figurebokovina2.Normal.Z);
@@ -202,12 +206,58 @@ namespace BMCIModule
                     faceToPlane.Add(reversFigureBokovina2);
                     faceToPlane.Add(reversFigureBokovina3);
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
-                    Transform pointTransform = pcInstance.GetTotalTransform();
+                    Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001,500);// как-будто надо увеличить количество точек
+                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001,1000);// как-будто надо увеличить количество точек
                     var variable=pointCollection.Select(x => pointTransform.OfPoint((XYZ) x)).ToList();
-                    collectionPointCollection.Add(variable);
+                    collectionPointCollection.Add(face,variable);
                 }
+
+                SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
+                // тут какой-то пиздец, нужно зациклить, пока все круги ада не прогонит
+                foreach (var face in collectionPointCollection)
+                {
+                    List<XYZ> checkList=new List<XYZ>();
+                    //просто список точек плоскости
+                    foreach (var VARIABLE in face.Key.GetEdgesAsCurveLoops())
+                    {
+                        foreach (var curve in VARIABLE)
+                        {
+                            checkList.Add(curve.GetEndPoint(0));
+                        }
+                    }
+                    int countCheck = 0;
+                    foreach (var checkPointXYZ in checkList)
+                    {
+                        foreach (var checkPoint in dictionaryConvertPoint)
+                        {
+                            if (checkPointXYZ.IsAlmostEqualTo(checkPoint.Key))
+                            {
+                                if (checkPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders &&
+                                    checkPoint.Value.checkoutStatus == false)
+                                {
+                                    checkPoint.Value.checkoutStatus = true;
+                                    countCheck++;
+                                }
+                            }
+                        }
+                    }
+                    if (countCheck >= 2)
+                    {
+                        foreach (var point in checkList)
+                        {
+                            if (dictionaryConvertPoint.TryGetValue(point, out Point getPoint))
+                            {
+                                if (getPoint.checkoutStatus == false)
+                                {
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+
+
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
@@ -216,7 +266,7 @@ namespace BMCIModule
                 TaskDialog.Show("Время выполнения", elapsedTime);
                 
                 tr2.Commit();
-            }*/
+            }
             return Result.Succeeded;
         }
 
@@ -264,7 +314,7 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-
+        // пока что метод все ломает
         public bool VisiblePointInRegion(ref Face topface, Point point)
         {
 
@@ -300,8 +350,13 @@ namespace BMCIModule
             }
             else
             {
-                return true;
+                if (pointCross.Count == 1)
+                {
+                    return true;
+                }
+                
             }
+            return false;
         }
         public ICollection<Point> IsInFigureWithBorders(ICollection<Point> points, Face topFace,ref double stepMin)
         {
@@ -315,16 +370,16 @@ namespace BMCIModule
                     if (countMiss < numberTriangle)
                     {
                         MeshTriangle triangleMEsh = trMesh.get_Triangle(i);
-                        if (VisiblePointInRegion(ref topFace, point) == true)
-                        {
-                            point.getPointPosition = PointInFigureWithBorders.inFigure;
-                            break;
-                        }
-                        else
-                        {
-                            point.getPointPosition = PointInFigureWithBorders.outFigure;
-                            countMiss++;
-                        }
+                    if (VisiblePointInRegion(triangleMEsh, point) == true)
+                    {
+                        point.getPointPosition = PointInFigureWithBorders.inFigure;
+                        break;
+                    }
+                    else
+                    {
+                        point.getPointPosition = PointInFigureWithBorders.outFigure;
+                        countMiss++;
+                    }
                     }
                 }
                 countMiss = 0;
@@ -361,11 +416,10 @@ namespace BMCIModule
                     }
                 }
             }
-
             return point.getPointPosition;
         }
         
-        public ICollection<Point> GeneratePointCollection(Face topface,ref double stepmin)
+        public ICollection<Point> GeneratePointCollection(ref Face topface,ref double stepmin)
         {
             ICollection<XYZ> pointCurve = new Collection<XYZ>();
             XYZ xMin, yMin;
@@ -390,11 +444,11 @@ namespace BMCIModule
                 if (point.Y < yMin.Y) yMin = point;
             }
             List<Point> pointGenerate = new List<Point>();
-            double heightTriangle = ((Math.Sqrt(3)) * stepmin / 2.0d).DoubleToNumbers(2);
+            double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
-            for (int i = 0; i <= (int)((Math.Abs(yMax.Y - yMin.Y))+1 / heightTriangle); i++)
+            for (int i = 0; i <= (int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle); i++)
             {
-                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X)+1 / stepmin)); j++)
+                for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X)/ stepmin)); j++)
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
@@ -406,7 +460,6 @@ namespace BMCIModule
             foreach (var point in pointGenerate)
             {
                 var pointCollection = pointGenerate
-                    //.Where(X=>((X.X+ stepMinForLinq == point.X)||(X.X- stepMinForLinq == point.X))&&((X.Y+ heightTriangle==point.Y)||(X.Y - heightTriangle==point.Y)));
                     .Where(x => ((Math.Abs(x.X - point.X) <= stepMinForLinq + 0.01 * stepMinForLinq) ||
                                  (Math.Abs(x.X - point.X) <= stepMinForLinq - 0.01 * stepMinForLinq))
                                 && ((Math.Abs(x.Y - point.Y) <= heightTriangle + 0.01 * heightTriangle) ||
@@ -424,6 +477,8 @@ namespace BMCIModule
             public double X { get; set ; }
             public double Y { get; set; }
             public double Z { get; set; }
+
+            public bool checkoutStatus { get; set; } = false;
 
             PointInFigureWithBorders GetPointPosition=PointInFigureWithBorders.notDetected;
 
@@ -472,7 +527,7 @@ namespace BMCIModule
                 if (getPointToMovie.getPointPosition == PointInFigureWithBorders.outFigure)
                 {
                     XYZ origin = new XYZ(superPositionX,superPositionY,superPositionZ);
-                    XYZ direction = new XYZ((getPointToMovie.X-origin.X).DoubleToNumbers(2),(getPointToMovie.Y-origin.Y).DoubleToNumbers(2),(getPointToMovie.Z-origin.Z).DoubleToNumbers(2));
+                    XYZ direction = new XYZ((getPointToMovie.X-origin.X).DoubleToNumbers(2),(getPointToMovie.Y-origin.Y).DoubleToNumbers(2),(getPointToMovie.Z-origin.Z));
                     //метод полная херумпула, потому что непонятно что выдает
                     var line=Line.CreateUnbound(origin, direction);
                     List<XYZ> pointCross=new List<XYZ>();
