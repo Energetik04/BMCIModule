@@ -212,7 +212,7 @@ namespace BMCIModule
                     var variable=pointCollection.Select(x => pointTransform.OfPoint((XYZ) x)).ToList();
                     collectionPointCollection.Add(face,variable);
                 }
-
+                // массив вершин,нужно искать по этим вершинам 
                 SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
                 // тут какой-то пиздец, нужно зациклить, пока все круги ада не прогонит
                 foreach (var face in collectionPointCollection)
@@ -358,6 +358,7 @@ namespace BMCIModule
             }
             return false;
         }
+
         public ICollection<Point> IsInFigureWithBorders(ICollection<Point> points, Face topFace,ref double stepMin)
         {
             Mesh trMesh = topFace.Triangulate(1);
