@@ -278,51 +278,6 @@ namespace BMCIModule
                         }
                     }
                 }
-
-                //// тут какой-то пиздец, нужно зациклить, пока все круги ада не прогонит
-                //foreach (var face in collectionPointCollection)
-                //{
-                //    List<XYZ> checkList=new List<XYZ>();
-                //    //просто список точек плоскости
-                //    foreach (var VARIABLE in face.Key.GetEdgesAsCurveLoops())
-                //    {
-                //        foreach (var curve in VARIABLE)
-                //        {
-                //            checkList.Add(curve.GetEndPoint(0));
-                //        }
-                //    }
-                //    int countCheck = 0;
-                //    foreach (var checkPointXYZ in checkList)
-                //    {
-                //        foreach (var checkPoint in dictionaryConvertPoint)
-                //        {
-                //            if (checkPointXYZ.IsAlmostEqualTo(checkPoint.Key))
-                //            {
-                //                if (checkPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders &&
-                //                    checkPoint.Value.checkoutStatus == false)
-                //                {
-                //                    checkPoint.Value.checkoutStatus = true;
-                //                    countCheck++;
-                //                }
-                //            }
-                //        }
-                //    }
-                //    if (countCheck >= 2)
-                //    {
-                //        foreach (var point in checkList)
-                //        {
-                //            if (dictionaryConvertPoint.TryGetValue(point, out Point getPoint))
-                //            {
-                //                if (getPoint.checkoutStatus == false)
-                //                {
-                                    
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
-
-
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
