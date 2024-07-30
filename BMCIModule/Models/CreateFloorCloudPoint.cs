@@ -63,7 +63,7 @@ namespace BMCIModule
 
             #region Визуализация точками
 
-            using (Transaction tr = new Transaction(doc,"поехали"))
+            /*using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
                 foreach (Point point in collection)
@@ -82,7 +82,7 @@ namespace BMCIModule
                     
                 }
                 tr.Commit();
-            }
+            }*/
 
             #endregion
             TaskDialog.Show("Количество точек",collection.Count.ToString());
@@ -149,6 +149,7 @@ namespace BMCIModule
                 tr2.Start();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
+                SlabShapeEditor shapeEditor = (selectFloor as Floor).SlabShapeEditor;
                 Options op = new Options();// default setting
                 List<GeometryObject> list = new List<GeometryObject>();
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
@@ -214,48 +215,112 @@ namespace BMCIModule
                 }
                 // массив вершин,нужно искать по этим вершинам 
                 SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
-                // тут какой-то пиздец, нужно зациклить, пока все круги ада не прогонит
-                foreach (var face in collectionPointCollection)
+                foreach (SlabShapeVertex vertex in vertexToCheck)
                 {
-                    List<XYZ> checkList=new List<XYZ>();
-                    //просто список точек плоскости
-                    foreach (var VARIABLE in face.Key.GetEdgesAsCurveLoops())
+                    if (dictionaryConvertPoint.ContainsKey(vertex.Position))
                     {
-                        foreach (var curve in VARIABLE)
+                        var itemDictionary=dictionaryConvertPoint[vertex.Position];
+                        if (itemDictionary.getPointPosition == PointInFigureWithBorders.inBorders || itemDictionary.getPointPosition==PointInFigureWithBorders.moviePointFromOutFigure)
                         {
-                            checkList.Add(curve.GetEndPoint(0));
+                            itemDictionary.checkoutStatus = true;
                         }
                     }
-                    int countCheck = 0;
-                    foreach (var checkPointXYZ in checkList)
+                }
+                List< XYZ > listPointProverka=new List< XYZ >();
+                Dictionary<Face,List<XYZ>> faceDictionaryToXYZPointTriangle=new Dictionary<Face,List<XYZ>>();
+                foreach (var face in topFaceArray)
+                {
+                    List<XYZ> listPointFace= new List<XYZ>();
+                    foreach (var curveLoop in face.GetEdgesAsCurveLoops())
                     {
-                        foreach (var checkPoint in dictionaryConvertPoint)
+                        foreach (var curve in curveLoop)
                         {
-                            if (checkPointXYZ.IsAlmostEqualTo(checkPoint.Key))
+                            listPointFace.Add(curve.GetEndPoint(0));
+                            listPointProverka.Add(curve.GetEndPoint(0));
+                        }
+                    }
+                    faceDictionaryToXYZPointTriangle.Add(face,listPointFace);
+                }
+                foreach (SlabShapeVertex vertex in vertexToCheck)
+                {
+                    listPointProverka.Contains(vertex.Position);
+                    foreach (var keyValuePair in faceDictionaryToXYZPointTriangle)
+                    {
+                        int countStatusChekTrue = 0;
+                        // тут какой-то поломанный пиздец уже происходит 
+                        foreach(var listXYZ in keyValuePair.Value)
+                        {
+                            if (listXYZ.IsAlmostEqualTo(vertex.Position))
                             {
-                                if (checkPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders &&
-                                    checkPoint.Value.checkoutStatus == false)
+
+                            }
+                            foreach (var pointFace in keyValuePair.Value)
+                            {
+                                if (dictionaryConvertPoint[listXYZ].checkoutStatus == true)
                                 {
-                                    checkPoint.Value.checkoutStatus = true;
-                                    countCheck++;
+                                    countStatusChekTrue++;
                                 }
                             }
                         }
-                    }
-                    if (countCheck >= 2)
-                    {
-                        foreach (var point in checkList)
+
+                        if (countStatusChekTrue == 2 && keyValuePair.Value.Count==3)
                         {
-                            if (dictionaryConvertPoint.TryGetValue(point, out Point getPoint))
+                            foreach (var pointFace in keyValuePair.Value)
                             {
-                                if (getPoint.checkoutStatus == false)
+                                if (dictionaryConvertPoint[pointFace].checkoutStatus == false)
                                 {
-                                    
+                                    List<XYZ> listPoint = collectionPointCollection[keyValuePair.Key];
+                                    Aproximate(listPoint,out double a, out double b);
+                                    double zPredict = a * vertex.Position.X + b;
+                                    shapeEditor.ModifySubElement(vertex, zPredict);
                                 }
                             }
                         }
                     }
                 }
+
+                //// тут какой-то пиздец, нужно зациклить, пока все круги ада не прогонит
+                //foreach (var face in collectionPointCollection)
+                //{
+                //    List<XYZ> checkList=new List<XYZ>();
+                //    //просто список точек плоскости
+                //    foreach (var VARIABLE in face.Key.GetEdgesAsCurveLoops())
+                //    {
+                //        foreach (var curve in VARIABLE)
+                //        {
+                //            checkList.Add(curve.GetEndPoint(0));
+                //        }
+                //    }
+                //    int countCheck = 0;
+                //    foreach (var checkPointXYZ in checkList)
+                //    {
+                //        foreach (var checkPoint in dictionaryConvertPoint)
+                //        {
+                //            if (checkPointXYZ.IsAlmostEqualTo(checkPoint.Key))
+                //            {
+                //                if (checkPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders &&
+                //                    checkPoint.Value.checkoutStatus == false)
+                //                {
+                //                    checkPoint.Value.checkoutStatus = true;
+                //                    countCheck++;
+                //                }
+                //            }
+                //        }
+                //    }
+                //    if (countCheck >= 2)
+                //    {
+                //        foreach (var point in checkList)
+                //        {
+                //            if (dictionaryConvertPoint.TryGetValue(point, out Point getPoint))
+                //            {
+                //                if (getPoint.checkoutStatus == false)
+                //                {
+                                    
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
 
 
                 sw.Stop();
@@ -268,6 +333,27 @@ namespace BMCIModule
                 tr2.Commit();
             }
             return Result.Succeeded;
+        }
+
+        public void Aproximate(List<XYZ> pointCollection,out double a,out double b)
+        {
+            //line function z=a*x+b
+            //a=(a1-sumx*sumy)/(a2-a3)
+            //b=(a2*sumy-sumx*a1)/a2-a3
+            a = 0;
+            b= 0;
+            double  a1=0, a2=0, a3=0, sumx=0, sumy = 0;
+            foreach (var point in pointCollection)
+            {
+                a = a + point.X * point.Z;
+                sumx = sumx + point.X;
+                sumy = sumy + point.Z;
+                a2 = a2 + Math.Pow(point.X, 2);
+            }
+
+            a3 = Math.Pow(sumx, 2);
+            a=(pointCollection.Count*a1-sumx*sumy)/(pointCollection.Count*a2-a3);
+            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
         }
 
         //получение верхней грани, только если пол плоский
