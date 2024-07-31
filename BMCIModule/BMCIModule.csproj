@@ -152,10 +152,13 @@
     <Compile Include="Infrastructure\Commands\DefaultDialogService.cs" />
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
     <Compile Include="Infrastructure\Interface\Base\IDialogService.cs" />
-    <Compile Include="Models\CreateFloorCloudPoint.cs" />
+    <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />
     <Compile Include="Models\CreateFloorDXF.cs" />
-    <Compile Include="Models\PointInFigureWithBorders.cs" />
-    <Compile Include="Models\СreateAnalysisFloor.cs" />
+    <Compile Include="Models\Extension\ExtensionDouble.cs" />
+    <Compile Include="Models\Extension\ExtensionFace.cs" />
+    <Compile Include="Models\PointCloud\Point.cs" />
+    <Compile Include="Models\PointCloud\PointInFigureWithBorders.cs" />
+    <Compile Include="Models\PointCloud\СreateAnalysisFloor.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -163,10 +166,10 @@
     </Compile>
     <Compile Include="ViewModel\Base\ViewModel.cs" />
     <Compile Include="ViewModel\RibbonPanel\BMCIModule_Application.cs" />
-    <Compile Include="Models\CreateWorkset.cs" />
-    <Compile Include="Models\CopyLevel.cs" />
-    <Compile Include="Models\CopyGrids.cs" />
-    <Compile Include="Models\CoordinationFile.cs" />
+    <Compile Include="Models\PreparingTheFile\CreateWorkset.cs" />
+    <Compile Include="Models\PreparingTheFile\CopyLevel.cs" />
+    <Compile Include="Models\PreparingTheFile\CopyGrids.cs" />
+    <Compile Include="Models\PreparingTheFile\CoordinationFile.cs" />
     <Compile Include="Models\Department\SetDepartmentBMCI.cs" />
     <Compile Include="Models\Department\Mark.cs" />
     <Compile Include="Models\Department\Department.cs" />

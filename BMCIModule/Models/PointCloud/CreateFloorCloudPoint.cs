@@ -9,9 +9,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Threading.Tasks;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
+using BMCIModule.Models.Extension;
+using POINT=BMCIModule.Models.PointCloud;
 
 namespace BMCIModule
 {
@@ -56,8 +57,8 @@ namespace BMCIModule
             
             double stepMin = 1.75d;
             // создаю сетку точек, так же их нужно проверить
-            ICollection<Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
-            ICollection<Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
+            ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
+            ICollection<Models.PointCloud.Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
             MovieOutFigurePointInBorders(ref collection,ref topFace);
             #endregion
 
@@ -88,7 +89,7 @@ namespace BMCIModule
             TaskDialog.Show("Количество точек",collection.Count.ToString());
 
             #region Построение ребер на поверхности
-            Dictionary<XYZ,Point> dictionaryConvertPoint=new Dictionary<XYZ,Point>();
+            Dictionary<XYZ,POINT.Point> dictionaryConvertPoint=new Dictionary<XYZ,POINT.Point>();
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
@@ -97,7 +98,7 @@ namespace BMCIModule
                 slabFloor.Enable();// открываем на редактирование
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
-                foreach (Point point in collection)
+                foreach (POINT.Point point in collection)
                 {
                     XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
                     dictionaryConvertPoint.Add(convertPoint,point);
@@ -344,7 +345,7 @@ namespace BMCIModule
 
 
         //скорее всего не мусор
-        public bool VisiblePointInRegion(MeshTriangle triangle, Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
+        public bool VisiblePointInRegion(MeshTriangle triangle, POINT.Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
         {
             GraphicsPath graphicsPath = new GraphicsPath();
 
@@ -356,7 +357,7 @@ namespace BMCIModule
             return false;
         }
         // пока что метод все ломает
-        public bool VisiblePointInRegion(ref Face topface, Point point)
+        public bool VisiblePointInRegion(ref Face topface, POINT.Point point)
         {
 
             XYZ originRay = new XYZ(point.X, point.Y, point.Z);
@@ -400,7 +401,7 @@ namespace BMCIModule
             return false;
         }
 
-        public ICollection<Point> IsInFigureWithBorders(ICollection<Point> points, Face topFace,ref double stepMin)
+        public ICollection<POINT.Point> IsInFigureWithBorders(ICollection<POINT.Point> points, Face topFace,ref double stepMin)
         {
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
@@ -433,7 +434,7 @@ namespace BMCIModule
             return points;
         }
 
-        public PointInFigureWithBorders ChangeStatusPoint(Point point, ref Face topFace)
+        public PointInFigureWithBorders ChangeStatusPoint(POINT.Point point, ref Face topFace)
         {
             IList<CurveLoop> curveArray = topFace.GetEdgesAsCurveLoops();
             foreach (var curveLoop in curveArray)
@@ -461,7 +462,7 @@ namespace BMCIModule
             return point.getPointPosition;
         }
         
-        public ICollection<Point> GeneratePointCollection(ref Face topface,ref double stepmin)
+        public ICollection<POINT.Point> GeneratePointCollection(ref Face topface,ref double stepmin)
         {
             ICollection<XYZ> pointCurve = new Collection<XYZ>();
             XYZ xMin, yMin;
@@ -485,7 +486,7 @@ namespace BMCIModule
                 if (point.X < xMin.X) xMin = point;
                 if (point.Y < yMin.Y) yMin = point;
             }
-            List<Point> pointGenerate = new List<Point>();
+            List<POINT.Point> pointGenerate = new List<POINT.Point>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
             for (int i = 0; i <= ((int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle))+1; i++)
@@ -494,7 +495,7 @@ namespace BMCIModule
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
-                    pointGenerate.Add(new Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), (topface as PlanarFace).Origin.Z));
+                    pointGenerate.Add(new POINT.Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), (topface as PlanarFace).Origin.Z));
                 }
                 offset = !offset;
             }
@@ -514,39 +515,7 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        public class Point
-        {
-            public double X { get; set ; }
-            public double Y { get; set; }
-            public double Z { get; set; }
-
-            public bool checkoutStatus { get; set; } = false;
-
-            PointInFigureWithBorders GetPointPosition=PointInFigureWithBorders.notDetected;
-
-            public PointInFigureWithBorders getPointPosition 
-            {
-                get
-                {
-                    return GetPointPosition;
-                }
-                set
-                {
-                    GetPointPosition=value;
-                }
-
-            }
-            public HashSet<Point> pointForHex=new HashSet<Point>();
-
-            public Point(double x, double y, double z)
-            {
-                X =x;
-                Y = y;
-                Z = z;
-            }
-        }
-
-        public void MovieOutFigurePointInBorders(ref ICollection<Point> pointCollection,ref Face topFace)
+        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection,ref Face topFace)
         {
             var pointCollectionOutFigure=pointCollection.Where(x => x.getPointPosition == PointInFigureWithBorders.outFigure);
             double superPositionX=0;
@@ -621,17 +590,5 @@ namespace BMCIModule
             }
         }
        
-    }
-    public static class ExtensionDouble
-    {
-        public static double DoubleToNumbers(this double ob, int i)
-        {
-            string str=ob.ToString();
-            string[] strArray=str.Split(',');
-            char[] chr = strArray[1].ToCharArray(0,i);
-            string mantisa = new string(chr);
-            string strNew = strArray[0] + "," +mantisa;
-            return Convert.ToDouble(strNew);
-        }
     }
 }

@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BMCIModule.Models.Extension
+{
+    public static class ExtensionDouble
+    {
+        public static double DoubleToNumbers(this double ob, int i)
+        {
+            if (ob == 0) return 0;
+            string str = ob.ToString();
+            string[] strArray = str.Split(',');
+            char[] chr = strArray[1].ToCharArray(0, i);
+            string mantisa = new string(chr);
+            string strNew = strArray[0] + "," + mantisa;
+            return Convert.ToDouble(strNew);
+        }
+    }
+}
