@@ -102,8 +102,12 @@ namespace BMCIModule
                 foreach (POINT.Point point in collection)
                 {
                     XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
-                    dictionaryConvertPoint.Add(convertPoint,point);
-                    slabFloor.DrawPoint(convertPoint);
+                    var vertex = slabFloor.DrawPoint(convertPoint);
+                    if (vertex != null)
+                    {
+                        dictionaryConvertPoint.Add(vertex.Position,point);
+                    }
+                    
                 }
                 double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
                 SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
@@ -218,28 +222,31 @@ namespace BMCIModule
                 // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
+                List<XYZ> listPointProverka = new List<XYZ>();
+                List<POINT.Point> listPointInBorder = new List<POINT.Point>();
                 foreach (SlabShapeVertex vertex in vertexToCheck)
                 {
                     foreach (var dPoint in dictionaryConvertPoint)
                     {
                         if (dPoint.Key.IsAlmostEqualTo(vertex.Position)==true)
                         {
+                            listPointInBorder.Add(dPoint.Value);
                             if (dPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders || dPoint.Value.getPointPosition == PointInFigureWithBorders.moviePointFromOutFigure)
                             {
                                 dPoint.Value.checkoutStatus = true;
                             }
+                            
                         }
                     }
                 }
-                List<POINT.Point> listPointInBorder=new List<POINT.Point>();
-                foreach (var dPoint in dictionaryConvertPoint)
+                /*foreach (var dPoint in dictionaryConvertPoint)
                 {
-                    if (dPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders)
+                    if (dPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders || dPoint.Value.getPointPosition==PointInFigureWithBorders.moviePointFromOutFigure)
                     {
                         listPointInBorder.Add(dPoint.Value);
                     }
-                }
-                List< XYZ > listPointProverka=new List< XYZ >();
+                }*/
+                
                 Dictionary<Face,List<XYZ>> faceDictionaryToXYZPointTriangle=new Dictionary<Face,List<XYZ>>();
                 foreach (var face in topFaceArray)
                 {
@@ -253,12 +260,6 @@ namespace BMCIModule
                     {
                         int countStatusChekTrue = 0;
                         // тут какой-то поломанный пиздец уже происходит 
-                        foreach(var listXYZ in keyValuePair.Value)
-                        {
-                            if (listXYZ.IsAlmostEqualTo(vertex.Position))
-                            {
-
-                            }
                             foreach (var pointFace in keyValuePair.Value)
                             {
                                 foreach (var dPoint in dictionaryConvertPoint)
@@ -273,8 +274,7 @@ namespace BMCIModule
                                     }
                                 }
                             }
-                        }
-
+                        // вот тут логика отпизднула
                         if (countStatusChekTrue == 2 && keyValuePair.Value.Count==3)
                         {
                             foreach (var pointFace in keyValuePair.Value)
