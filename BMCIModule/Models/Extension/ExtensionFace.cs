@@ -9,9 +9,9 @@ namespace BMCIModule.Models.Extension
 {
     public static class ExtensionFace
     {
-        public static IList<XYZ> GetListPointInFace(this Face ob)
+        public static List<XYZ> GetListPointInFace(this Face ob)
         {
-            IList<XYZ> listPointInFace=new List<XYZ>();
+            List<XYZ> listPointInFace=new List<XYZ>();
             var curveLoop = ob.GetEdgesAsCurveLoops();
             foreach (var loop in curveLoop)
             {

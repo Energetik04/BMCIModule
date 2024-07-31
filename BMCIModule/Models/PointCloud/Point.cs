@@ -12,7 +12,7 @@ namespace BMCIModule.Models.PointCloud
         public double Y { get; set; }
         public double Z { get; set; }
 
-        public bool checkoutStatus { get; set; } = false;
+        public bool checkoutStatus { get; set; }
 
         PointInFigureWithBorders GetPointPosition = PointInFigureWithBorders.notDetected;
 

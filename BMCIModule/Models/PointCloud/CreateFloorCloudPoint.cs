@@ -12,6 +12,7 @@ using System.Linq;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
+using Point = Autodesk.Revit.DB.Point;
 using POINT=BMCIModule.Models.PointCloud;
 
 namespace BMCIModule
@@ -215,31 +216,34 @@ namespace BMCIModule
                     collectionPointCollection.Add(face,variable);
                 }
                 // массив вершин,нужно искать по этим вершинам 
+                //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
                 foreach (SlabShapeVertex vertex in vertexToCheck)
                 {
-                    if (dictionaryConvertPoint.ContainsKey(vertex.Position))
+                    foreach (var dPoint in dictionaryConvertPoint)
                     {
-                        var itemDictionary=dictionaryConvertPoint[vertex.Position];
-                        if (itemDictionary.getPointPosition == PointInFigureWithBorders.inBorders || itemDictionary.getPointPosition==PointInFigureWithBorders.moviePointFromOutFigure)
+                        if (dPoint.Key.IsAlmostEqualTo(vertex.Position)==true)
                         {
-                            itemDictionary.checkoutStatus = true;
+                            if (dPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders || dPoint.Value.getPointPosition == PointInFigureWithBorders.moviePointFromOutFigure)
+                            {
+                                dPoint.Value.checkoutStatus = true;
+                            }
                         }
+                    }
+                }
+                List<POINT.Point> listPointInBorder=new List<POINT.Point>();
+                foreach (var dPoint in dictionaryConvertPoint)
+                {
+                    if (dPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders)
+                    {
+                        listPointInBorder.Add(dPoint.Value);
                     }
                 }
                 List< XYZ > listPointProverka=new List< XYZ >();
                 Dictionary<Face,List<XYZ>> faceDictionaryToXYZPointTriangle=new Dictionary<Face,List<XYZ>>();
                 foreach (var face in topFaceArray)
                 {
-                    List<XYZ> listPointFace= new List<XYZ>();
-                    foreach (var curveLoop in face.GetEdgesAsCurveLoops())
-                    {
-                        foreach (var curve in curveLoop)
-                        {
-                            listPointFace.Add(curve.GetEndPoint(0));
-                            listPointProverka.Add(curve.GetEndPoint(0));
-                        }
-                    }
+                    List<XYZ> listPointFace=face.GetListPointInFace();
                     faceDictionaryToXYZPointTriangle.Add(face,listPointFace);
                 }
                 foreach (SlabShapeVertex vertex in vertexToCheck)
@@ -257,9 +261,16 @@ namespace BMCIModule
                             }
                             foreach (var pointFace in keyValuePair.Value)
                             {
-                                if (dictionaryConvertPoint[listXYZ].checkoutStatus == true)
+                                foreach (var dPoint in dictionaryConvertPoint)
                                 {
-                                    countStatusChekTrue++;
+                                    if(dPoint.Key.IsAlmostEqualTo(pointFace) == true)
+                                    //if (dictionaryConvertPoint[listXYZ].checkoutStatus == true)
+                                    {
+                                        if (dPoint.Value.checkoutStatus == true)
+                                        {
+                                            countStatusChekTrue++;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -268,12 +279,15 @@ namespace BMCIModule
                         {
                             foreach (var pointFace in keyValuePair.Value)
                             {
-                                if (dictionaryConvertPoint[pointFace].checkoutStatus == false)
+                                foreach (var dictionarePoint in dictionaryConvertPoint)
                                 {
-                                    List<XYZ> listPoint = collectionPointCollection[keyValuePair.Key];
-                                    Aproximate(listPoint,out double a, out double b);
-                                    double zPredict = a * vertex.Position.X + b;
-                                    shapeEditor.ModifySubElement(vertex, zPredict);
+                                    if (dictionarePoint.Key.IsAlmostEqualTo(pointFace)==true)
+                                    {
+                                        List<XYZ> listPoint = collectionPointCollection[keyValuePair.Key];
+                                        Aproximate(listPoint, out double a, out double b);
+                                        double zPredict = a * vertex.Position.X + b;
+                                        shapeEditor.ModifySubElement(vertex, zPredict);
+                                    }
                                 }
                             }
                         }
