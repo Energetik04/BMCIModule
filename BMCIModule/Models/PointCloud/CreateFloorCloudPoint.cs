@@ -255,6 +255,7 @@ namespace BMCIModule
                 // опять какая-то лажа, надо как-то это терьмо передумать
                 while (allCheckPoint==false)
                 {
+                    // нарушение цикла, убдет пиздец, надо отниимать от количества поинтов
                     foreach (var getPointStatusValue in dictionaryConvertPoint.Values)
                     {
                         if (getPointStatusValue.checkoutStatus == true)
@@ -262,7 +263,7 @@ namespace BMCIModule
                             countPointTrue++;
                         }
                     }
-                    if (countPointTrue == dictionaryConvertPoint.Count)
+                    if (countPointTrue >= dictionaryConvertPoint.Count)
                     {
                         allCheckPoint=true;
                     }
