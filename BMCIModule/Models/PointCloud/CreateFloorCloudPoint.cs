@@ -307,18 +307,20 @@ namespace BMCIModule
                                                         {
                                                             Aproximate(collectionPointCollection[faceInTopFace.Key], out double a, out double b);
                                                             double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
-                                                            shapeEditor.ModifySubElement(vertex, zPredict);
                                                             dictionaryConvertPoint[vertex.Position].checkoutStatus = true;
+                                                            shapeEditor.ModifySubElement(vertex, zPredict);
+                                                            
                                                         }
                                                         else
                                                         {
-                                                            if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
+                                                            /*if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
                                                                 collectionPointCollection[faceInTopFace.Key].Count == 0)
                                                             {
                                                                 double z = 0;
+                                                                dictionaryConvertPoint[vertex.Position].checkoutStatus = true;
                                                                 shapeEditor.ModifySubElement(vertex,z);
-                                                                dictionaryConvertPoint[vertex.Position].checkoutStatus =true;
-                                                            }
+                                                                
+                                                            }*/
                                                         }
                                                     }
                                                 }
@@ -395,7 +397,7 @@ namespace BMCIModule
             double  a1=0, a2=0, a3=0, sumx=0, sumy = 0;
             foreach (var point in pointCollection)
             {
-                a = a + point.X * point.Z;
+                a1 = a1 + point.X * point.Z;
                 sumx = sumx + point.X;
                 sumy = sumy + point.Z;
                 a2 = a2 + Math.Pow(point.X, 2);
