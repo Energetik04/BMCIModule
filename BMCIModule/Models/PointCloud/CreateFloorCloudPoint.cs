@@ -89,7 +89,7 @@ namespace BMCIModule
             TaskDialog.Show("Количество точек",collection.Count.ToString());
 
             #region Построение ребер на поверхности
-            Dictionary<XYZ,POINT.Point> dictionaryConvertPoint=new Dictionary<XYZ,POINT.Point>();
+            Dictionary<XYZ,POINT.Point> dictionaryVetexAndPoint=new Dictionary<XYZ,POINT.Point>();
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
@@ -104,7 +104,7 @@ namespace BMCIModule
                     var vertex = slabFloor.DrawPoint(convertPoint);
                     if (vertex != null)
                     {
-                        dictionaryConvertPoint.Add(vertex.Position,point);
+                        dictionaryVetexAndPoint.Add(vertex.Position,point);
                     }
                     
                 }
@@ -224,7 +224,7 @@ namespace BMCIModule
                 List<XYZ> listPointProverka = new List<XYZ>();
                 foreach (SlabShapeVertex vertex in vertexToCheck)
                 {
-                    foreach (var dPoint in dictionaryConvertPoint)
+                    foreach (var dPoint in dictionaryVetexAndPoint)
                     {
                         if (dPoint.Key.IsAlmostEqualTo(vertex.Position)==true)
                         {
@@ -244,11 +244,11 @@ namespace BMCIModule
                     }
                 }*/
                 
-                Dictionary<Face,List<XYZ>> faceDictionaryToXYZPointTriangle=new Dictionary<Face,List<XYZ>>();
+                Dictionary<Face,List<XYZ>> dictionaryFaceAndPointFace=new Dictionary<Face,List<XYZ>>();
                 foreach (var face in topFaceArray)
                 {
                     List<XYZ> listPointFace=face.GetListPointInFace();
-                    faceDictionaryToXYZPointTriangle.Add(face,listPointFace);
+                    dictionaryFaceAndPointFace.Add(face,listPointFace);
                 }
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
@@ -256,27 +256,27 @@ namespace BMCIModule
                 while (allCheckPoint==false)
                 {
                     // нарушение цикла, убдет пиздец, надо отниимать от количества поинтов
-                    foreach (var getPointStatusValue in dictionaryConvertPoint.Values)
+                    foreach (var getPointStatusValue in dictionaryVetexAndPoint.Values)
                     {
                         if (getPointStatusValue.checkoutStatus == true)
                         {
                             countPointTrue++;
                         }
                     }
-                    if (countPointTrue >= dictionaryConvertPoint.Count)
+                    if (countPointTrue >= dictionaryVetexAndPoint.Count)
                     {
                         allCheckPoint=true;
                     }
                     else
                     {
-                        foreach (var faceInTopFace in faceDictionaryToXYZPointTriangle)
+                        foreach (var faceInDictionaryFaceTriangulate in dictionaryFaceAndPointFace)
                         {
                             int getCountStatusTrue = 0;
-                            foreach (var pointInFace in faceInTopFace.Value)
+                            foreach (var listPointInFace in faceInDictionaryFaceTriangulate.Value)
                             {
-                                foreach (var convertPoint in dictionaryConvertPoint)
+                                foreach (var convertPoint in dictionaryVetexAndPoint)
                                 {
-                                    if (pointInFace.IsAlmostEqualTo(convertPoint.Key) && faceInTopFace.Value.Count == 3) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
+                                    if (listPointInFace.IsAlmostEqualTo(convertPoint.Key) && faceInDictionaryFaceTriangulate.Value.Count == 3) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
                                     {
                                         if (convertPoint.Value.checkoutStatus == true)
                                         {
@@ -285,7 +285,7 @@ namespace BMCIModule
                                     }
                                 }
                             }
-                            if (getCountStatusTrue == faceInTopFace.Value.Count)
+                            if (getCountStatusTrue == faceInDictionaryFaceTriangulate.Value.Count)
                             {
                                 continue;
                             }
@@ -293,21 +293,21 @@ namespace BMCIModule
                             {
                                 if (getCountStatusTrue >= 2)
                                 {
-                                    foreach (var pointInFace in faceInTopFace.Value)
+                                    foreach (var pointInFace in faceInDictionaryFaceTriangulate.Value)
                                     {
-                                        foreach (var convertPoint in dictionaryConvertPoint)
+                                        foreach (var convertPoint in dictionaryVetexAndPoint)
                                         {
                                             if (pointInFace.IsAlmostEqualTo(convertPoint.Key) && convertPoint.Value.checkoutStatus == false)
                                             {
-                                                if (collectionPointCollection.ContainsKey(faceInTopFace.Key))
+                                                if (collectionPointCollection.ContainsKey(faceInDictionaryFaceTriangulate.Key))
                                                 {
                                                     foreach (SlabShapeVertex vertex in vertexToCheck)
                                                     {
-                                                        if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCollection[faceInTopFace.Key].Count!=0)
+                                                        if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCollection[faceInDictionaryFaceTriangulate.Key].Count!=0)
                                                         {
-                                                            Aproximate(collectionPointCollection[faceInTopFace.Key], out double a, out double b);
+                                                            Aproximate(collectionPointCollection[faceInDictionaryFaceTriangulate.Key], out double a, out double b);
                                                             double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
-                                                            dictionaryConvertPoint[vertex.Position].checkoutStatus = true;
+                                                            dictionaryVetexAndPoint[vertex.Position].checkoutStatus = true;
                                                             shapeEditor.ModifySubElement(vertex, zPredict);
                                                             
                                                         }
