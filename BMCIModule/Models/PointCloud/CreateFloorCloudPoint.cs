@@ -12,6 +12,7 @@ using System.Linq;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
+using Point = Autodesk.Revit.DB.Point;
 using POINT=BMCIModule.Models.PointCloud;
 
 namespace BMCIModule
@@ -89,7 +90,7 @@ namespace BMCIModule
             TaskDialog.Show("Количество точек",collection.Count.ToString());
 
             #region Построение ребер на поверхности
-            Dictionary<XYZ,POINT.Point> dictionaryVetexAndPoint=new Dictionary<XYZ,POINT.Point>();
+            Dictionary<XYZ,POINT.Point> dictionaryVertexAndPoint=new Dictionary<XYZ,POINT.Point>();
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
@@ -104,7 +105,7 @@ namespace BMCIModule
                     var vertex = slabFloor.DrawPoint(convertPoint);
                     if (vertex != null)
                     {
-                        dictionaryVetexAndPoint.Add(vertex.Position,point);
+                        dictionaryVertexAndPoint.Add(vertex.Position,point);
                     }
                     
                 }
@@ -176,7 +177,7 @@ namespace BMCIModule
                 double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
                 double zMax=selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
                 PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
-                Dictionary<Face,List<XYZ>> collectionPointCollection = new Dictionary<Face, List<XYZ>>();
+                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = new Dictionary<Face, List<XYZ>>();
                 foreach (Face face in topFaceArray)
                 {
                     CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
@@ -214,17 +215,18 @@ namespace BMCIModule
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                     Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.001,1000);// как-будто надо увеличить количество точек
+                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001,3000);// как-будто надо увеличить количество точек
                     var variable=pointCollection.Select(x => pointTransform.OfPoint((XYZ) x)).ToList();
-                    collectionPointCollection.Add(face,variable);
+                    collectionPointCloudInTriangle.Add(face,variable);
                 }
                 // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
-                List<XYZ> listPointProverka = new List<XYZ>();
+                List<XYZ> vertexCheckList=new List<XYZ>();
+                List<POINT.Point> pointInChecList=new List<POINT.Point>();
                 foreach (SlabShapeVertex vertex in vertexToCheck)
                 {
-                    foreach (var dPoint in dictionaryVetexAndPoint)
+                    foreach (var dPoint in dictionaryVertexAndPoint)
                     {
                         if (dPoint.Key.IsAlmostEqualTo(vertex.Position)==true)
                         {
@@ -253,17 +255,19 @@ namespace BMCIModule
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
                 // опять какая-то лажа, надо как-то это терьмо передумать
+                // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
-                    // нарушение цикла, убдет пиздец, надо отниимать от количества поинтов
-                    foreach (var getPointStatusValue in dictionaryVetexAndPoint.Values)
-                    {
-                        if (getPointStatusValue.checkoutStatus == true)
-                        {
-                            countPointTrue++;
-                        }
-                    }
-                    if (countPointTrue >= dictionaryVetexAndPoint.Count)
+                    countPointTrue = 0;
+                    // нарушение цикла, если такая же точка попадается, значение добавляется,поэтому так мало точек, надо отниимать от количества поинтов
+                    //foreach (var getPointStatusValue in dictionaryVertexAndPoint.Values)
+                    //{
+                    //    if (getPointStatusValue.checkoutStatus == true)
+                    //    {
+                    //        countPointTrue++;
+                    //    }
+                    //}
+                    if (countPointTrue >= dictionaryVertexAndPoint.Count)
                     {
                         allCheckPoint=true;
                     }
@@ -272,9 +276,10 @@ namespace BMCIModule
                         foreach (var faceInDictionaryFaceTriangulate in dictionaryFaceAndPointFace)
                         {
                             int getCountStatusTrue = 0;
+                            // тут опять какой-то треш
                             foreach (var listPointInFace in faceInDictionaryFaceTriangulate.Value)
                             {
-                                foreach (var convertPoint in dictionaryVetexAndPoint)
+                                foreach (var convertPoint in dictionaryVertexAndPoint)
                                 {
                                     if (listPointInFace.IsAlmostEqualTo(convertPoint.Key) && faceInDictionaryFaceTriangulate.Value.Count == 3) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
                                     {
@@ -295,32 +300,39 @@ namespace BMCIModule
                                 {
                                     foreach (var pointInFace in faceInDictionaryFaceTriangulate.Value)
                                     {
-                                        foreach (var convertPoint in dictionaryVetexAndPoint)
+                                        foreach (var convertPoint in dictionaryVertexAndPoint)
                                         {
-                                            if (pointInFace.IsAlmostEqualTo(convertPoint.Key) && convertPoint.Value.checkoutStatus == false)
+                                            //изменил поиск с ключа на Point
+                                            if (pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && convertPoint.Value.checkoutStatus == false)
                                             {
-                                                if (collectionPointCollection.ContainsKey(faceInDictionaryFaceTriangulate.Key))
+                                                if (collectionPointCloudInTriangle.ContainsKey(faceInDictionaryFaceTriangulate.Key))
                                                 {
                                                     foreach (SlabShapeVertex vertex in vertexToCheck)
                                                     {
-                                                        if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCollection[faceInDictionaryFaceTriangulate.Key].Count!=0)
+                                                        //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
+                                                        if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count!=0)
                                                         {
-                                                            Aproximate(collectionPointCollection[faceInDictionaryFaceTriangulate.Key], out double a, out double b);
+                                                            Aproximate(collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key], out double a, out double b);
                                                             double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
-                                                            dictionaryVetexAndPoint[vertex.Position].checkoutStatus = true;
-                                                            shapeEditor.ModifySubElement(vertex, zPredict);
-                                                            
-                                                        }
-                                                        else
-                                                        {
-                                                            /*if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
-                                                                collectionPointCollection[faceInTopFace.Key].Count == 0)
+                                                            foreach (var vertexInDictionary in dictionaryVertexAndPoint)
                                                             {
-                                                                double z = 0;
-                                                                dictionaryConvertPoint[vertex.Position].checkoutStatus = true;
-                                                                shapeEditor.ModifySubElement(vertex,z);
-                                                                
-                                                            }*/
+                                                                if (vertexInDictionary.Key.IsAlmostEqualTo(
+                                                                        vertex.Position))
+                                                                {
+                                                                    vertexInDictionary.Value.checkoutStatus = true;
+                                                                    vertexCheckList.Add(vertex.Position);
+                                                                    shapeEditor.ModifySubElement(vertex, zPredict);
+                                                                    vertexCheckList.Add(vertex.Position);
+                                                                    pointInChecList.Add(vertexInDictionary.Value);
+                                                                    foreach (var checkTrue in dictionaryVertexAndPoint)
+                                                                    {
+                                                                        if (checkTrue.Value.checkoutStatus == true)
+                                                                        {
+                                                                            countPointTrue++;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -333,48 +345,6 @@ namespace BMCIModule
                     }
                 }
                 
-
-                /*foreach (SlabShapeVertex vertex in vertexToCheck)
-                {
-                    listPointProverka.Contains(vertex.Position);
-                    foreach (var faceInDictionary in faceDictionaryToXYZPointTriangle)
-                    {
-                        int countStatusChekTrue = 0;
-                        // тут какой-то поломанный пиздец уже происходит 
-                            foreach (var pointFace in faceInDictionary.Value)
-                            {
-                                foreach (var dPoint in dictionaryConvertPoint)
-                                {
-                                    if(dPoint.Key.IsAlmostEqualTo(pointFace) == true)
-                                    //if (dictionaryConvertPoint[listXYZ].checkoutStatus == true)
-                                    {
-                                        if (dPoint.Value.checkoutStatus == true)
-                                        {
-                                            countStatusChekTrue++;
-                                        }
-                                    }
-                                }
-                            }
-                            //ЛОГИКУ булевского уравнения необходимо поставит, когдя я опять возьму эту поверхность, переберу его точки, посмотрю есть ли там true и если есть, то уже буду идти дальше 
-                        // вот тут логика отпизднула
-                        if (countStatusChekTrue == 2 && faceInDictionary.Value.Count==3)
-                        {
-                            foreach (var pointFace in faceInDictionary.Value)
-                            {
-                                foreach (var dictionarePoint in dictionaryConvertPoint)
-                                {
-                                    if (dictionarePoint.Key.IsAlmostEqualTo(pointFace)==true)
-                                    {
-                                        List<XYZ> listPoint = collectionPointCollection[faceInDictionary.Key];
-                                        Aproximate(listPoint, out double a, out double b);
-                                        double zPredict = a * vertex.Position.X + b;
-                                        shapeEditor.ModifySubElement(vertex, zPredict);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }*/
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
@@ -402,7 +372,6 @@ namespace BMCIModule
                 sumy = sumy + point.Z;
                 a2 = a2 + Math.Pow(point.X, 2);
             }
-
             a3 = Math.Pow(sumx, 2);
             a=(pointCollection.Count*a1-sumx*sumy)/(pointCollection.Count*a2-a3);
             b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
