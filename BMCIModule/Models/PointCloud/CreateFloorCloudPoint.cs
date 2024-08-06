@@ -233,6 +233,7 @@ namespace BMCIModule
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
+                List<int> missFace = new List<int>();
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
@@ -243,16 +244,15 @@ namespace BMCIModule
                     else
                     {
                         countPointTrue = 0;
-                        foreach (var faceInDictionaryFaceTriangulate in dictionaryFaceAndPointFace)
-                        {
+                       foreach (var pointInBorderFace in dictionaryFaceAndPointFace)
+                       {
                             int getCountStatusTrue = 0;
                             // тут опять какой-то треш
-                            foreach (XYZ listPointInFace in faceInDictionaryFaceTriangulate.Value)
+                            foreach (XYZ listPointInFace in pointInBorderFace.Value)
                             {
-
                                 foreach (var convertPoint in dictionaryVertexAndPoint)
                                 {
-                                    if (listPointInFace.IsAlmostEqualTo(convertPoint.Key) && faceInDictionaryFaceTriangulate.Value.Count == 3) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
+                                    if (listPointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && pointInBorderFace.Value.Count == 3) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
                                     {
                                         if (convertPoint.Value.checkoutStatus == true)
                                         {
@@ -261,35 +261,38 @@ namespace BMCIModule
                                     }
                                 }
                             }
-                            if (getCountStatusTrue == faceInDictionaryFaceTriangulate.Value.Count)
+                            if (getCountStatusTrue == pointInBorderFace.Value.Count)
                             {
+                                missFace.Add(pointInBorderFace.Key.Id);
                                 continue;
                             }
                             else
                             {
                                 if (getCountStatusTrue >= 2)
                                 {
-
-                                    foreach (XYZ pointInFace in faceInDictionaryFaceTriangulate.Value)
+                                    foreach (XYZ pointInFace in pointInBorderFace.Value)
                                     {
+                                        //var point = dictionaryVertexAndPoint.Where(x =>
+                                        //    x.Key.IsAlmostEqualTo(pointInFace) && x.Value.checkoutStatus == false); // нахожу которые не определены 
+                                        //if(point.Count()!=0)
                                         foreach (var convertPoint in dictionaryVertexAndPoint)
-                                        {
+                                        { 
                                             //изменил поиск с ключа на Point
                                             if (pointInFace.IsAlmostEqualTo(convertPoint.Key) && convertPoint.Value.checkoutStatus == false)
                                             {
                                                 foreach (var triangleWithPointCloud in collectionPointCloudInTriangle)
                                                 {
                                                     if (triangleWithPointCloud.Key.Id ==
-                                                        faceInDictionaryFaceTriangulate.Key.Id)
+                                                        pointInBorderFace.Key.Id)
                                                     {
-                                                        idInsertFace.Add(faceInDictionaryFaceTriangulate.Key.Id);
+                                                        idInsertFace.Add(pointInBorderFace.Key.Id);
                                                         foreach (SlabShapeVertex vertex in vertexToCheck)
                                                         {
                                                             //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
-                                                            if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count != 0 && vertex.VertexType == SlabShapeVertexType.Interior)
+                                                            if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[pointInBorderFace.Key].Count != 0 && vertex.VertexType == SlabShapeVertexType.Interior)
                                                             //if(vertex.VertexType==SlabShapeVertexType.Interior && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count != 0)
                                                             {
-                                                                Aproximate(collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key], out double a, out double b);
+                                                                Aproximate(collectionPointCloudInTriangle[pointInBorderFace.Key], out double a, out double b);
                                                                 double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
                                                                 foreach (var vertexInDictionary in dictionaryVertexAndPoint)
                                                                 {
@@ -297,9 +300,13 @@ namespace BMCIModule
                                                                     if (vertexInDictionary.Key.IsAlmostEqualTo(
                                                                             vertex.Position))
                                                                     {
-                                                                        vertexInDictionary.Value.checkoutStatus = true;
                                                                         shapeEditor.ModifySubElement(vertex, zPredict);
-                                                                        vertexCheckList.Add(vertex.Position);
+                                                                        vertexInDictionary.Value.checkoutStatus = true;
+                                                                        vertexInDictionary.Value.X=vertex.Position.X;
+                                                                        vertexInDictionary.Value.Y=vertex.Position.Y;
+                                                                        vertexInDictionary.Value.Z=vertex.Position.Z;
+                                                                        dictionaryVertexAndPoint.Add(vertex.Position,vertexInDictionary.Value);
+                                                                        //dictionaryVertexAndPoint.Remove(vertexInDictionary.Key);
                                                                         pointInChecList.Add(vertexInDictionary.Value);
                                                                     }
                                                                 }
@@ -307,31 +314,6 @@ namespace BMCIModule
                                                         }
                                                     }
                                                 }
-                                                //if (collectionPointCloudInTriangle.ContainsKey(faceInDictionaryFaceTriangulate.Key))
-                                                //{
-                                                //    checkListCloudPoint.Add(faceInDictionaryFaceTriangulate.Key);
-                                                //    foreach (SlabShapeVertex vertex in vertexToCheck)
-                                                //    {
-                                                //        //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
-                                                //        if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count!=0 && vertex.VertexType==SlabShapeVertexType.Interior)
-                                                //        //if(vertex.VertexType==SlabShapeVertexType.Interior && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count != 0)
-                                                //        {
-                                                //            Aproximate(collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key], out double a, out double b);
-                                                //            double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
-                                                //            foreach (var vertexInDictionary in dictionaryVertexAndPoint)
-                                                //            {
-                                                //                if (vertexInDictionary.Key.IsAlmostEqualTo(
-                                                //                        vertex.Position))
-                                                //                {
-                                                //                    vertexInDictionary.Value.checkoutStatus = true;
-                                                //                    shapeEditor.ModifySubElement(vertex, zPredict);
-                                                //                    vertexCheckList.Add(vertex.Position);
-                                                //                    pointInChecList.Add(vertexInDictionary.Value);
-                                                //                }
-                                                //            }
-                                                //        }
-                                                //    }
-                                                //}
                                             }
                                         }
                                     }
