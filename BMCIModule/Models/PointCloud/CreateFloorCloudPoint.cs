@@ -181,7 +181,6 @@ namespace BMCIModule
             }
             #endregion
 
-
             using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
                 tr2.Start();
@@ -189,71 +188,13 @@ namespace BMCIModule
                 sw.Start();
                 SlabShapeEditor shapeEditor = (selectFloor as Floor).SlabShapeEditor;
                 Options op = new Options();// default setting
-                List<GeometryObject> list = new List<GeometryObject>();
+                //List<GeometryObject> list = new List<GeometryObject>();
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
-                foreach (var instance in selectorNewFloor.get_Geometry(op))
-                {
-                    if (instance is Solid) list.Add(instance);
-                }
-                
-                Solid solid = list[0] as Solid;
-                FaceArray faceArray = solid.Faces;
-                XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
-                XYZ normalNegative = new XYZ(0.000000000, 0.000000000, -1.000000000);
                 List<Face> topFaceArray = new List<Face>();
-                foreach (Face face in faceArray)
-                {
-                    if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) topFaceArray.Add(face); // не доходят все точки 
-                }
-                List<Face> bottomFaceArray = new List<Face>();
-                double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
-                double zMax=selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
-                PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
-                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = new Dictionary<Face, List<XYZ>>();
-                foreach (Face face in topFaceArray)
-                {
-                    CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
-                    List<XYZ> pointMeshMax= new List<XYZ>();
-                    List<XYZ> pointMeshMin=new List<XYZ>();
-                    foreach (Line getLine in curve)
-                    {
-                        pointMeshMax.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMax));
-                        pointMeshMin.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMin));
-                    }
-                    //плоскости фигуры по 3 точкам
-                    Plane planeMaxHeight = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMax[2]);
-                    Plane planeMinHeight = Plane.CreateByThreePoints(pointMeshMin[0], pointMeshMin[1], pointMeshMin[2]);
-                    Plane figurebokovina1=Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMin[0]);
-                    Plane figurebokovina2 = Plane.CreateByThreePoints(pointMeshMax[1], pointMeshMax[2], pointMeshMin[1]);
-                    Plane figurebokovina3 = Plane.CreateByThreePoints(pointMeshMax[2], pointMeshMax[0], pointMeshMin[2]);
-
-                    XYZ reversNormalMaxheight =new XYZ(planeMaxHeight.Normal.X,planeMaxHeight.Normal.Y,planeMaxHeight.Normal.Z*(-1));
-
-                    XYZ reversNormalFigureBokovina1=new XYZ(figurebokovina1.Normal.X,figurebokovina1.Normal.Y,-1*figurebokovina1.Normal.Z);
-                    XYZ reversNormalFigureBokovina2 = new XYZ(figurebokovina2.Normal.X, figurebokovina2.Normal.Y, -1 * figurebokovina2.Normal.Z);
-                    XYZ reversNormalFigureBokovina3 = new XYZ(figurebokovina3.Normal.X, figurebokovina3.Normal.Y, -1 * figurebokovina3.Normal.Z);
-
-                    Plane reversFigureBokovina1=Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina1,figurebokovina1.Origin);
-                    Plane reversFigureBokovina2 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina2, figurebokovina2.Origin);
-                    Plane reversFigureBokovina3 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina3, figurebokovina3.Origin);
-
-                    Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
-                    IList<Plane> faceToPlane= new List<Plane>();
-                    faceToPlane.Add(reversPlaneMaxHeight);
-                    faceToPlane.Add(planeMinHeight);
-                    faceToPlane.Add(reversFigureBokovina1);
-                    faceToPlane.Add(reversFigureBokovina2);
-                    faceToPlane.Add(reversFigureBokovina3);
-                    PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
-                    Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
-
-                    PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001,3000);// как-будто надо увеличить количество точек
-                    var variable=pointCollection.Select(x => pointTransform.OfPoint((XYZ) x)).ToList();
-                    collectionPointCloudInTriangle.Add(face,variable);
-                }
-                // массив вершин,нужно искать по этим вершинам 
+                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray);
+               // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
-                SlabShapeVertexArray vertexToCheck = (selectFloor as Floor).SlabShapeEditor.SlabShapeVertices;
+                SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
                 List<XYZ> vertexCheckList=new List<XYZ>();
                 List<POINT.Point> pointInChecList=new List<POINT.Point>();
                 foreach (SlabShapeVertex vertex in vertexToCheck)
@@ -275,20 +216,26 @@ namespace BMCIModule
                     List<XYZ> listPointFace=face.GetListPointInFace();
                     dictionaryFaceAndPointFace.Add(face,listPointFace);
                 }
+                //имеют одинаковые ID
+                List<int> idFaceInDictionaryFaceAndPointFace = new List<int>();
+                foreach (var VARIABLE in dictionaryFaceAndPointFace)
+                {
+                    idFaceInDictionaryFaceAndPointFace.Add(VARIABLE.Key.Id);
+                }
+                List<int> idFaceInCollectionPointCloudInTriangle=new List<int>();
+                foreach (var VARIABLE in collectionPointCloudInTriangle)
+                {
+                    idFaceInCollectionPointCloudInTriangle.Add(VARIABLE.Key.Id);
+                }
+
+
+
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
-                    // нарушение цикла, если такая же точка попадается, значение добавляется,поэтому так мало точек, надо отниимать от количества поинтов
-                    //foreach (var getPointStatusValue in dictionaryVertexAndPoint.Values)
-                    //{
-                    //    if (getPointStatusValue.checkoutStatus == true)
-                    //    {
-                    //        countPointTrue++;
-                    //    }
-                    //}
                     if (countPointTrue >= dictionaryVertexAndPoint.Count)
                     {
                         allCheckPoint=true;
@@ -322,6 +269,7 @@ namespace BMCIModule
                             {
                                 if (getCountStatusTrue >= 2)
                                 {
+
                                     foreach (XYZ pointInFace in faceInDictionaryFaceTriangulate.Value)
                                     {
                                         foreach (var convertPoint in dictionaryVertexAndPoint)
@@ -410,6 +358,74 @@ namespace BMCIModule
                 tr2.Commit();
             }
             return Result.Succeeded;
+        }
+
+        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray)
+        {
+            Options op = new Options();
+            List<GeometryObject> list = new List<GeometryObject>();
+            foreach (var instance in selectorNewFloor.get_Geometry(op))
+            {
+                if (instance is Solid) list.Add(instance);
+            }
+
+            Solid solid = list[0] as Solid;
+            FaceArray faceArray = solid.Faces;
+            XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
+            XYZ normalNegative = new XYZ(0.000000000, 0.000000000, -1.000000000);
+            //List<Face> topFaceArray = new List<Face>();
+            foreach (Face face in faceArray)
+            {
+                if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) topFaceArray.Add(face); // не доходят все точки 
+            }
+            List<Face> bottomFaceArray = new List<Face>();
+            double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
+            double zMax = selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
+            PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
+            Dictionary<Face, List<XYZ>> collectionPointCloudInTriangle = new Dictionary<Face, List<XYZ>>();
+            foreach (Face face in topFaceArray)
+            {
+                CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
+                List<XYZ> pointMeshMax = new List<XYZ>();
+                List<XYZ> pointMeshMin = new List<XYZ>();
+                foreach (Line getLine in curve)
+                {
+                    pointMeshMax.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMax));
+                    pointMeshMin.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMin));
+                }
+                //плоскости фигуры по 3 точкам
+                Plane planeMaxHeight = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMax[2]);
+                Plane planeMinHeight = Plane.CreateByThreePoints(pointMeshMin[0], pointMeshMin[1], pointMeshMin[2]);
+                Plane figurebokovina1 = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMin[0]);
+                Plane figurebokovina2 = Plane.CreateByThreePoints(pointMeshMax[1], pointMeshMax[2], pointMeshMin[1]);
+                Plane figurebokovina3 = Plane.CreateByThreePoints(pointMeshMax[2], pointMeshMax[0], pointMeshMin[2]);
+
+                XYZ reversNormalMaxheight = new XYZ(planeMaxHeight.Normal.X, planeMaxHeight.Normal.Y, planeMaxHeight.Normal.Z * (-1));
+
+                XYZ reversNormalFigureBokovina1 = new XYZ(figurebokovina1.Normal.X, figurebokovina1.Normal.Y, -1 * figurebokovina1.Normal.Z);
+                XYZ reversNormalFigureBokovina2 = new XYZ(figurebokovina2.Normal.X, figurebokovina2.Normal.Y, -1 * figurebokovina2.Normal.Z);
+                XYZ reversNormalFigureBokovina3 = new XYZ(figurebokovina3.Normal.X, figurebokovina3.Normal.Y, -1 * figurebokovina3.Normal.Z);
+
+                Plane reversFigureBokovina1 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina1, figurebokovina1.Origin);
+                Plane reversFigureBokovina2 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina2, figurebokovina2.Origin);
+                Plane reversFigureBokovina3 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina3, figurebokovina3.Origin);
+
+                Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
+                IList<Plane> faceToPlane = new List<Plane>();
+                faceToPlane.Add(reversPlaneMaxHeight);
+                faceToPlane.Add(planeMinHeight);
+                faceToPlane.Add(reversFigureBokovina1);
+                faceToPlane.Add(reversFigureBokovina2);
+                faceToPlane.Add(reversFigureBokovina3);
+                PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
+                Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
+
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 3000);// как-будто надо увеличить количество точек
+                var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
+                collectionPointCloudInTriangle.Add(face, variable);
+            }
+
+            return collectionPointCloudInTriangle;
         }
 
         public void Aproximate(List<XYZ> pointCollection,out double a,out double b)
