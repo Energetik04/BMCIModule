@@ -216,6 +216,7 @@ namespace BMCIModule
                     List<XYZ> listPointFace=face.GetListPointInFace();
                     dictionaryFaceAndPointFace.Add(face,listPointFace);
                 }
+
                 //имеют одинаковые ID
                 List<int> idFaceInDictionaryFaceAndPointFace = new List<int>();
                 foreach (var VARIABLE in dictionaryFaceAndPointFace)
@@ -227,13 +228,11 @@ namespace BMCIModule
                 {
                     idFaceInCollectionPointCloudInTriangle.Add(VARIABLE.Key.Id);
                 }
-
-
-
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
-                List<int> missFace = new List<int>();
+                List<XYZ> pointNotInList = new List<XYZ>();
+               
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
@@ -252,7 +251,8 @@ namespace BMCIModule
                             {
                                 foreach (var convertPoint in dictionaryVertexAndPoint)
                                 {
-                                    if (listPointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && pointInBorderFace.Value.Count == 3) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
+                                    // проверка совпадения точек, не проходит почему-то
+                                    if (listPointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z))) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
                                     {
                                         if (convertPoint.Value.checkoutStatus == true)
                                         {
@@ -263,7 +263,6 @@ namespace BMCIModule
                             }
                             if (getCountStatusTrue == pointInBorderFace.Value.Count)
                             {
-                                missFace.Add(pointInBorderFace.Key.Id);
                                 continue;
                             }
                             else
@@ -276,20 +275,24 @@ namespace BMCIModule
                                         //    x.Key.IsAlmostEqualTo(pointInFace) && x.Value.checkoutStatus == false); // нахожу которые не определены 
                                         //if(point.Count()!=0)
                                         foreach (var convertPoint in dictionaryVertexAndPoint)
-                                        { 
+                                        {
+                                            if((pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X, convertPoint.Value.Y, convertPoint.Value.Z))) && convertPoint.Value.checkoutStatus==true)
+                                            {
+                                                break;
+                                            }
                                             //изменил поиск с ключа на Point
-                                            if (pointInFace.IsAlmostEqualTo(convertPoint.Key) && convertPoint.Value.checkoutStatus == false)
+                                            if (pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && convertPoint.Value.checkoutStatus == false)
                                             {
                                                 foreach (var triangleWithPointCloud in collectionPointCloudInTriangle)
                                                 {
-                                                    if (triangleWithPointCloud.Key.Id ==
-                                                        pointInBorderFace.Key.Id)
+                                                    if (triangleWithPointCloud.Key.Id == pointInBorderFace.Key.Id)
                                                     {
                                                         idInsertFace.Add(pointInBorderFace.Key.Id);
                                                         foreach (SlabShapeVertex vertex in vertexToCheck)
                                                         {
+                                                            if(vertex.VertexType!=SlabShapeVertexType.Interior)
                                                             //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
-                                                            if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[pointInBorderFace.Key].Count != 0 && vertex.VertexType == SlabShapeVertexType.Interior)
+                                                            if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[pointInBorderFace.Key].Count != 0)
                                                             //if(vertex.VertexType==SlabShapeVertexType.Interior && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count != 0)
                                                             {
                                                                 Aproximate(collectionPointCloudInTriangle[pointInBorderFace.Key], out double a, out double b);
@@ -297,39 +300,44 @@ namespace BMCIModule
                                                                 foreach (var vertexInDictionary in dictionaryVertexAndPoint)
                                                                 {
                                                                     //дальше какой-то пиздец, находит только 96 
-                                                                    if (vertexInDictionary.Key.IsAlmostEqualTo(
-                                                                            vertex.Position))
+                                                                    if (vertex.Position.IsAlmostEqualTo(new XYZ(vertexInDictionary.Value.X,vertexInDictionary.Value.Y,vertexInDictionary.Value.Z)) && vertexInDictionary.Value.getPointPosition==PointInFigureWithBorders.inFigure)
                                                                     {
                                                                         shapeEditor.ModifySubElement(vertex, zPredict);
                                                                         vertexInDictionary.Value.checkoutStatus = true;
-                                                                        vertexInDictionary.Value.X=vertex.Position.X;
+                                                                        vertexInDictionary.Value.X = vertex.Position.X;
                                                                         vertexInDictionary.Value.Y=vertex.Position.Y;
-                                                                        vertexInDictionary.Value.Z=vertex.Position.Z;
-                                                                        dictionaryVertexAndPoint.Add(vertex.Position,vertexInDictionary.Value);
-                                                                        //dictionaryVertexAndPoint.Remove(vertexInDictionary.Key);
+                                                                        vertexInDictionary.Value.Z = vertex.Position.Z;
                                                                         pointInChecList.Add(vertexInDictionary.Value);
+                                                                        break;
                                                                     }
                                                                 }
+                                                                break;
                                                             }
                                                         }
+                                                        break;
                                                     }
                                                 }
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                pointNotInList.Add(pointInFace);
+                                                break;
                                             }
                                         }
                                     }
                                 }
-                                foreach (var checkTrue in dictionaryVertexAndPoint)
-                                {
-                                    if (checkTrue.Value.checkoutStatus == true)
-                                    {
-                                        countPointTrue++;
-                                    }
-                                }
                             }
+                       }
+                    }
+                    foreach (var checkTrue in dictionaryVertexAndPoint)
+                    {
+                        if (checkTrue.Value.checkoutStatus == true)
+                        {
+                            countPointTrue++;
                         }
                     }
                 }
-                
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
