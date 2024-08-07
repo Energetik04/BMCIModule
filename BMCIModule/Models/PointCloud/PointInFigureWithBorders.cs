@@ -13,6 +13,7 @@ namespace BMCIModule.Models
         outFigure = 2,
         inBorders = 3,
         moviePointFromOutFigure=4,
-        deleteThisPoint= 5
+        deleteThisPoint= 5,
+        cornerPoint=6
     }
 }

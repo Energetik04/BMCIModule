@@ -112,7 +112,6 @@ namespace BMCIModule
                     {
                         dictionaryVertexAndPoint.Add(vertex.Position,point);
                     }
-                    
                 }
                 double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
                 SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
@@ -126,6 +125,11 @@ namespace BMCIModule
                 {
                     if (vertex.VertexType == SlabShapeVertexType.Corner)
                     {
+                        POINT.Point cornerPoint =
+                            new POINT.Point(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+                        cornerPoint.checkoutStatus = true;
+                        cornerPoint.getPointPosition = PointInFigureWithBorders.cornerPoint;
+                        dictionaryVertexAndPoint.Add(vertex.Position,cornerPoint);
                         cornerList.Add(vertex.Position);
                     }
                     else
@@ -216,18 +220,7 @@ namespace BMCIModule
                     List<XYZ> listPointFace=face.GetListPointInFace();
                     dictionaryFaceAndPointFace.Add(face,listPointFace);
                 }
-
                 //имеют одинаковые ID
-                List<int> idFaceInDictionaryFaceAndPointFace = new List<int>();
-                foreach (var VARIABLE in dictionaryFaceAndPointFace)
-                {
-                    idFaceInDictionaryFaceAndPointFace.Add(VARIABLE.Key.Id);
-                }
-                List<int> idFaceInCollectionPointCloudInTriangle=new List<int>();
-                foreach (var VARIABLE in collectionPointCloudInTriangle)
-                {
-                    idFaceInCollectionPointCloudInTriangle.Add(VARIABLE.Key.Id);
-                }
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
@@ -287,10 +280,9 @@ namespace BMCIModule
                                                 {
                                                     if (triangleWithPointCloud.Key.Id == pointInBorderFace.Key.Id)
                                                     {
-                                                        idInsertFace.Add(pointInBorderFace.Key.Id);
                                                         foreach (SlabShapeVertex vertex in vertexToCheck)
                                                         {
-                                                            if(vertex.VertexType!=SlabShapeVertexType.Interior)
+                                                            //if(vertex.VertexType==SlabShapeVertexType.Corner) continue;
                                                             //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
                                                             if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[pointInBorderFace.Key].Count != 0)
                                                             //if(vertex.VertexType==SlabShapeVertexType.Interior && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count != 0)
@@ -302,6 +294,7 @@ namespace BMCIModule
                                                                     //дальше какой-то пиздец, находит только 96 
                                                                     if (vertex.Position.IsAlmostEqualTo(new XYZ(vertexInDictionary.Value.X,vertexInDictionary.Value.Y,vertexInDictionary.Value.Z)) && vertexInDictionary.Value.getPointPosition==PointInFigureWithBorders.inFigure)
                                                                     {
+                                                                        idInsertFace.Add(pointInBorderFace.Key.Id);
                                                                         shapeEditor.ModifySubElement(vertex, zPredict);
                                                                         vertexInDictionary.Value.checkoutStatus = true;
                                                                         vertexInDictionary.Value.X = vertex.Position.X;
@@ -317,11 +310,6 @@ namespace BMCIModule
                                                         break;
                                                     }
                                                 }
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                pointNotInList.Add(pointInFace);
                                                 break;
                                             }
                                         }
