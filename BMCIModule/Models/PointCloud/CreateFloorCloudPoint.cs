@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Windows.Documents;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
@@ -107,7 +108,7 @@ namespace BMCIModule
                 foreach (POINT.Point point in collection)
                 {
                     XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
-                    var vertex = slabFloor.DrawPoint(convertPoint);
+                    SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint); // вернет null если точки не существует на верхней грании фигуры
                     if (vertex != null)
                     {
                         dictionaryVertexAndPoint.Add(vertex.Position,point);
@@ -125,8 +126,7 @@ namespace BMCIModule
                 {
                     if (vertex.VertexType == SlabShapeVertexType.Corner)
                     {
-                        POINT.Point cornerPoint =
-                            new POINT.Point(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+                        POINT.Point cornerPoint = new POINT.Point(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
                         cornerPoint.checkoutStatus = true;
                         cornerPoint.getPointPosition = PointInFigureWithBorders.cornerPoint;
                         dictionaryVertexAndPoint.Add(vertex.Position,cornerPoint);
@@ -147,7 +147,6 @@ namespace BMCIModule
                         }
                     }
                 }
-                
                 Dictionary<int, SlabShapeCreaseArray> tableHashSet = new Dictionary<int, SlabShapeCreaseArray>();
                 foreach (SlabShapeVertex vertex in vertexArray)
                 {
@@ -192,7 +191,6 @@ namespace BMCIModule
                 sw.Start();
                 SlabShapeEditor shapeEditor = (selectFloor as Floor).SlabShapeEditor;
                 Options op = new Options();// default setting
-                //List<GeometryObject> list = new List<GeometryObject>();
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
                 List<Face> topFaceArray = new List<Face>();
                 Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray);
@@ -224,8 +222,7 @@ namespace BMCIModule
                 bool allCheckPoint=false;
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
-                List<XYZ> pointNotInList = new List<XYZ>();
-               
+                Dictionary<Face,bool> fullCheckOutFace=new Dictionary<Face, bool>();
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
@@ -235,88 +232,164 @@ namespace BMCIModule
                     }
                     else
                     {
-                        countPointTrue = 0;
-                       foreach (var pointInBorderFace in dictionaryFaceAndPointFace)
-                       {
-                            int getCountStatusTrue = 0;
-                            // тут опять какой-то треш
-                            foreach (XYZ listPointInFace in pointInBorderFace.Value)
+                        foreach (var faceAndPointInFace in dictionaryFaceAndPointFace)
+                        {
+                            foreach (var pointInFace in faceAndPointInFace.Value)
                             {
-                                foreach (var convertPoint in dictionaryVertexAndPoint)
+                                foreach (var vertexAndPoint in dictionaryVertexAndPoint)
                                 {
-                                    // проверка совпадения точек, не проходит почему-то
-                                    if (listPointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z))) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
+                                    if (pointInFace.IsAlmostEqualTo(new XYZ(vertexAndPoint.Value.X,
+                                            vertexAndPoint.Value.Y, vertexAndPoint.Value.Z)) && vertexAndPoint.Value.checkoutStatus==true)
                                     {
-                                        if (convertPoint.Value.checkoutStatus == true)
-                                        {
-                                            getCountStatusTrue++;
-                                        }
+                                        break;
                                     }
-                                }
-                            }
-                            if (getCountStatusTrue == pointInBorderFace.Value.Count)
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                if (getCountStatusTrue >= 2)
-                                {
-                                    foreach (XYZ pointInFace in pointInBorderFace.Value)
+                                    else
                                     {
-                                        //var point = dictionaryVertexAndPoint.Where(x =>
-                                        //    x.Key.IsAlmostEqualTo(pointInFace) && x.Value.checkoutStatus == false); // нахожу которые не определены 
-                                        //if(point.Count()!=0)
-                                        foreach (var convertPoint in dictionaryVertexAndPoint)
+                                        if (pointInFace.IsAlmostEqualTo(new XYZ(vertexAndPoint.Value.X,
+                                                vertexAndPoint.Value.Y, vertexAndPoint.Value.Z)) &&
+                                            vertexAndPoint.Value.checkoutStatus == false)
                                         {
-                                            if((pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X, convertPoint.Value.Y, convertPoint.Value.Z))) && convertPoint.Value.checkoutStatus==true)
+                                            var trianglePoint = collectionPointCloudInTriangle
+                                                .Where(x => x.Key.Id == faceAndPointInFace.Key.Id);
+                                            foreach (SlabShapeVertex vertex in vertexToCheck)
                                             {
-                                                break;
-                                            }
-                                            //изменил поиск с ключа на Point
-                                            if (pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && convertPoint.Value.checkoutStatus == false)
-                                            {
-                                                foreach (var triangleWithPointCloud in collectionPointCloudInTriangle)
+                                                if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
+                                                    collectionPointCloudInTriangle[trianglePoint.First().Key].Count != 0)
                                                 {
-                                                    if (triangleWithPointCloud.Key.Id == pointInBorderFace.Key.Id)
+                                                    Aproximate(collectionPointCloudInTriangle[trianglePoint.First().Key], out double a, out double b);
+                                                    double zPredict = a * vertex.Position.X + b;
+                                                    shapeEditor.ModifySubElement(vertex, zPredict);
+                                                    vertexAndPoint.Value.checkoutStatus = true;
+                                                    vertexAndPoint.Value.X = vertex.Position.X;
+                                                    vertexAndPoint.Value.Y = vertex.Position.Y;
+                                                    vertexAndPoint.Value.Z = vertex.Position.Z;
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
+                                                        collectionPointCloudInTriangle[trianglePoint.First().Key]
+                                                            .Count == 0)
                                                     {
-                                                        foreach (SlabShapeVertex vertex in vertexToCheck)
-                                                        {
-                                                            //if(vertex.VertexType==SlabShapeVertexType.Corner) continue;
-                                                            //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
-                                                            if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[pointInBorderFace.Key].Count != 0)
-                                                            //if(vertex.VertexType==SlabShapeVertexType.Interior && collectionPointCloudInTriangle[faceInDictionaryFaceTriangulate.Key].Count != 0)
-                                                            {
-                                                                Aproximate(collectionPointCloudInTriangle[pointInBorderFace.Key], out double a, out double b);
-                                                                double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
-                                                                foreach (var vertexInDictionary in dictionaryVertexAndPoint)
-                                                                {
-                                                                    //дальше какой-то пиздец, находит только 96 
-                                                                    if (vertex.Position.IsAlmostEqualTo(new XYZ(vertexInDictionary.Value.X,vertexInDictionary.Value.Y,vertexInDictionary.Value.Z)) && vertexInDictionary.Value.getPointPosition==PointInFigureWithBorders.inFigure)
-                                                                    {
-                                                                        idInsertFace.Add(pointInBorderFace.Key.Id);
-                                                                        shapeEditor.ModifySubElement(vertex, zPredict);
-                                                                        vertexInDictionary.Value.checkoutStatus = true;
-                                                                        vertexInDictionary.Value.X = vertex.Position.X;
-                                                                        vertexInDictionary.Value.Y=vertex.Position.Y;
-                                                                        vertexInDictionary.Value.Z = vertex.Position.Z;
-                                                                        pointInChecList.Add(vertexInDictionary.Value);
-                                                                        break;
-                                                                    }
-                                                                }
-                                                                break;
-                                                            }
-                                                        }
-                                                        break;
+                                                        vertexAndPoint.Value.checkoutStatus = true;
                                                     }
                                                 }
-                                                break;
                                             }
                                         }
                                     }
                                 }
                             }
-                       }
+                        }
+                       // countPointTrue = 0;
+                       //foreach (var pointInBorderFace in dictionaryFaceAndPointFace)
+                       //{
+                       //    if (fullCheckOutFace.ContainsKey(pointInBorderFace.Key))
+                       //    {
+                       //        continue;
+                       //    }
+                       //     int getCountStatusTrue = 0;
+                       //     // тут опять какой-то треш
+                       //     foreach (XYZ listPointInFace in pointInBorderFace.Value)
+                       //     {
+                       //         foreach (var convertPoint in dictionaryVertexAndPoint)
+                       //         {
+                       //             // проверка совпадения точек, не проходит почему-то
+                       //             if (listPointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z))) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
+                       //             {
+                       //                 if (convertPoint.Value.checkoutStatus == true)
+                       //                 {
+                       //                     getCountStatusTrue++;
+                       //                     break;
+                       //                 }
+                       //             }
+                       //         }
+                       //     }
+                       //     if (getCountStatusTrue == pointInBorderFace.Value.Count)
+                       //     {
+                       //         fullCheckOutFace.Add(pointInBorderFace.Key,true);
+                       //         continue;
+                       //     }
+                       //     else
+                       //     {
+                       //         if (getCountStatusTrue >= 2)
+                       //         {
+                       //             foreach (XYZ pointInFace in pointInBorderFace.Value)
+                       //             {
+                       //                 //var point = dictionaryVertexAndPoint.Where(x =>
+                       //                 //    x.Key.IsAlmostEqualTo(pointInFace) && x.Value.checkoutStatus == false); // нахожу которые не определены 
+                       //                 //if(point.Count()!=0)
+                       //                 foreach (var convertPoint in dictionaryVertexAndPoint)
+                       //                 {
+                       //                     if((pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X, convertPoint.Value.Y, convertPoint.Value.Z))) && convertPoint.Value.checkoutStatus==true)
+                       //                     {
+                       //                         break;
+                       //                     }
+                       //                     //изменил поиск с ключа на Point
+                       //                     if (pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && convertPoint.Value.checkoutStatus == false)
+                       //                     {
+                       //                         var trianglePoint = collectionPointCloudInTriangle
+                       //                             .Where(x => x.Key.Id == pointInBorderFace.Key.Id);
+                       //                         //foreach (var triangleWithPointCloud in collectionPointCloudInTriangle)
+                       //                         //{
+                       //                             //if (triangleWithPointCloud.Key.Id == pointInBorderFace.Key.Id)
+                       //                             //{
+                       //                                 foreach (SlabShapeVertex vertex in vertexToCheck)
+                       //                                 {
+                       //                                     //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
+                       //                                     if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[trianglePoint.First().Key].Count != 0)
+                       //                                     {
+                       //                                         Aproximate(collectionPointCloudInTriangle[trianglePoint.First().Key], out double a, out double b);
+                       //                                         double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
+                       //                                         foreach (var vertexInDictionary in dictionaryVertexAndPoint)
+                       //                                         {
+                       //                                             //дальше какой-то пиздец, находит только 96 
+                       //                                             if (vertex.Position.IsAlmostEqualTo(new XYZ(vertexInDictionary.Value.X,vertexInDictionary.Value.Y,vertexInDictionary.Value.Z)))
+                       //                                             {
+                       //                                                 idInsertFace.Add(pointInBorderFace.Key.Id);
+                       //                                                 shapeEditor.ModifySubElement(vertex, zPredict);
+                       //                                                 vertexInDictionary.Value.checkoutStatus = true;
+                       //                                                 vertexInDictionary.Value.X = vertex.Position.X;
+                       //                                                 vertexInDictionary.Value.Y=vertex.Position.Y;
+                       //                                                 vertexInDictionary.Value.Z = vertex.Position.Z;
+                       //                                                 pointInChecList.Add(vertexInDictionary.Value);
+                       //                                                 break;
+                       //                                             }
+                       //                                         }
+                       //                                         break;
+                       //                                     }
+                       //                                     else
+                       //                                     {
+                       //                                         if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
+                       //                                             collectionPointCloudInTriangle[
+                       //                                                 trianglePoint.First().Key].Count == 0)
+                       //                                         {
+                       //                                             foreach (var VARIABLE in dictionaryVertexAndPoint)
+                       //                                             {
+                       //                                                 if (vertex.Position.IsAlmostEqualTo(new XYZ(VARIABLE.Value.X, VARIABLE.Value.Y, VARIABLE.Value.Z)))
+                       //                                                 {
+                       //                                                     shapeEditor.ModifySubElement(vertex, vertex.Position.Z);
+                       //                                                     VARIABLE.Value.X = vertex.Position.X;
+                       //                                                     VARIABLE.Value.Y = vertex.Position.Y;
+                       //                                                     VARIABLE.Value.Z = vertex.Position.Z;
+                       //                                                     VARIABLE.Value.checkoutStatus = true;
+                       //                                                     break;
+                       //                                                 }
+                       //                                             }
+                       //                                             break;
+                       //                                         }
+                       //                                     }
+                                                            
+                       //                                 }
+                       //                                 //break;
+                       //                             //}
+                       //                         //}
+                       //                         break;
+                       //                     }
+                       //                 }
+                       //             }
+                       //         }
+                       //     }
+                       //}
                     }
                     foreach (var checkTrue in dictionaryVertexAndPoint)
                     {
