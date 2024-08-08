@@ -57,7 +57,7 @@ namespace BMCIModule
 
             #region Триангуляция
             
-            double stepMin = 1.75d;
+            double stepMin = 1.0d;
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
             ICollection<Models.PointCloud.Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
