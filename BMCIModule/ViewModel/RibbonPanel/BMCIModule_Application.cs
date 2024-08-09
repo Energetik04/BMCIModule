@@ -60,13 +60,16 @@ namespace BMCIModule
                     {
                         //ribbon.FontFamily=new System.Windows.Media.FontFamily("Bauhaus 93");
                         //ribbon.FontSize = 14;
-                        panel.CustomPanelTitleBarBackground = gradientBrush;
+
+                        // бурал пока градиент , иначе букв не видно
+                        //panel.CustomPanelTitleBarBackground = gradientBrush;
                         if (panel.Source.Name == ribbonLogo)
                         {
                             //panel.ResizeItemWidthPriority;
                             panel.CustomPanelBackground = picBrush;
                             panel.ResizeStyle = AW.RibbonResizeStyles.NeverHideText;
                         }
+
                         //panel.CustomPanelBackground = picBrush; // use your picture
                         //panel.CustomPanelBackground 
                         //  = gradientBrush; // use your gradient fill

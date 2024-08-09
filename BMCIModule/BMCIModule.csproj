@@ -153,7 +153,6 @@
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
     <Compile Include="Infrastructure\Interface\Base\IDialogService.cs" />
     <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />
-    <Compile Include="Models\CreateFloorDXF.cs" />
     <Compile Include="Models\Extension\ExtensionDouble.cs" />
     <Compile Include="Models\Extension\ExtensionFace.cs" />
     <Compile Include="Models\PointCloud\Point.cs" />

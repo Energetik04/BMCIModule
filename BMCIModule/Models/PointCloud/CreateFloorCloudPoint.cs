@@ -32,7 +32,6 @@ namespace BMCIModule
             #endregion
 
             #region SelectFloor
-
             TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
             Selection choiceFloor = uidoc.Selection;
             Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
@@ -472,7 +471,7 @@ namespace BMCIModule
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
                 PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 3000);// как-будто надо увеличить количество точек
-                var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
+                var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).OrderBy(x=>x.X).ToList();
                 collectionPointCloudInTriangle.Add(face, variable);
             }
 
