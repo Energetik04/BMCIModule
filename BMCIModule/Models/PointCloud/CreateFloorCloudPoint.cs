@@ -237,15 +237,13 @@ namespace BMCIModule
                             {
                                 foreach (var vertexAndPoint in dictionaryVertexAndPoint)
                                 {
-                                    if (pointInFace.IsAlmostEqualTo(new XYZ(vertexAndPoint.Value.X,
-                                            vertexAndPoint.Value.Y, vertexAndPoint.Value.Z)) && vertexAndPoint.Value.checkoutStatus==true)
+                                    if (pointInFace.IsAlmostEqualTo(vertexAndPoint.Value.CreateXYZFromPoint()) && vertexAndPoint.Value.checkoutStatus==true)
                                     {
                                         break;
                                     }
                                     else
                                     {
-                                        if (pointInFace.IsAlmostEqualTo(new XYZ(vertexAndPoint.Value.X,
-                                                vertexAndPoint.Value.Y, vertexAndPoint.Value.Z)) &&
+                                        if (pointInFace.IsAlmostEqualTo(vertexAndPoint.Value.CreateXYZFromPoint()) &&
                                             vertexAndPoint.Value.checkoutStatus == false)
                                         {
                                             var trianglePoint = collectionPointCloudInTriangle

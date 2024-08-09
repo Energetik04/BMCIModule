@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Autodesk.Revit.DB;
 
 namespace BMCIModule.Models.PointCloud
 {
@@ -27,6 +29,11 @@ namespace BMCIModule.Models.PointCloud
                 GetPointPosition = value;
             }
 
+        }
+        
+        public XYZ CreateXYZFromPoint()
+        {
+            return new XYZ(X, Y, Z);
         }
         public HashSet<Point> pointForHex = new HashSet<Point>();
 

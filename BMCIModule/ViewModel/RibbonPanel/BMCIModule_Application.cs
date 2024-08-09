@@ -84,29 +84,27 @@ namespace BMCIModule
             AddButtonCoordination(panelCoordination);
             AddButtonFloor(panelFloor);
             
+            #region Действующая панель
 
-            
 
+            // Работа с полами,панель
             void AddButtonFloor(RibbonPanel panel)
             {
-                PushButtonData createFloorDxf = new PushButtonData("CreateFloorCloudPoint", "Топоповерхность", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
-                createFloorDxf.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
+                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPoint", "Пол", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
+                changeFloorToPointCloudData.ToolTip = "Изменение формы пола по облаку точек";
                 // путь к картинкам либо изменить либо пересмотреть 
-                createFloorDxf.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
-                PushButton createFloorDxfButton = panel.AddItem(createFloorDxf) as PushButton;
-
+                changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                PushButton createFloorToPointCloudDataButton = panel.AddItem(changeFloorToPointCloudData) as PushButton;
 
                 PushButtonData createAnalysisFloor = new PushButtonData("createAnalysisFloor", "Анализ пола", wayForApplication, "BMCIModule.СreateAnalysisFloor");
-                createAnalysisFloor.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
+                createAnalysisFloor.ToolTip = "Создание вида с аналитической поверхностью, для более наглядного представления неровностей пола, путем нанесенгия цветной диаграммы";
                 // путь к картинкам либо изменить либо пересмотреть 
                 createAnalysisFloor.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
                 PushButton createAnalysisFloorButton = panel.AddItem(createAnalysisFloor) as PushButton;
             }
 
-            #region Действующая панель
             void AddButtonCoordination(RibbonPanel panel)
             {
-
                 /* путь к сборке продумать и продумать 
                 название видимое пользователям и добавить название класса*/
                 PushButtonData dataButtonCoordination = new PushButtonData("CoordinationButton", "Копирование координат", wayForApplication, "BMCIModule.CoordinationFile");
@@ -140,7 +138,6 @@ namespace BMCIModule
             }
             
             #endregion
-
             
             return Result.Succeeded;
 
