@@ -222,6 +222,7 @@ namespace BMCIModule
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
                 Dictionary<Face,bool> fullCheckOutFace=new Dictionary<Face, bool>();
+                List<double> detemmination=new List<double>();
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
@@ -255,6 +256,27 @@ namespace BMCIModule
                                                 {
                                                     Aproximate(collectionPointCloudInTriangle[trianglePoint.First().Key], out double a, out double b);
                                                     double zPredict = a * vertex.Position.X + b;
+                                                    double midleZ = 0;
+                                                    foreach (var pointCloud in collectionPointCloudInTriangle[trianglePoint.First().Key])
+                                                    {
+                                                        midleZ = midleZ + pointCloud.Z;
+
+
+                                                    }
+
+                                                    midleZ = midleZ /
+                                                             collectionPointCloudInTriangle[trianglePoint.First().Key]
+                                                                 .Count;
+                                                    double sumChis = 0;
+                                                    double sumZnam = 0;
+                                                    foreach (var variable in collectionPointCloudInTriangle[trianglePoint.First().Key])
+                                                    {
+                                                        sumChis=sumChis + Math.Pow((variable.Z-midleZ),2);
+                                                        sumZnam = sumZnam + Math.Pow(variable.Z -a*variable.X+b,2);
+                                                    }
+
+                                                    double oshibka = 1 - sumChis / sumZnam;
+                                                    detemmination.Add(oshibka);
                                                     shapeEditor.ModifySubElement(vertex, zPredict);
                                                     vertexAndPoint.Value.checkoutStatus = true;
                                                     vertexAndPoint.Value.X = vertex.Position.X;
@@ -469,7 +491,7 @@ namespace BMCIModule
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
                 PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 3000);// как-будто надо увеличить количество точек
-                var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).OrderBy(x=>x.X).ToList();
+                var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList()/*OrderBy(x=>x.X).ToList()*/;
                 collectionPointCloudInTriangle.Add(face, variable);
             }
 
