@@ -2,14 +2,10 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
-using System.IO;
-using System.Reflection;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Microsoft.Identity.Client;
 using AW=Autodesk.Windows;
 using Color = System.Windows.Media.Color;
-using System.Windows.Controls;
 
 
 // Нужно добавить регионы
