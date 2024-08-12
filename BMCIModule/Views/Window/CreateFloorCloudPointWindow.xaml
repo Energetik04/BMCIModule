@@ -1,0 +1,25 @@
+﻿<Window x:Class="BMCIModule.Views.Window.CreateFloorCloudPointWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:BMCIModule.ViewModel"
+             xmlns:local="clr-namespace:BMCIModule"
+             mc:Ignorable="d" 
+             Height="200" Width="360"
+             ResizeMode="NoResize"
+             Title="{Binding Path=Title}">
+    <Window.DataContext>
+        <vm:CreateFloorCloudPointVM></vm:CreateFloorCloudPointVM>
+    </Window.DataContext>
+    <Canvas>
+        <Label Content="Шаг сетки триангуляции" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="20"/>
+        <Label Content="Количество точек в ячейке" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="63"/>
+        <TextBox x:Name="stepMinWindow" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="20" Width="120" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" />
+        <TextBox x:Name="numberPoint" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="63" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
+        <Button Content="Применить" Canvas.Left="26" Canvas.Top="117" HorizontalAlignment="Left" VerticalAlignment="Top" Width="121"   Command="{Binding ApplyAplicationCommand}" Click="ClickApplyWindow"/>
+        <Button Content="Отмена/Закрыть" Canvas.Left="208" Canvas.Top="117" Width="121" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CloseAplicationCommand}" Click="ClickCloseWindow"/>
+    </Canvas>
+
+
+</Window>

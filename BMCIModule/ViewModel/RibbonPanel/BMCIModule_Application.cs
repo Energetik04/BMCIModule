@@ -90,7 +90,7 @@ namespace BMCIModule
             // Работа с полами,панель
             void AddButtonFloor(RibbonPanel panel)
             {
-                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPoint", "Пол", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
+                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPointWindow", "Пол", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
                 changeFloorToPointCloudData.ToolTip = "Изменение формы пола по облаку точек";
                 // путь к картинкам либо изменить либо пересмотреть 
                 changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
@@ -124,8 +124,7 @@ namespace BMCIModule
                 // Объединение кнопок в одну
                 SplitButtonData splitCopy = new SplitButtonData("splitCoordination", "Split");
                 SplitButton splitButtonCopy = panel.AddItem(splitCopy) as SplitButton;
-
-                splitButtonCopy.AddPushButton(dataButtonCoordination);
+                 
                 splitButtonCopy.AddPushButton(copyGridButtonData);
                 splitButtonCopy.AddPushButton(copyLevelButtonData);
 

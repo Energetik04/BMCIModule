@@ -1,0 +1,2 @@
+1)создать папку BMCIModule
+2) По маршруту C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule поместить папку с плагином

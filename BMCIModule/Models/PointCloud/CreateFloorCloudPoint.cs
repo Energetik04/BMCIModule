@@ -13,6 +13,8 @@ using System.Windows.Documents;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
+using BMCIModule.ViewModel;
+using BMCIModule.Views.Window;
 using Point = Autodesk.Revit.DB.Point;
 using POINT=BMCIModule.Models.PointCloud;
 
@@ -21,6 +23,9 @@ namespace BMCIModule
     [Transaction((TransactionMode.Manual))]
     public class CreateFloorCloudPoint:IExternalCommand
     {
+        CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
+        CreateFloorCloudPointWindow createFloorCloudPoint=new CreateFloorCloudPointWindow();
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             #region Document and Interface
@@ -28,8 +33,23 @@ namespace BMCIModule
             var app = commandData.Application;// пользовательский интерфейс
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
-            
+            double stepMin;
+            int numberPoint;
             #endregion
+            createFloorCloudPoint.DataContext = createFloorCloudPointVm;
+            createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
+            
+            if (createFloorCloudPoint.ShowDialog() == false)
+            {
+                return Result.Succeeded;
+            }
+            else
+            {
+                createFloorCloudPointVm.Step = double.Parse(createFloorCloudPoint.stepMinWindow.Text);
+                createFloorCloudPointVm.NumberPoint = int.Parse(createFloorCloudPoint.numberPoint.Text);
+                stepMin = createFloorCloudPointVm.Step*0.003281d;
+                numberPoint=createFloorCloudPointVm.NumberPoint;
+            }
 
             #region SelectFloor
             TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
@@ -56,7 +76,7 @@ namespace BMCIModule
 
             #region Триангуляция
             
-            double stepMin = 1.0d;
+            
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
             ICollection<Models.PointCloud.Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
@@ -192,7 +212,7 @@ namespace BMCIModule
                 Options op = new Options();// default setting
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
                 List<Face> topFaceArray = new List<Face>();
-                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray);
+                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint);
                // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
@@ -430,7 +450,7 @@ namespace BMCIModule
             return Result.Succeeded;
         }
 
-        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray)
+        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint)
         {
             Options op = new Options();
             List<GeometryObject> list = new List<GeometryObject>();
@@ -490,7 +510,7 @@ namespace BMCIModule
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 3000);// как-будто надо увеличить количество точек
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, numberPoint);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList()/*OrderBy(x=>x.X).ToList()*/;
                 collectionPointCloudInTriangle.Add(face, variable);
             }

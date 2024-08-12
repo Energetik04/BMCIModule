@@ -20,7 +20,7 @@ namespace BMCIModule
     {
         SelectWorksetViewModel SelectWorksetViewModel = new SelectWorksetViewModel();
         SelectWorksetWindow viewModel = new SelectWorksetWindow();
-               
+        
         public Result Execute (ExternalCommandData commanddata, ref  string message,ElementSet elements)
         {
             // Создание класса окна для Создания рабочих наборов
