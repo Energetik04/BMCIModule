@@ -104,7 +104,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
-        <GroupBox Grid.Column="6" Header="ОИИ">
+        <GroupBox Grid.Column="6" Header="ОИО">
             <DataGrid ItemsSource="{Binding  departmentCollection[6].ListMark}" 
                       Style="{StaticResource DataGridStyle}">
                 <DataGrid.Columns >

@@ -13,7 +13,7 @@
         <vm:CreateFloorCloudPointVM></vm:CreateFloorCloudPointVM>
     </Window.DataContext>
     <Canvas>
-        <Label Content="Шаг сетки триангуляции" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="20"/>
+        <Label Content="Шаг сетки триангуляции, мм" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="20"/>
         <Label Content="Количество точек в ячейке" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="63"/>
         <TextBox x:Name="stepMinWindow" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="20" Width="120" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" />
         <TextBox x:Name="numberPoint" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="63" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
