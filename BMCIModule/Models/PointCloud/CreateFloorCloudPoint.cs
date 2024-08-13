@@ -25,8 +25,6 @@ namespace BMCIModule
     {
         CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
         CreateFloorCloudPointWindow createFloorCloudPoint=new CreateFloorCloudPointWindow();
-        static double a = 2.2d;
-        private double b = a.DoubleToNumbers(3);
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -47,10 +45,18 @@ namespace BMCIModule
             }
             else
             {
-                createFloorCloudPointVm.Step = double.Parse(createFloorCloudPoint.stepMinWindow.Text);
-                createFloorCloudPointVm.NumberPoint = int.Parse(createFloorCloudPoint.numberPoint.Text);
-                stepMin = createFloorCloudPointVm.Step*0.003281d;
-                numberPoint=createFloorCloudPointVm.NumberPoint;
+                try
+                {
+                    createFloorCloudPointVm.Step = double.Parse(createFloorCloudPoint.stepMinWindow.Text);
+                    createFloorCloudPointVm.NumberPoint = int.Parse(createFloorCloudPoint.numberPoint.Text);
+                    stepMin = createFloorCloudPointVm.Step * 0.003281d;
+                    numberPoint = createFloorCloudPointVm.NumberPoint;
+                }
+                catch (NullReferenceException)
+                {
+                    TaskDialog.Show("Ошибка ввода", "Ошибка ввода данных в поля");
+                    return Result.Succeeded;
+                }
             }
 
             #region SelectFloor
@@ -81,7 +87,7 @@ namespace BMCIModule
             
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
-            ICollection<Models.PointCloud.Point> collection = IsInFigureWithBorders(pointRevit, topFace,ref stepMin);
+            ICollection<Models.PointCloud.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace,ref stepMin);
             MovieOutFigurePointInBorders(ref collection,ref topFace);
             #endregion
 
@@ -89,25 +95,26 @@ namespace BMCIModule
             /*using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
-                foreach (Point point in collection)
+                foreach (POINT.Point point in pointRevit)
                 {
-                    if (point.getPointPosition == PointInFigureWithBorders.deleteThisPoint)
-                    {
-                        continue;
-                    }
-                    else
-                    {
+                    //if (point.getPointPosition == PointInFigureWithBorders.deleteThisPoint)
+                    //{
+                    //    continue;
+                    //}
+                    //else
+                    //{
                         //проверка на попадание точки в регион
                         XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
                         var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки
                         directShape.SetShape(new List<GeometryObject>() { Autodesk.Revit.DB.Point.Create(convertPoint) });// размещение обощенной модели точки
-                    }
+                    //}
                     
                 }
                 tr.Commit();
             }*/
             #endregion
-            TaskDialog.Show("Количество точек",collection.Count.ToString());
+            
+            TaskDialog.Show("Количество точек","Количество точек триангуляции попавших в верхнюю грань пола "+collection.Count.ToString()+"шт.");
 
             #region Построение ребер на поверхности
 
@@ -199,8 +206,7 @@ namespace BMCIModule
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
-
-                TaskDialog.Show("Время выполнения", elapsedTime);
+                TaskDialog.Show("Время выполнения", "Время выполнения триангуляции и построения ребер:"+"\n"+elapsedTime);
                 tr.Commit();
             }
             #endregion
@@ -286,8 +292,7 @@ namespace BMCIModule
 
                                                     }
 
-                                                    midleZ = midleZ /
-                                                             collectionPointCloudInTriangle[trianglePoint.First().Key]
+                                                    midleZ = midleZ / collectionPointCloudInTriangle[trianglePoint.First().Key]
                                                                  .Count;
                                                     double sumChis = 0;
                                                     double sumZnam = 0;
@@ -474,10 +479,46 @@ namespace BMCIModule
             if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
             return false;
         }
-        // пока что метод все ломает
-        
+        // перегрузка метода 
+        public bool VisiblePointInRegion(List<XYZ> listPointInTopFace, POINT.Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
+        {
+            GraphicsPath graphicsPath = new GraphicsPath();
+            listPointInTopFace.Add(listPointInTopFace[0]);
+            for (int i = 0; i < listPointInTopFace.Count-1; i++)
+            {
+                graphicsPath.AddLine((float)listPointInTopFace[i].X, (float)listPointInTopFace[i].Y, (float)listPointInTopFace[i + 1].X, (float)listPointInTopFace[i+1].Y);
+            }
+            Region region = new Region(graphicsPath);
+            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
+            return false;
+        }
+
+        public ICollection<POINT.Point> IsInFigureWithBordersFace(ICollection<POINT.Point> points, Face topFace, ref double stepMin)
+        {
+            var pointInFace = topFace.GetListPointInFace();
+            foreach (var point in points)
+            {
+                if (VisiblePointInRegion(pointInFace, point) == true)
+                {
+                    point.getPointPosition = PointInFigureWithBorders.inFigure;
+                    break;
+                }
+                else
+                {
+                    point.getPointPosition = PointInFigureWithBorders.outFigure;
+                }
+            }
+            foreach (var point in points)
+            {
+                point.getPointPosition = ChangeStatusPoint(point, ref topFace);
+            }
+            return points;
+        }
+
+        // уже не нужный метод, нету необходимости  триангулировать 
         public ICollection<POINT.Point> IsInFigureWithBorders(ICollection<POINT.Point> points, Face topFace,ref double stepMin)
         {
+            var pointInFace = topFace.GetListPointInFace();
             Mesh trMesh = topFace.Triangulate(1);
             int numberTriangle = trMesh.NumTriangles;
             int countMiss = 0;
@@ -508,6 +549,8 @@ namespace BMCIModule
             }
             return points;
         }
+
+
         public PointInFigureWithBorders ChangeStatusPoint(POINT.Point point, ref Face topFace)
         {
             IList<CurveLoop> curveArray = topFace.GetEdgesAsCurveLoops();
@@ -556,13 +599,14 @@ namespace BMCIModule
             List<POINT.Point> pointGenerate = new List<POINT.Point>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
+            int huita= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle)+1;
             for (int i = 0; i <= ((int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle))+1; i++)
             {
                 for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X)/ stepmin)); j++)
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
-                    pointGenerate.Add(new POINT.Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), (topface as PlanarFace).Origin.Z));
+                    pointGenerate.Add(new POINT.Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), pointTopFace[0].Z));
                 }
                 offset = !offset;
             }
@@ -584,10 +628,12 @@ namespace BMCIModule
 
         public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection,ref Face topFace)
         {
+            var pointTopface = topFace.GetListPointInFace();
             double superPositionX=0;
             double superPositionY=0;
-            double superPositionZ=0;
+            double superPositionZ=pointTopface[0].Z;
             int countPointInFigure = 0;
+            // центр масс
             foreach (var point in pointCollection)
             {
                 if (point.getPointPosition == PointInFigureWithBorders.inFigure)
@@ -597,14 +643,14 @@ namespace BMCIModule
                     superPositionY = superPositionY + point.Y;
                 }
             }
-            superPositionX = (superPositionX / countPointInFigure).DoubleToNumbers(2);
-            superPositionY=(superPositionY / countPointInFigure).DoubleToNumbers(2);
+            superPositionX = (superPositionX / countPointInFigure).DoubleToNumbers(3);
+            superPositionY=(superPositionY / countPointInFigure).DoubleToNumbers(3);
             foreach (var getPointToMovie in pointCollection)
             {
                 if (getPointToMovie.getPointPosition == PointInFigureWithBorders.outFigure)
                 {
                     XYZ origin = new XYZ(superPositionX,superPositionY,superPositionZ);
-                    XYZ direction = new XYZ((getPointToMovie.X-origin.X).DoubleToNumbers(2),(getPointToMovie.Y-origin.Y).DoubleToNumbers(2),(getPointToMovie.Z-origin.Z));
+                    XYZ direction = new XYZ((getPointToMovie.X-origin.X).DoubleToNumbers(3),(getPointToMovie.Y-origin.Y).DoubleToNumbers(2),superPositionZ);
                     //метод полная херумпула, потому что непонятно что выдает
                     var line=Line.CreateUnbound(origin, direction);
                     List<XYZ> pointCross=new List<XYZ>();
