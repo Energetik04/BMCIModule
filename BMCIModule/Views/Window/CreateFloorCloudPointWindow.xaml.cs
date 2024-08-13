@@ -24,6 +24,8 @@ namespace BMCIModule.Views.Window
         public CreateFloorCloudPointWindow()
         {
             InitializeComponent();
+            stepMinWindow.Text = "0";
+            numberPoint.Text = "0";
             Topmost = true;
         }
 

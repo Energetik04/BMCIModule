@@ -70,8 +70,6 @@ namespace BMCIModule.ViewModel
                 new RelayCommand(OnCloseAplicationCommandExecuted, CanCloseAplicationCommandExecute);
             ApplyAplicationCommand =
                 new RelayCommand(OnApplyAplicationCommandExecuted, CanApplyAplicationCommandExecuted);
-            stepMin = 0;
-            numberPoint = 0;
         }
     }
 }

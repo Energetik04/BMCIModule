@@ -25,6 +25,8 @@ namespace BMCIModule
     {
         CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
         CreateFloorCloudPointWindow createFloorCloudPoint=new CreateFloorCloudPointWindow();
+        static double a = 2.2d;
+        private double b = a.DoubleToNumbers(3);
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -319,116 +321,6 @@ namespace BMCIModule
                                 }
                             }
                         }
-                       // countPointTrue = 0;
-                       //foreach (var pointInBorderFace in dictionaryFaceAndPointFace)
-                       //{
-                       //    if (fullCheckOutFace.ContainsKey(pointInBorderFace.Key))
-                       //    {
-                       //        continue;
-                       //    }
-                       //     int getCountStatusTrue = 0;
-                       //     // тут опять какой-то треш
-                       //     foreach (XYZ listPointInFace in pointInBorderFace.Value)
-                       //     {
-                       //         foreach (var convertPoint in dictionaryVertexAndPoint)
-                       //         {
-                       //             // проверка совпадения точек, не проходит почему-то
-                       //             if (listPointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z))) // пока втупуюограничил до 3 точек, но могут быть и четырехугольники
-                       //             {
-                       //                 if (convertPoint.Value.checkoutStatus == true)
-                       //                 {
-                       //                     getCountStatusTrue++;
-                       //                     break;
-                       //                 }
-                       //             }
-                       //         }
-                       //     }
-                       //     if (getCountStatusTrue == pointInBorderFace.Value.Count)
-                       //     {
-                       //         fullCheckOutFace.Add(pointInBorderFace.Key,true);
-                       //         continue;
-                       //     }
-                       //     else
-                       //     {
-                       //         if (getCountStatusTrue >= 2)
-                       //         {
-                       //             foreach (XYZ pointInFace in pointInBorderFace.Value)
-                       //             {
-                       //                 //var point = dictionaryVertexAndPoint.Where(x =>
-                       //                 //    x.Key.IsAlmostEqualTo(pointInFace) && x.Value.checkoutStatus == false); // нахожу которые не определены 
-                       //                 //if(point.Count()!=0)
-                       //                 foreach (var convertPoint in dictionaryVertexAndPoint)
-                       //                 {
-                       //                     if((pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X, convertPoint.Value.Y, convertPoint.Value.Z))) && convertPoint.Value.checkoutStatus==true)
-                       //                     {
-                       //                         break;
-                       //                     }
-                       //                     //изменил поиск с ключа на Point
-                       //                     if (pointInFace.IsAlmostEqualTo(new XYZ(convertPoint.Value.X,convertPoint.Value.Y,convertPoint.Value.Z)) && convertPoint.Value.checkoutStatus == false)
-                       //                     {
-                       //                         var trianglePoint = collectionPointCloudInTriangle
-                       //                             .Where(x => x.Key.Id == pointInBorderFace.Key.Id);
-                       //                         //foreach (var triangleWithPointCloud in collectionPointCloudInTriangle)
-                       //                         //{
-                       //                             //if (triangleWithPointCloud.Key.Id == pointInBorderFace.Key.Id)
-                       //                             //{
-                       //                                 foreach (SlabShapeVertex vertex in vertexToCheck)
-                       //                                 {
-                       //                                     //тут посмотерть логику сверки точек, потому что к 1 точке относиться до 6 треугольников
-                       //                                     if (vertex.Position.IsAlmostEqualTo(pointInFace) && collectionPointCloudInTriangle[trianglePoint.First().Key].Count != 0)
-                       //                                     {
-                       //                                         Aproximate(collectionPointCloudInTriangle[trianglePoint.First().Key], out double a, out double b);
-                       //                                         double zPredict = a * vertex.Position.X + b; // пока только для 0 работает
-                       //                                         foreach (var vertexInDictionary in dictionaryVertexAndPoint)
-                       //                                         {
-                       //                                             //дальше какой-то пиздец, находит только 96 
-                       //                                             if (vertex.Position.IsAlmostEqualTo(new XYZ(vertexInDictionary.Value.X,vertexInDictionary.Value.Y,vertexInDictionary.Value.Z)))
-                       //                                             {
-                       //                                                 idInsertFace.Add(pointInBorderFace.Key.Id);
-                       //                                                 shapeEditor.ModifySubElement(vertex, zPredict);
-                       //                                                 vertexInDictionary.Value.checkoutStatus = true;
-                       //                                                 vertexInDictionary.Value.X = vertex.Position.X;
-                       //                                                 vertexInDictionary.Value.Y=vertex.Position.Y;
-                       //                                                 vertexInDictionary.Value.Z = vertex.Position.Z;
-                       //                                                 pointInChecList.Add(vertexInDictionary.Value);
-                       //                                                 break;
-                       //                                             }
-                       //                                         }
-                       //                                         break;
-                       //                                     }
-                       //                                     else
-                       //                                     {
-                       //                                         if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
-                       //                                             collectionPointCloudInTriangle[
-                       //                                                 trianglePoint.First().Key].Count == 0)
-                       //                                         {
-                       //                                             foreach (var VARIABLE in dictionaryVertexAndPoint)
-                       //                                             {
-                       //                                                 if (vertex.Position.IsAlmostEqualTo(new XYZ(VARIABLE.Value.X, VARIABLE.Value.Y, VARIABLE.Value.Z)))
-                       //                                                 {
-                       //                                                     shapeEditor.ModifySubElement(vertex, vertex.Position.Z);
-                       //                                                     VARIABLE.Value.X = vertex.Position.X;
-                       //                                                     VARIABLE.Value.Y = vertex.Position.Y;
-                       //                                                     VARIABLE.Value.Z = vertex.Position.Z;
-                       //                                                     VARIABLE.Value.checkoutStatus = true;
-                       //                                                     break;
-                       //                                                 }
-                       //                                             }
-                       //                                             break;
-                       //                                         }
-                       //                                     }
-                                                            
-                       //                                 }
-                       //                                 //break;
-                       //                             //}
-                       //                         //}
-                       //                         break;
-                       //                     }
-                       //                 }
-                       //             }
-                       //         }
-                       //     }
-                       //}
                     }
                     foreach (var checkTrue in dictionaryVertexAndPoint)
                     {
@@ -645,27 +537,21 @@ namespace BMCIModule
         }
         public ICollection<POINT.Point> GeneratePointCollection(ref Face topface,ref double stepmin)
         {
-            ICollection<XYZ> pointCurve = new Collection<XYZ>();
+            var pointTopFace = topface.GetListPointInFace(); // точки верхней грани
             XYZ xMin, yMin;
             XYZ xMax, yMax;
-            xMax = new XYZ(double.MinValue, 0, 0);
-            yMax = new XYZ(0, double.MinValue, 0);
-            xMin = new XYZ(double.MaxValue, 0, 0);
-            yMin = new XYZ(0, double.MaxValue, 0);
-            foreach (var curve in topface.GetEdgesAsCurveLoops())
-            {
-                foreach (var line in curve)
-                {
-                    pointCurve.Add(line.GetEndPoint(0));
-                }
-            }
+            //Z координата верхней грани
+            xMax = new XYZ(double.MinValue, 0, pointTopFace[0].Z);
+            yMax = new XYZ(0, double.MinValue, pointTopFace[0].Z);
+            xMin = new XYZ(double.MaxValue, 0, pointTopFace[0].Z);
+            yMin = new XYZ(0, double.MaxValue, pointTopFace[0].Z);
             //координаты минимума и максимума 
-            foreach (var point in pointCurve)
+            foreach (var point in pointTopFace)
             {
-                if (point.X > xMax.X) xMax = point;
-                if (point.Y > yMax.Y) yMax = point;
-                if (point.X < xMin.X) xMin = point;
-                if (point.Y < yMin.Y) yMin = point;
+                if (point.X >= xMax.X) xMax = point;
+                if (point.Y >= yMax.Y) yMax = point;
+                if (point.X <= xMin.X) xMin = point;
+                if (point.Y <= yMin.Y) yMin = point;
             }
             List<POINT.Point> pointGenerate = new List<POINT.Point>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
