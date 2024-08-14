@@ -26,6 +26,7 @@ namespace BMCIModule.Views.Window
             InitializeComponent();
             stepMinWindow.Text = "0";
             numberPoint.Text = "0";
+            captureRange.Text = "0";
             Topmost = true;
         }
 

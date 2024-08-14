@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:BMCIModule.ViewModel"
              xmlns:local="clr-namespace:BMCIModule"
              mc:Ignorable="d" 
-             Height="200" Width="360"
+             Height="250" Width="360"
              ResizeMode="NoResize"
              Title="{Binding Path=Title}">
     <Window.DataContext>
@@ -15,10 +15,12 @@
     <Canvas>
         <Label Content="Шаг сетки триангуляции, мм" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="20"/>
         <Label Content="Количество точек в ячейке" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="63"/>
+        <Label Content="Диапазон захвата облака точек" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="19" Canvas.Top="108"/>
         <TextBox x:Name="stepMinWindow" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="20" Width="120" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" />
         <TextBox x:Name="numberPoint" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="63" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
-        <Button Content="Применить" Canvas.Left="26" Canvas.Top="117" HorizontalAlignment="Left" VerticalAlignment="Top" Width="121"   Command="{Binding ApplyAplicationCommand}" Click="ClickApplyWindow"/>
-        <Button Content="Отмена/Закрыть" Canvas.Left="208" Canvas.Top="117" Width="121" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CloseAplicationCommand}" Click="ClickCloseWindow"/>
+        <TextBox x:Name="captureRange" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="108" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26"/>
+        <Button Content="Применить" Canvas.Left="19" Canvas.Top="154" HorizontalAlignment="Left" VerticalAlignment="Top" Width="121"   Command="{Binding ApplyAplicationCommand}" Click="ClickApplyWindow"/>
+        <Button Content="Отмена/Закрыть" Canvas.Left="207" Canvas.Top="154" Width="121" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding CloseAplicationCommand}" Click="ClickCloseWindow"/>
     </Canvas>
 
 

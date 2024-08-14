@@ -13,10 +13,10 @@ namespace BMCIModule.ViewModel
         /// 
         internal Action Close;
 
-        private double stepMin;
-        private int numberPoint;
-
         private string _Title = "Параметры преобразования пола";
+        private int numberPoint;
+        private double stepMin;
+        private double captureRange;
 
         public string Title
         {
@@ -38,7 +38,11 @@ namespace BMCIModule.ViewModel
             set { Set(ref numberPoint, value); }
         }
 
-
+        public double CaptureRange
+        {
+            get => captureRange;
+            set => Set(ref captureRange, value);
+        }
         public ICommand CloseAplicationCommand { get; } // Создание комманды
 
         private void OnCloseAplicationCommandExecuted(object p)

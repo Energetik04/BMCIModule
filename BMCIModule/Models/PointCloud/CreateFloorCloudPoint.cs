@@ -33,7 +33,7 @@ namespace BMCIModule
             var app = commandData.Application;// пользовательский интерфейс
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
-            double stepMin;
+            double stepMin,captureRange;
             int numberPoint;
             #endregion
             createFloorCloudPoint.DataContext = createFloorCloudPointVm;
@@ -47,8 +47,12 @@ namespace BMCIModule
             {
                 try
                 {
+                    //установил свойства из Window в VM 
                     createFloorCloudPointVm.Step = double.Parse(createFloorCloudPoint.stepMinWindow.Text);
                     createFloorCloudPointVm.NumberPoint = int.Parse(createFloorCloudPoint.numberPoint.Text);
+                    createFloorCloudPointVm.CaptureRange=double.Parse(createFloorCloudPoint.captureRange.Text);
+                    // передал свойства в класс
+                    captureRange=createFloorCloudPointVm.CaptureRange*0.003281d; // 0,003281 перевод в футы
                     stepMin = createFloorCloudPointVm.Step * 0.003281d;
                     numberPoint = createFloorCloudPointVm.NumberPoint;
                 }
@@ -92,7 +96,7 @@ namespace BMCIModule
             #endregion
 
             #region Визуализация точками
-            /*using (Transaction tr = new Transaction(doc,"поехали"))
+            using (Transaction tr = new Transaction(doc,"поехали"))
             {
                 tr.Start();
                 foreach (POINT.Point point in pointRevit)
@@ -111,7 +115,7 @@ namespace BMCIModule
                     
                 }
                 tr.Commit();
-            }*/
+            }
             #endregion
             
             TaskDialog.Show("Количество точек","Количество точек триангуляции попавших в верхнюю грань пола "+collection.Count.ToString()+"шт.");
@@ -211,6 +215,7 @@ namespace BMCIModule
             }
             #endregion
 
+
             using (Transaction tr2=new Transaction(doc,"Work with CloudPoint"))
             {
                 tr2.Start();
@@ -220,7 +225,7 @@ namespace BMCIModule
                 Options op = new Options();// default setting
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
                 List<Face> topFaceArray = new List<Face>();
-                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint);
+                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint, captureRange);
                // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
@@ -347,31 +352,54 @@ namespace BMCIModule
             return Result.Succeeded;
         }
 
-        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint)
+        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint, double captureRage)
         {
+            //толщина пола
+            var floorParameters = selectorNewFloor.Parameters;
+            double thicknesFloor=0;
+            foreach(Parameter parameter in floorParameters)
+            {
+                ElementId searchElementId = new ElementId(-1001900);
+                if(parameter.Id==searchElementId) thicknesFloor=parameter.AsDouble();
+            }
             Options op = new Options();
             List<GeometryObject> list = new List<GeometryObject>();
+            
             foreach (var instance in selectorNewFloor.get_Geometry(op))
             {
                 if (instance is Solid) list.Add(instance);
             }
-
             Solid solid = list[0] as Solid;
             FaceArray faceArray = solid.Faces;
             XYZ normal = new XYZ(0.000000000, 0.000000000, 1.000000000);
             XYZ normalNegative = new XYZ(0.000000000, 0.000000000, -1.000000000);
-            //List<Face> topFaceArray = new List<Face>();
+
             foreach (Face face in faceArray)
             {
                 if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) topFaceArray.Add(face); // не доходят все точки 
             }
+
             List<Face> bottomFaceArray = new List<Face>();
             double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
             double zMax = selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
             PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
             Dictionary<Face, List<XYZ>> collectionPointCloudInTriangle = new Dictionary<Face, List<XYZ>>();
+
             foreach (Face face in topFaceArray)
             {
+                var listPointFace = face.GetListPointInFace();
+                listPointFace.Add(listPointFace[0]);
+                List<Plane> planeFace=new List<Plane>();
+                // плоскости из точек ограничивающих плоскость topFace
+                for ( int i=0; i<listPointFace.Count-1; i++)
+                {
+                    XYZ newPointInBottomFace=new XYZ(listPointFace[i].X, listPointFace[i].Y, listPointFace[i].Z-thicknesFloor);
+                    Plane getPlaneFace = Plane.CreateByThreePoints(listPointFace[i], listPointFace[i+1], newPointInBottomFace);
+                    planeFace.Add(getPlaneFace);
+                }
+
+
+
                 CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
                 List<XYZ> pointMeshMax = new List<XYZ>();
                 List<XYZ> pointMeshMin = new List<XYZ>();
