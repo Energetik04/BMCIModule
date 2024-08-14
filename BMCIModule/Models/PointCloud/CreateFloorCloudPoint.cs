@@ -397,41 +397,56 @@ namespace BMCIModule
                     Plane getPlaneFace = Plane.CreateByThreePoints(listPointFace[i], listPointFace[i+1], newPointInBottomFace);
                     planeFace.Add(getPlaneFace);
                 }
-
-
-
-                CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
-                List<XYZ> pointMeshMax = new List<XYZ>();
-                List<XYZ> pointMeshMin = new List<XYZ>();
-                foreach (Line getLine in curve)
-                {
-                    pointMeshMax.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMax));
-                    pointMeshMin.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMin));
-                }
-                //плоскости фигуры по 3 точкам
-                Plane planeMaxHeight = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMax[2]);
-                Plane planeMinHeight = Plane.CreateByThreePoints(pointMeshMin[0], pointMeshMin[1], pointMeshMin[2]);
-                Plane figurebokovina1 = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMin[0]);
-                Plane figurebokovina2 = Plane.CreateByThreePoints(pointMeshMax[1], pointMeshMax[2], pointMeshMin[1]);
-                Plane figurebokovina3 = Plane.CreateByThreePoints(pointMeshMax[2], pointMeshMax[0], pointMeshMin[2]);
-
-                XYZ reversNormalMaxheight = new XYZ(planeMaxHeight.Normal.X, planeMaxHeight.Normal.Y, planeMaxHeight.Normal.Z * (-1));
-
-                XYZ reversNormalFigureBokovina1 = new XYZ(figurebokovina1.Normal.X, figurebokovina1.Normal.Y, -1 * figurebokovina1.Normal.Z);
-                XYZ reversNormalFigureBokovina2 = new XYZ(figurebokovina2.Normal.X, figurebokovina2.Normal.Y, -1 * figurebokovina2.Normal.Z);
-                XYZ reversNormalFigureBokovina3 = new XYZ(figurebokovina3.Normal.X, figurebokovina3.Normal.Y, -1 * figurebokovina3.Normal.Z);
-
-                Plane reversFigureBokovina1 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina1, figurebokovina1.Origin);
-                Plane reversFigureBokovina2 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina2, figurebokovina2.Origin);
-                Plane reversFigureBokovina3 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina3, figurebokovina3.Origin);
-
-                Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
+                var surfaceFace=face.GetSurface() as Plane;
                 IList<Plane> faceToPlane = new List<Plane>();
-                faceToPlane.Add(reversPlaneMaxHeight);
+                XYZ negativeVector=new XYZ(-1,-1,-1);
+                foreach (Plane plane in planeFace)
+                {
+                    XYZ reversNormalPlane=new XYZ(plane.Normal.X,plane.Normal.Y,(-1)*plane.Normal.Z);
+                    Plane reversPlane=Plane.CreateByNormalAndOrigin(reversNormalPlane,plane.Origin);
+                    faceToPlane.Add(reversPlane);
+                }
+                Plane planeMinHeight = Plane.CreateByThreePoints(
+                    new XYZ(listPointFace[0].X, listPointFace[0].Y, zMin),
+                    new XYZ(listPointFace[1].X, listPointFace[1].Y, zMin),
+                    new XYZ(listPointFace[2].X, listPointFace[2].Y, zMin));
+                Plane planeMaxHeight = Plane.CreateByThreePoints(new XYZ(listPointFace[0].X, listPointFace[0].Y, zMax),
+                    new XYZ(listPointFace[1].X, listPointFace[1].Y, zMax),
+                    new XYZ(listPointFace[2].X, listPointFace[2].Y, zMax));
+                faceToPlane.Add(planeMaxHeight);
                 faceToPlane.Add(planeMinHeight);
-                faceToPlane.Add(reversFigureBokovina1);
-                faceToPlane.Add(reversFigureBokovina2);
-                faceToPlane.Add(reversFigureBokovina3);
+                //CurveLoop curve = face.GetEdgesAsCurveLoops()[0];
+                //List<XYZ> pointMeshMax = new List<XYZ>();
+                //List<XYZ> pointMeshMin = new List<XYZ>();
+                //foreach (Line getLine in curve)
+                //{
+                //    pointMeshMax.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMax));
+                //    pointMeshMin.Add(new XYZ(getLine.GetEndPoint(0).X, getLine.GetEndPoint(0).Y, zMin));
+                //}
+                ////плоскости фигуры по 3 точкам
+                //Plane planeMaxHeight = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMax[2]);
+                
+                //Plane figurebokovina1 = Plane.CreateByThreePoints(pointMeshMax[0], pointMeshMax[1], pointMeshMin[0]);
+                //Plane figurebokovina2 = Plane.CreateByThreePoints(pointMeshMax[1], pointMeshMax[2], pointMeshMin[1]);
+                //Plane figurebokovina3 = Plane.CreateByThreePoints(pointMeshMax[2], pointMeshMax[0], pointMeshMin[2]);
+
+                //XYZ reversNormalMaxheight = new XYZ(planeMaxHeight.Normal.X, planeMaxHeight.Normal.Y, planeMaxHeight.Normal.Z * (-1));
+
+                //XYZ reversNormalFigureBokovina1 = new XYZ(figurebokovina1.Normal.X, figurebokovina1.Normal.Y, -1 * figurebokovina1.Normal.Z);
+                //XYZ reversNormalFigureBokovina2 = new XYZ(figurebokovina2.Normal.X, figurebokovina2.Normal.Y, -1 * figurebokovina2.Normal.Z);
+                //XYZ reversNormalFigureBokovina3 = new XYZ(figurebokovina3.Normal.X, figurebokovina3.Normal.Y, -1 * figurebokovina3.Normal.Z);
+
+                //Plane reversFigureBokovina1 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina1, figurebokovina1.Origin);
+                //Plane reversFigureBokovina2 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina2, figurebokovina2.Origin);
+                //Plane reversFigureBokovina3 = Plane.CreateByNormalAndOrigin(reversNormalFigureBokovina3, figurebokovina3.Origin);
+
+                //Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
+                
+                //faceToPlane.Add(reversPlaneMaxHeight);
+                //faceToPlane.Add(planeMinHeight);
+                //faceToPlane.Add(reversFigureBokovina1);
+                //faceToPlane.Add(reversFigureBokovina2);
+                //faceToPlane.Add(reversFigureBokovina3);
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
@@ -439,7 +454,6 @@ namespace BMCIModule
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList()/*OrderBy(x=>x.X).ToList()*/;
                 collectionPointCloudInTriangle.Add(face, variable);
             }
-
             return collectionPointCloudInTriangle;
         }
 
