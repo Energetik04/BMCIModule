@@ -96,7 +96,7 @@ namespace BMCIModule
             #endregion
 
             #region Визуализация точками
-            using (Transaction tr = new Transaction(doc,"Визуализация точками"))
+            /*using (Transaction tr = new Transaction(doc,"Визуализация точками"))
             {
                 tr.Start();
                 foreach (POINT.Point point in pointRevit)
@@ -115,7 +115,7 @@ namespace BMCIModule
                     
                 }
                 tr.Commit();
-            }
+            }*/
             #endregion
             
             TaskDialog.Show("Количество точек","Количество точек триангуляции попавших в верхнюю грань пола "+collection.Count.ToString()+"шт.");
@@ -123,9 +123,9 @@ namespace BMCIModule
             #region Построение ребер на поверхности
 
             //списки точек по типу Ревит
-            List<XYZ> listEdge = new List<XYZ>();
-            List<XYZ> cornerList = new List<XYZ>();
-            List<XYZ> InteriorList = new List<XYZ>();
+            //List<XYZ> listEdge = new List<XYZ>();
+            //List<XYZ> cornerList = new List<XYZ>();
+            //List<XYZ> InteriorList = new List<XYZ>();
 
 
             Dictionary<XYZ,POINT.Point> dictionaryVertexAndPoint=new Dictionary<XYZ,POINT.Point>();
@@ -159,22 +159,26 @@ namespace BMCIModule
                     if (vertex.VertexType == SlabShapeVertexType.Corner)
                     {
                         POINT.Point cornerPoint = new POINT.Point(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
-                        cornerPoint.checkoutStatus = true;
+                        //cornerPoint.checkoutStatus = true;
                         cornerPoint.getPointPosition = PointInFigureWithBorders.cornerPoint;
                         dictionaryVertexAndPoint.Add(vertex.Position,cornerPoint);
-                        cornerList.Add(vertex.Position);
+                        //cornerList.Add(vertex.Position);
                     }
                     else
                     {
                         if (vertex.VertexType == SlabShapeVertexType.Edge)
                         {
-                            listEdge.Add(vertex.Position);
+                            POINT.Point edgePoint = new POINT.Point(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+                            //cornerPoint.checkoutStatus = true;
+                            edgePoint.getPointPosition = PointInFigureWithBorders.inBorders;
+                            dictionaryVertexAndPoint.Add(vertex.Position, edgePoint);
+                            //listEdge.Add(vertex.Position);
                         }
                         else
                         {
                             if (vertex.VertexType == SlabShapeVertexType.Interior)
                             {
-                                InteriorList.Add(vertex.Position);
+                                //InteriorList.Add(vertex.Position);
                             }
                         }
                     }
@@ -225,13 +229,14 @@ namespace BMCIModule
                 Options op = new Options();// default setting
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
                 List<Face> topFaceArray = new List<Face>();
+                //обработка облака вне зависимости от фигуры перекрытия
                 Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint, captureRange);
-               // массив вершин,нужно искать по этим вершинам 
+                // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
                 List<XYZ> vertexCheckList=new List<XYZ>();
                 List<POINT.Point> pointInChecList=new List<POINT.Point>();
-                foreach (SlabShapeVertex vertex in vertexToCheck)
+                /*foreach (SlabShapeVertex vertex in vertexToCheck)
                 {
                     foreach (var dPoint in dictionaryVertexAndPoint)
                     {
@@ -243,7 +248,7 @@ namespace BMCIModule
                             }
                         }
                     }
-                }
+                }*/
                 Dictionary<Face,List<XYZ>> dictionaryFaceAndPointFace=new Dictionary<Face,List<XYZ>>(); //точки плоскость и точки ограничивающие плоскость
                 foreach (var face in topFaceArray)
                 {
@@ -293,8 +298,6 @@ namespace BMCIModule
                                                     foreach (var pointCloud in collectionPointCloudInTriangle[trianglePoint.First().Key])
                                                     {
                                                         midleZ = midleZ + pointCloud.Z;
-
-
                                                     }
 
                                                     midleZ = midleZ / collectionPointCloudInTriangle[trianglePoint.First().Key]
@@ -306,10 +309,12 @@ namespace BMCIModule
                                                         sumChis=sumChis + Math.Pow((variable.Z-midleZ),2);
                                                         sumZnam = sumZnam + Math.Pow(variable.Z -a*variable.X+b,2);
                                                     }
-
-                                                    double oshibka = 1 - sumChis / sumZnam;
+                                                                                                        double oshibka = 1 - sumChis / sumZnam;
                                                     detemmination.Add(oshibka);
-                                                    shapeEditor.ModifySubElement(vertex, zPredict);
+                                                    double zForFloor = vertex.Position.Z;
+                                                    if (vertex.Position.Z >= zPredict) zForFloor = (-1)*Math.Abs(zForFloor - zPredict);
+                                                    if (vertex.Position.Z < zPredict) zForFloor=Math.Abs(zPredict-zForFloor);
+                                                    shapeEditor.ModifySubElement(vertex, zForFloor);
                                                     vertexAndPoint.Value.checkoutStatus = true;
                                                     vertexAndPoint.Value.X = vertex.Position.X;
                                                     vertexAndPoint.Value.Y = vertex.Position.Y;
@@ -319,8 +324,7 @@ namespace BMCIModule
                                                 else
                                                 {
                                                     if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
-                                                        collectionPointCloudInTriangle[trianglePoint.First().Key]
-                                                            .Count == 0)
+                                                        collectionPointCloudInTriangle[trianglePoint.First().Key].Count == 0)
                                                     {
                                                         vertexAndPoint.Value.checkoutStatus = true;
                                                     }
