@@ -85,9 +85,7 @@ namespace BMCIModule
 
             //Получить Верхнюю грань
             Face topFace=GetTopFace(selectFloor, doc);
-
             #region Триангуляция
-            
             
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
@@ -309,11 +307,18 @@ namespace BMCIModule
                                                         sumChis=sumChis + Math.Pow((variable.Z-midleZ),2);
                                                         sumZnam = sumZnam + Math.Pow(variable.Z -a*variable.X+b,2);
                                                     }
-                                                                                                        double oshibka = 1 - sumChis / sumZnam;
+                                                    double oshibka = 1 - sumChis / sumZnam;
                                                     detemmination.Add(oshibka);
                                                     double zForFloor = vertex.Position.Z;
-                                                    if (vertex.Position.Z >= zPredict) zForFloor = (-1)*Math.Abs(zForFloor - zPredict);
-                                                    if (vertex.Position.Z < zPredict) zForFloor=Math.Abs(zPredict-zForFloor);
+                                                    if (zPredict >= captureRange+zForFloor || zPredict<=zForFloor-captureRange) 
+                                                    {
+                                                        zForFloor = 0;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (vertex.Position.Z >= zPredict) zForFloor = (-1) * Math.Abs(zForFloor - zPredict);
+                                                        if (vertex.Position.Z < zPredict) zForFloor = Math.Abs(zPredict - zForFloor);
+                                                    }
                                                     shapeEditor.ModifySubElement(vertex, zForFloor);
                                                     vertexAndPoint.Value.checkoutStatus = true;
                                                     vertexAndPoint.Value.X = vertex.Position.X;
