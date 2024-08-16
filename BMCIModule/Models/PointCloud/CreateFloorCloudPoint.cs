@@ -17,6 +17,7 @@ using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
 using Point = Autodesk.Revit.DB.Point;
 using POINT=BMCIModule.Models.PointCloud;
+using Autodesk.Revit.DB.DirectContext3D;
 
 namespace BMCIModule
 {
@@ -131,7 +132,7 @@ namespace BMCIModule
             {
                 tr.Start();
                 SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
-
+                
                 slabFloor.Enable();// открываем на редактирование
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
@@ -228,7 +229,8 @@ namespace BMCIModule
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
                 List<Face> topFaceArray = new List<Face>();
                 //обработка облака вне зависимости от фигуры перекрытия
-                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint, captureRange);
+                double thicknesFloor = 0;
+                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint, captureRange, ref thicknesFloor);
                 // массив вершин,нужно искать по этим вершинам 
                 //пройтись по всей логике еще раз
                 SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
@@ -302,6 +304,7 @@ namespace BMCIModule
                                                                  .Count;
                                                     double sumChis = 0;
                                                     double sumZnam = 0;
+                                                    
                                                     foreach (var variable in collectionPointCloudInTriangle[trianglePoint.First().Key])
                                                     {
                                                         sumChis=sumChis + Math.Pow((variable.Z-midleZ),2);
@@ -309,17 +312,17 @@ namespace BMCIModule
                                                     }
                                                     double oshibka = 1 - sumChis / sumZnam;
                                                     detemmination.Add(oshibka);
-                                                    double zForFloor = vertex.Position.Z;
-                                                    if (zPredict >= captureRange+zForFloor || zPredict<=zForFloor-captureRange) 
+                                                    double deltaVertexAndPredict = 0;
+                                                    if (Math.Abs(vertex.Position.Z-zPredict)>captureRange || Math.Abs(vertex.Position.Z-zPredict-thicknesFloor)>captureRange) 
                                                     {
-                                                        zForFloor = 0;
+                                                        deltaVertexAndPredict = 0;
                                                     }
                                                     else
                                                     {
-                                                        if (vertex.Position.Z >= zPredict) zForFloor = (-1) * Math.Abs(zForFloor - zPredict);
-                                                        if (vertex.Position.Z < zPredict) zForFloor = Math.Abs(zPredict - zForFloor);
+                                                        if(vertex.Position.Z<zPredict) deltaVertexAndPredict=zPredict-vertex.Position.Z;
+                                                        if(vertex.Position.Z>zPredict) deltaVertexAndPredict=(-1)*Math.Abs(vertex.Position.Z-zPredict);
                                                     }
-                                                    shapeEditor.ModifySubElement(vertex, zForFloor);
+                                                    shapeEditor.ModifySubElement(vertex, deltaVertexAndPredict);
                                                     vertexAndPoint.Value.checkoutStatus = true;
                                                     vertexAndPoint.Value.X = vertex.Position.X;
                                                     vertexAndPoint.Value.Y = vertex.Position.Y;
@@ -328,6 +331,7 @@ namespace BMCIModule
                                                 }
                                                 else
                                                 {
+                                                    // тут что-то неcуразное
                                                     if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
                                                         collectionPointCloudInTriangle[trianglePoint.First().Key].Count == 0)
                                                     {
@@ -361,11 +365,10 @@ namespace BMCIModule
             return Result.Succeeded;
         }
 
-        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint, double captureRage)
+        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint, double captureRage, ref double thicknesFloor)
         {
             //толщина пола
             var floorParameters = selectorNewFloor.Parameters;
-            double thicknesFloor = 0;
             foreach (Parameter parameter in floorParameters)
             {
                 ElementId searchElementId = new ElementId(-1001900);
@@ -734,7 +737,7 @@ namespace BMCIModule
                                 }
                         }
                     }
-                    XYZ convertPoint = new XYZ(getPointToMovie.X, getPointToMovie.Y, getPointToMovie.Z);
+                    XYZ convertPoint = new XYZ(getPointToMovie.X, getPointToMovie.Y, superPositionZ);
                     XYZ tempPoint = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
                     foreach (var intersectPoint in pointCross)
                     {
@@ -752,7 +755,7 @@ namespace BMCIModule
                     {
                         getPointToMovie.X = tempPoint.X;
                         getPointToMovie.Y = tempPoint.Y;
-                        getPointToMovie.Z = tempPoint.Z;
+                        getPointToMovie.Z = superPositionZ;
                         getPointToMovie.getPointPosition = PointInFigureWithBorders.moviePointFromOutFigure;
                     }
                 }
