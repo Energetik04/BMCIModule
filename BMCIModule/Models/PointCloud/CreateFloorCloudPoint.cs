@@ -138,7 +138,7 @@ namespace BMCIModule
                 sw.Start();
                 foreach (POINT.Point point in collection)
                 {
-                    XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
+                    XYZ convertPoint = point.CreateXYZFromPoint();
                     SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint); // вернет null если точки не существует на верхней грании фигуры
                     if (vertex != null)
                     {
