@@ -132,21 +132,40 @@ namespace BMCIModule
             {
                 tr.Start();
                 SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
-                
-                slabFloor.Enable();// открываем на редактирование
+                //slabFloor.Enable();// открываем на редактирование
+                var face=GetTopFace(selectFloor, doc);
+                var list = face.GetListPointInFace();
+                List<XYZ> listNull=new List<XYZ>();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
+                int vertexNull = 0;
                 foreach (POINT.Point point in collection)
                 {
-                    XYZ convertPoint = point.CreateXYZFromPoint();
-                    SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint); // вернет null если точки не существует на верхней грании фигуры
-                    if (vertex != null)
+                    if (point.getPointPosition == PointInFigureWithBorders.deleteThisPoint)
                     {
-                        dictionaryVertexAndPoint.Add(vertex.Position,point);
+                        continue;
                     }
+                    //XYZ convertPoint = point.CreateXYZFromPoint();
+                    XYZ convertPoint = point.CreateXYZFromPoint();
+                    SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint);
+                    //SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint); // вернет null если точки не существует на верхней грании фигуры
+                    if (vertex == null)
+                    {
+                        listNull.Add(convertPoint);
+                        vertexNull++;
+                        continue;
+                    }
+                    //if (vertex.Position.Z != convertPoint.Z)
+                    //{
+                    //    if(vertex.Position.Z>convertPoint.Z) slabFloor.ModifySubElement(vertex,-1*(Math.Abs(vertex.Position.Z-convertPoint.Z)));
+                    //    if(vertex.Position.Z<convertPoint.Z) slabFloor.ModifySubElement(vertex,(convertPoint.Z-vertex.Position.Z));
+                    //}
+                    dictionaryVertexAndPoint.Add(vertex.Position,point);
                 }
                 double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
+                // хер с ним, переберем все vertex  и поставить высоту
                 SlabShapeVertexArray vertexArray = slabFloor.SlabShapeVertices;
+                
                 List<SlabShapeVertex> vertexList=new List<SlabShapeVertex>();
                 foreach (SlabShapeVertex vertex in vertexArray)
                 {
@@ -186,7 +205,6 @@ namespace BMCIModule
                 foreach (SlabShapeVertex vertex in vertexArray)
                 {
                     int count = 0;
-
                     foreach (var vertexCurrentArray in vertexArray)
                     {
                         var vertexCurrent = vertexCurrentArray as SlabShapeVertex;
@@ -236,19 +254,6 @@ namespace BMCIModule
                 SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
                 List<XYZ> vertexCheckList=new List<XYZ>();
                 List<POINT.Point> pointInChecList=new List<POINT.Point>();
-                /*foreach (SlabShapeVertex vertex in vertexToCheck)
-                {
-                    foreach (var dPoint in dictionaryVertexAndPoint)
-                    {
-                        if (dPoint.Key.IsAlmostEqualTo(vertex.Position) == true)
-                        {
-                            if (dPoint.Value.getPointPosition == PointInFigureWithBorders.inBorders || dPoint.Value.getPointPosition == PointInFigureWithBorders.moviePointFromOutFigure)
-                            {
-                                dPoint.Value.checkoutStatus = true;
-                            }
-                        }
-                    }
-                }*/
                 Dictionary<Face,List<XYZ>> dictionaryFaceAndPointFace=new Dictionary<Face,List<XYZ>>(); //точки плоскость и точки ограничивающие плоскость
                 foreach (var face in topFaceArray)
                 {
@@ -260,7 +265,7 @@ namespace BMCIModule
                 int countPointTrue = 0;
                 List<int> idInsertFace=new List<int>();
                 Dictionary<Face,bool> fullCheckOutFace=new Dictionary<Face, bool>();
-                List<double> detemmination=new List<double>();
+                List<double> determination=new List<double>();
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
@@ -311,7 +316,7 @@ namespace BMCIModule
                                                         sumZnam = sumZnam + Math.Pow(variable.Z -a*variable.X+b,2);
                                                     }
                                                     double oshibka = 1 - sumChis / sumZnam;
-                                                    detemmination.Add(oshibka);
+                                                    determination.Add(oshibka);
                                                     double deltaVertexAndPredict = 0;
                                                     if (Math.Abs(vertex.Position.Z-zPredict)>captureRange || Math.Abs(vertex.Position.Z-zPredict-thicknesFloor)>captureRange) 
                                                     {
