@@ -90,7 +90,7 @@ namespace BMCIModule
             
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
-            ICollection<Models.PointCloud.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace,ref stepMin);
+            ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace,ref stepMin);
             MovieOutFigurePointInBorders(ref collection,ref topFace);
             #endregion
 
@@ -292,7 +292,7 @@ namespace BMCIModule
                                                 if (vertex.Position.IsAlmostEqualTo(pointInFace) &&
                                                     collectionPointCloudInTriangle[trianglePoint.First().Key].Count != 0)
                                                 {
-                                                    Aproximate(collectionPointCloudInTriangle[trianglePoint.First().Key], out double a, out double b);
+                                                    AproximateXZ(collectionPointCloudInTriangle[trianglePoint.First().Key], out double a, out double b);
                                                     double zPredict = a * vertex.Position.X + b;
                                                     double midleZ = 0;
                                                     foreach (var pointCloud in collectionPointCloudInTriangle[trianglePoint.First().Key])
@@ -476,7 +476,7 @@ namespace BMCIModule
             return collectionPointCloudInTriangle;
         }
 
-        public void Aproximate(List<XYZ> pointCollection,out double a,out double b)
+        public void AproximateXZ(List<XYZ> pointCollection,out double a,out double b)
         {
             //line function z=a*x+b
             //a=(a1-sumx*sumy)/(a2-a3)
@@ -495,6 +495,27 @@ namespace BMCIModule
             a=(pointCollection.Count*a1-sumx*sumy)/(pointCollection.Count*a2-a3);
             b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
         }
+
+        public void AproximateXY(List<XYZ> pointCollection, out double a, out double b)
+        {
+            //line function z=a*x+b
+            //a=(a1-sumx*sumy)/(a2-a3)
+            //b=(a2*sumy-sumx*a1)/a2-a3
+            a = 0;
+            b = 0;
+            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
+            foreach (var point in pointCollection)
+            {
+                a1 = a1 + point.X * point.Y;
+                sumx = sumx + point.X;
+                sumy = sumy + point.Y;
+                a2 = a2 + Math.Pow(point.X, 2);
+            }
+            a3 = Math.Pow(sumx, 2);
+            a = (pointCollection.Count * a1 - sumx * sumy) / (pointCollection.Count * a2 - a3);
+            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
+        }
+
 
         //получение верхней грани, только если пол плоский
         public Face GetTopFace(Element selectFloor, Document doc)
@@ -562,7 +583,7 @@ namespace BMCIModule
                 if (VisiblePointInRegion(pointInFace, point) == true)
                 {
                     point.getPointPosition = PointInFigureWithBorders.inFigure;
-                    break;
+                    continue;
                 }
                 else
                 {
@@ -663,7 +684,7 @@ namespace BMCIModule
             int huita= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle)+1;
             for (int i = 0; i <= ((int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle))+1; i++)
             {
-                for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X)/ stepmin)); j++)
+                for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X)/ stepmin))+1; j++)
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
@@ -687,41 +708,55 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection,ref Face topFace)
+        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection, ref Face topFace)
         {
             var pointTopface = topFace.GetListPointInFace();
-            double superPositionX=0;
-            double superPositionY=0;
-            double superPositionZ=pointTopface[0].Z;
             int countPointInFigure = 0;
             // центр масс
             foreach (var point in pointCollection)
             {
-                if (point.getPointPosition == PointInFigureWithBorders.inFigure)
+                if (point.getPointPosition == PointInFigureWithBorders.inFigure || point.getPointPosition == PointInFigureWithBorders.inBorders)
                 {
-                    countPointInFigure++;
-                    superPositionX = superPositionX + point.X;
-                    superPositionY = superPositionY + point.Y;
+                    continue;
                 }
-            }
-            superPositionX = (superPositionX / countPointInFigure).DoubleToNumbers(3);
-            superPositionY=(superPositionY / countPointInFigure).DoubleToNumbers(3);
-            foreach (var getPointToMovie in pointCollection)
-            {
-                if (getPointToMovie.getPointPosition == PointInFigureWithBorders.outFigure)
+                else
                 {
-                    XYZ origin = new XYZ(superPositionX,superPositionY,superPositionZ);
-                    XYZ direction = new XYZ((getPointToMovie.X-origin.X).DoubleToNumbers(3),(getPointToMovie.Y-origin.Y).DoubleToNumbers(2),superPositionZ);
-                    //метод полная херумпула, потому что непонятно что выдает
-                    var line=Line.CreateUnbound(origin, direction);
-                    List<XYZ> pointCross=new List<XYZ>();
-                    foreach (var curveLoop in topFace.GetEdgesAsCurveLoops())
+                    double superPositionX = 0;
+                    double superPositionY = 0;
+                    double superPositionZ = pointTopface[0].Z;
+                    int countPointInFigureHex = 0;
+                    foreach (var pointToHex in point.pointForHex)
                     {
-                        foreach (var curve in curveLoop)
+
+                        if (pointToHex.getPointPosition == PointInFigureWithBorders.inFigure)
                         {
-                            //разобрать  с результатом
-                            var result = curve.Intersect(line, out IntersectionResultArray resultArray);
-                            //List<double> distanceIntersectPoint=new List<double>();
+                            countPointInFigureHex++;
+                            superPositionX = superPositionX + pointToHex.X;
+                            superPositionY = superPositionY + pointToHex.Y;
+                        }
+                    }
+                    if (countPointInFigureHex == 0)
+                    {
+                        point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
+                        continue;
+                    }
+                    superPositionX = (superPositionX / countPointInFigureHex).DoubleToNumbers(3);
+                    superPositionY = (superPositionY / countPointInFigureHex).DoubleToNumbers(3);
+                    if (point.getPointPosition == PointInFigureWithBorders.outFigure)
+                    {
+                        XYZ origin = new XYZ(superPositionX, superPositionY, superPositionZ);
+                        XYZ direction = new XYZ((point.X - origin.X), (point.Y - origin.Y), superPositionZ);
+                        //метод полная херумпула, потому что непонятно что выдает
+                        var line = (Line.CreateBound(point.CreateXYZFromPoint(), origin) as Curve);
+                        line.MakeUnbound();
+                        List<XYZ> pointCross = new List<XYZ>();
+                        foreach (var curveLoop in topFace.GetEdgesAsCurveLoops())
+                        {
+                            foreach (var curve in curveLoop)
+                            {
+                                //разобрать  с результатом
+                                var result = curve.Intersect(line, out IntersectionResultArray resultArray);
+                                //List<double> distanceIntersectPoint=new List<double>();
                                 if (result == SetComparisonResult.Overlap)
                                 {
                                     foreach (var getResult in resultArray)
@@ -735,32 +770,32 @@ namespace BMCIModule
                                         }
                                     }
                                 }
+                            }
                         }
-                    }
-                    XYZ convertPoint = new XYZ(getPointToMovie.X, getPointToMovie.Y, superPositionZ);
-                    XYZ tempPoint = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
-                    foreach (var intersectPoint in pointCross)
-                    {
-                        if (intersectPoint.DistanceTo(convertPoint)<=convertPoint.DistanceTo(tempPoint))
+                        XYZ convertPoint = new XYZ(point.X, point.Y, superPositionZ);
+                        XYZ tempPoint = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
+                        foreach (var intersectPoint in pointCross)
                         {
-                            tempPoint = intersectPoint;
+                            if (intersectPoint.DistanceTo(convertPoint) <= convertPoint.DistanceTo(tempPoint))
+                            {
+                                tempPoint = intersectPoint;
+                            }
                         }
-                    }
-                    if (pointCross.Count == 0)
-                    {
-                        //динамически изменить коллекцию
-                        getPointToMovie.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
-                    }
-                    else
-                    {
-                        getPointToMovie.X = tempPoint.X;
-                        getPointToMovie.Y = tempPoint.Y;
-                        getPointToMovie.Z = superPositionZ;
-                        getPointToMovie.getPointPosition = PointInFigureWithBorders.moviePointFromOutFigure;
+                        if (pointCross.Count == 0)
+                        {
+                            //динамически изменить коллекцию
+                            point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
+                        }
+                        else
+                        {
+                            point.X = tempPoint.X;
+                            point.Y = tempPoint.Y;
+                            point.Z = superPositionZ;
+                            point.getPointPosition = PointInFigureWithBorders.moviePointFromOutFigure;
+                        }
                     }
                 }
             }
         }
-       
     }
 }
