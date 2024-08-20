@@ -4,20 +4,16 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Windows.Documents;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
 using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
-using Point = Autodesk.Revit.DB.Point;
 using POINT=BMCIModule.Models.PointCloud;
-using Autodesk.Revit.DB.DirectContext3D;
 
 namespace BMCIModule
 {
