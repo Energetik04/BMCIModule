@@ -242,6 +242,7 @@ namespace BMCIModule
                 List<int> idInsertFace=new List<int>();
                 Dictionary<Face,bool> fullCheckOutFace=new Dictionary<Face, bool>();
                 List<double> determination=new List<double>();
+                List<SlabShapeVertex> vertexList=new List<SlabShapeVertex>();
                 // опять как-то надо логику посмотреть 
                 while (allCheckPoint==false)
                 {
@@ -310,6 +311,7 @@ namespace BMCIModule
                                                     vertexAndPoint.Value.X = vertex.Position.X;
                                                     vertexAndPoint.Value.Y = vertex.Position.Y;
                                                     vertexAndPoint.Value.Z = vertex.Position.Z;
+                                                    vertexList.Add(vertex);
                                                     break;
                                                 }
                                                 else
@@ -340,9 +342,18 @@ namespace BMCIModule
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
+                TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
+                //нашел верхнюю и нижнюю точку среди vertex в плоскости пола
+                var vertexMin = vertexList.OrderBy(x => x.Position.Z).Select(x=>x).First();
+                var vertexMax = vertexList.OrderByDescending(x => x.Position.Z).First();
+                var bendMax=new XYZ(vertexMax.Position.X + 1, vertexMax.Position.Y+1, vertexMax.Position.Z);
+                var bendMin = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 1, vertexMin.Position.Z);
+                var bendMinEnd= new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 2, vertexMin.Position.Z);
 
-                TaskDialog.Show("Время выполнения", elapsedTime);
-                
+                View view = doc.ActiveView;
+                Reference refffa=new Reference(selectFloor);
+
+                var dimension=doc.Create.NewSpotElevation(doc.ActiveView,choiceFloorRef,vertexMin.Position,bendMin,bendMinEnd,vertexMin.Position,true);
                 tr2.Commit();
             }
             return Result.Succeeded;
@@ -465,7 +476,6 @@ namespace BMCIModule
             b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
         }
 
-
         //получение верхней грани, только если пол плоский
         public Face GetTopFace(Element selectFloor, Document doc)
         {
@@ -496,7 +506,6 @@ namespace BMCIModule
             }
             return topFace;
         }
-
 
         //скорее всего не мусор
         public bool VisiblePointInRegion(MeshTriangle triangle, POINT.Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
