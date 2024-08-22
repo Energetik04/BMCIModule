@@ -8,12 +8,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Windows.Media.Animation;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
 using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
 using POINT=BMCIModule.Models.PointCloud;
+using System.Windows.Shapes;
 
 namespace BMCIModule
 {
@@ -223,6 +225,7 @@ namespace BMCIModule
                 tr2.Start();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
+                ElementId floorId = selectFloor.Id;
                 SlabShapeEditor shapeEditor = (selectFloor as Floor).SlabShapeEditor;
                 Options op = new Options();// default setting
                 Element selectorNewFloor = doc.GetElement(selectFloorId);
@@ -343,21 +346,83 @@ namespace BMCIModule
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                 TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
-                //нашел верхнюю и нижнюю точку среди vertex в плоскости пола
-                var vertexMin = vertexList.OrderBy(x => x.Position.Z).Select(x=>x).First();
-                var vertexMax = vertexList.OrderByDescending(x => x.Position.Z).First();
-                var bendMax=new XYZ(vertexMax.Position.X + 1, vertexMax.Position.Y+1, vertexMax.Position.Z);
-                var bendMin = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 1, vertexMin.Position.Z);
-                var bendMinEnd= new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 2, vertexMin.Position.Z);
 
-                View view = doc.ActiveView;
-                Reference refffa=new Reference(selectFloor);
+                ////нашел верхнюю и нижнюю точку среди vertex в плоскости пола
+                SlabShapeVertex vertexMin = vertexList.OrderBy(x => x.Position.Z).Select(x => x).First();
+                //var vertexMax = vertexList.OrderByDescending(x => x.Position.Z).First();
+                //var bendMax = new XYZ(vertexMax.Position.X + 1, vertexMax.Position.Y + 1, vertexMax.Position.Z);
+                //var bendMin = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 1, vertexMin.Position.Z);
+                //var bendMinEnd = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 2, vertexMin.Position.Z);
+                View  view = doc.ActiveView;
+                var huita = (doc.GetElement(floorId).get_Geometry(op).Where(x=> x is Solid).First() as Solid).Edges;
+                List< XYZ> vershin=new List< XYZ >();
+                foreach (Edge edge in huita)
+                {
+                    List<XYZ> pointEdge=new List< XYZ >();
+                    pointEdge.Add(edge.AsCurve().GetEndPoint(0));
+                    pointEdge.Add(edge.AsCurve().GetEndPoint(1));
+                    foreach (XYZ line in pointEdge)
+                    {
+                        vershin.Add(line);
+                        if (line.IsAlmostEqualTo(vertexMin.Position))
+                        {
+                            Reference reffa = edge.GetEndPointReference(pointEdge.IndexOf(line));
+                            SpotDimension spot = doc.Create.NewSpotElevation(view, reffa, vertexMin.Position,
+                                vertexMin.Position, vertexMin.Position, vertexMin.Position, false);
+                            break;
+                        }
+                    }
+                }
 
-                var dimension=doc.Create.NewSpotElevation(doc.ActiveView,choiceFloorRef,vertexMin.Position,bendMin,bendMinEnd,vertexMin.Position,true);
                 tr2.Commit();
+            }
+
+            using (Transaction tr3 = new Transaction(doc, "тыр-тыр") )
+            {
+                tr3.Start();
+                ElementId floorId = selectFloorId;
+                Options op = new Options();
+                SlabShapeVertexArray vertexArray = (doc.GetElement(floorId) as Floor).SlabShapeEditor.SlabShapeVertices;
+                List<SlabShapeVertex> vertexList=new List< SlabShapeVertex >();
+                foreach (SlabShapeVertex vertex in vertexArray)
+                {
+                    vertexList.Add(vertex);
+                }
+                SlabShapeVertex vertexMin = vertexList.OrderBy(x => x.Position.Z).Select(x => x).First();
+                //var vertexMax = vertexList.OrderByDescending(x => x.Position.Z).First();
+                //var bendMax = new XYZ(vertexMax.Position.X + 1, vertexMax.Position.Y + 1, vertexMax.Position.Z);
+                //var bendMin = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 1, vertexMin.Position.Z);
+                //var bendMinEnd = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 2, vertexMin.Position.Z);
+                View view = doc.ActiveView;
+                var huita = (doc.GetElement(floorId).get_Geometry(op).Where(x => x is Solid).First() as Solid).Edges;
+                List<XYZ> vershin = new List<XYZ>();
+                foreach (Edge edge in huita)
+                {
+                    XYZ point0 = edge.AsCurve().GetEndPoint(0);
+                    XYZ point1=edge.AsCurve().GetEndPoint(1);
+                    if (point0.IsAlmostEqualTo(vertexMin.Position))
+                    {
+                        Reference reffa = edge.GetEndPointReference(0);
+                        SpotDimension spot = doc.Create.NewSpotElevation(view, reffa, vertexMin.Position,
+                            vertexMin.Position, vertexMin.Position, vertexMin.Position, false);
+                        break;
+                    }
+                    else
+                    {
+                        if (point1.IsAlmostEqualTo(vertexMin.Position))
+                        {
+                            Reference reffa = edge.GetEndPointReference(1);
+                            SpotDimension spot = doc.Create.NewSpotElevation(view, reffa, vertexMin.Position,
+                                vertexMin.Position, vertexMin.Position, vertexMin.Position, false);
+                            break;
+                        }
+                    }
+                }
+                tr3.Commit();
             }
             return Result.Succeeded;
         }
+
 
         public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint, double captureRage, ref double thicknesFloor)
         {
@@ -705,7 +770,7 @@ namespace BMCIModule
                         XYZ origin = new XYZ(superPositionX, superPositionY, superPositionZ);
                         XYZ direction = new XYZ((point.X - origin.X), (point.Y - origin.Y), superPositionZ);
                         //метод полная херумпула, потому что непонятно что выдает
-                        var line = (Line.CreateBound(point.CreateXYZFromPoint(), origin) as Curve);
+                        var line = (Autodesk.Revit.DB.Line.CreateBound(point.CreateXYZFromPoint(), origin) as Curve);
                         line.MakeUnbound();
                         List<XYZ> pointCross = new List<XYZ>();
                         foreach (var curveLoop in topFace.GetEdgesAsCurveLoops())
