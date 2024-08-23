@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Net;
 using System.Windows.Media.Animation;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
@@ -16,6 +17,7 @@ using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
 using POINT=BMCIModule.Models.PointCloud;
 using System.Windows.Shapes;
+using Point = Autodesk.Revit.DB.Point;
 
 namespace BMCIModule
 {
@@ -346,78 +348,57 @@ namespace BMCIModule
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                 TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
-
-                ////нашел верхнюю и нижнюю точку среди vertex в плоскости пола
-                SlabShapeVertex vertexMin = vertexList.OrderBy(x => x.Position.Z).Select(x => x).First();
-                //var vertexMax = vertexList.OrderByDescending(x => x.Position.Z).First();
-                //var bendMax = new XYZ(vertexMax.Position.X + 1, vertexMax.Position.Y + 1, vertexMax.Position.Z);
-                //var bendMin = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 1, vertexMin.Position.Z);
-                //var bendMinEnd = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 2, vertexMin.Position.Z);
-                View  view = doc.ActiveView;
-                var huita = (doc.GetElement(floorId).get_Geometry(op).Where(x=> x is Solid).First() as Solid).Edges;
-                List< XYZ> vershin=new List< XYZ >();
-                foreach (Edge edge in huita)
-                {
-                    List<XYZ> pointEdge=new List< XYZ >();
-                    pointEdge.Add(edge.AsCurve().GetEndPoint(0));
-                    pointEdge.Add(edge.AsCurve().GetEndPoint(1));
-                    foreach (XYZ line in pointEdge)
-                    {
-                        vershin.Add(line);
-                        if (line.IsAlmostEqualTo(vertexMin.Position))
-                        {
-                            Reference reffa = edge.GetEndPointReference(pointEdge.IndexOf(line));
-                            SpotDimension spot = doc.Create.NewSpotElevation(view, reffa, vertexMin.Position,
-                                vertexMin.Position, vertexMin.Position, vertexMin.Position, false);
-                            break;
-                        }
-                    }
-                }
-
                 tr2.Commit();
             }
 
-            using (Transaction tr3 = new Transaction(doc, "тыр-тыр") )
+            using (Transaction tr3 = new Transaction(doc, "Отметка максимума и минимума пола") )
             {
                 tr3.Start();
                 ElementId floorId = selectFloorId;
-                Options op = new Options();
+                Options op = new Options()
+                {
+                    ComputeReferences = true // открывает вычисление ссылок на геометрии
+                };
+                
                 SlabShapeVertexArray vertexArray = (doc.GetElement(floorId) as Floor).SlabShapeEditor.SlabShapeVertices;
                 List<SlabShapeVertex> vertexList=new List< SlabShapeVertex >();
                 foreach (SlabShapeVertex vertex in vertexArray)
                 {
                     vertexList.Add(vertex);
                 }
-                SlabShapeVertex vertexMin = vertexList.OrderBy(x => x.Position.Z).Select(x => x).First();
-                //var vertexMax = vertexList.OrderByDescending(x => x.Position.Z).First();
-                //var bendMax = new XYZ(vertexMax.Position.X + 1, vertexMax.Position.Y + 1, vertexMax.Position.Z);
-                //var bendMin = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 1, vertexMin.Position.Z);
-                //var bendMinEnd = new XYZ(vertexMin.Position.X + 1, vertexMin.Position.Y + 2, vertexMin.Position.Z);
+                SlabShapeVertex vertexMin = vertexList.Where(x => x.VertexType==SlabShapeVertexType.Interior).OrderBy(x => x.Position.Z).Select(x => x).First();
+                SlabShapeVertex vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior).OrderByDescending(x => x.Position.Z).Select(x => x).First();
                 View view = doc.ActiveView;
-                var huita = (doc.GetElement(floorId).get_Geometry(op).Where(x => x is Solid).First() as Solid).Edges;
-                List<XYZ> vershin = new List<XYZ>();
-                foreach (Edge edge in huita)
+                var edgeArray = (doc.GetElement(floorId).get_Geometry(op).Where(x => x is Solid).First() as Solid).Edges;
+                foreach (Edge edge in edgeArray)
                 {
                     XYZ point0 = edge.AsCurve().GetEndPoint(0);
-                    XYZ point1=edge.AsCurve().GetEndPoint(1);
+                    if (point0.IsAlmostEqualTo(vertexMax.Position))
+                    {
+                        Reference reffa = edge.GetEndPointReference(0);
+                        SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
+                    vertexMax.Position,
+                    new XYZ(vertexMax.Position.X + 2, vertexMax.Position.Y + 2, vertexMax.Position.Z),
+                    new XYZ(vertexMax.Position.X + 4, vertexMax.Position.Y + 2, vertexMax.Position.Z),
+                    vertexMax.Position, true);
+                        break;
+                    }
+                }
+                foreach (Edge edge in edgeArray)
+                {
+                    XYZ point0 = edge.AsCurve().GetEndPoint(0);
                     if (point0.IsAlmostEqualTo(vertexMin.Position))
                     {
                         Reference reffa = edge.GetEndPointReference(0);
-                        SpotDimension spot = doc.Create.NewSpotElevation(view, reffa, vertexMin.Position,
-                            vertexMin.Position, vertexMin.Position, vertexMin.Position, false);
+                        SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
+                            vertexMin.Position,
+                            new XYZ(vertexMin.Position.X + 2, vertexMin.Position.Y + 2, vertexMin.Position.Z),
+                            new XYZ(vertexMax.Position.X + 4, vertexMin.Position.Y + 2, vertexMin.Position.Z),
+                            vertexMax.Position, true);
                         break;
                     }
-                    else
-                    {
-                        if (point1.IsAlmostEqualTo(vertexMin.Position))
-                        {
-                            Reference reffa = edge.GetEndPointReference(1);
-                            SpotDimension spot = doc.Create.NewSpotElevation(view, reffa, vertexMin.Position,
-                                vertexMin.Position, vertexMin.Position, vertexMin.Position, false);
-                            break;
-                        }
-                    }
                 }
+                
                 tr3.Commit();
             }
             return Result.Succeeded;

@@ -10,6 +10,13 @@ namespace BMCIModule.Models
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            #region Поулчение документа и интерфейса
+
+            var app = commandData.Application;// пользовательский интерфейс
+            var uidoc = app.ActiveUIDocument;// активный документ
+            var doc = uidoc.Document;// сам документ
+
+            #endregion
 
 
 
