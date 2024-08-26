@@ -26,7 +26,7 @@ namespace BMCIModule
             IList<Element> rvtLink = collector.WhereElementIsNotElementType()
                 .OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
             var list = rvtLink.Select(x => x.Name).ToList();
-            getLinkVM.Links = rvtLink.Select(x => x.Name).ToList();
+            getLinkVM.Links = rvtLink.Select(x =>(x as RevitLinkInstance).Name.Split(':').First()).ToList(); // убрал все что полсе двоеточия, но надо проверить для других файлов
             if (getLinkWindow.ShowDialog() == false)
             {
                 return Result.Succeeded;
@@ -38,12 +38,12 @@ namespace BMCIModule
                     
                 //переборка коллекции
                 if (rvtLink.Count == 0)
-                    {
+                {
                         message = "Нету связанных файлов. Добавьте файл для координации проекта.";
                         return Result.Cancelled;
-                    }
-                    else
-                    {
+                }
+                else
+                {
                         foreach (Element element1 in rvtLink)
                         {
                             using (Transaction t = new Transaction(doc, "Координация точек"))
@@ -101,8 +101,7 @@ namespace BMCIModule
                                 t.Commit();
                             }
                         }
-
-                    }
+                }
                     return Result.Succeeded;
                 }
                 catch (FileNotFoundException)

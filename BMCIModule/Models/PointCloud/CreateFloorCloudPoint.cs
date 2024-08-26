@@ -26,7 +26,7 @@ namespace BMCIModule
     {
         CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
         CreateFloorCloudPointWindow createFloorCloudPoint=new CreateFloorCloudPointWindow();
-
+        
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             #region Document and Interface
