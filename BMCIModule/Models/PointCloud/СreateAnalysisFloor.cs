@@ -1,9 +1,17 @@
 ﻿
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Analysis;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
+using Autodesk.Windows;
+using BMCIModule.Models.Extension;
+using TaskDialog = Autodesk.Revit.UI.TaskDialog;
 
-namespace BMCIModule.Models
+namespace BMCIModule
 {
     [Transaction(TransactionMode.Manual)]
     public class СreateAnalysisFloor:IExternalCommand
@@ -18,8 +26,51 @@ namespace BMCIModule.Models
 
             #endregion
 
+            SpatialFieldManager sfm=SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
+            if(sfm==null) sfm=SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView,1);
+            
+            #region Выбор пола
 
+            TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
+            Selection choiceFloor = uidoc.Selection;
+            Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
+            Element selectFloor = doc.GetElement(choiceFloorRef);
+            ElementId selectFloorId = selectFloor.Id;
+           
 
+            #endregion
+
+            Options op = new Options()
+            {
+                ComputeReferences = true
+            };
+            FaceArray faceArray = ((selectFloor as Floor).get_Geometry(op).First() as Solid).Faces;
+            var topFaceArray = (selectFloor as Floor).GetListTopFaceArray(doc);
+            foreach (Face face in topFaceArray)
+            {
+                Reference reference = face.Reference;
+                int idx = sfm.AddSpatialFieldPrimitive(reference);// индекс емкости массива данных точки 
+                IList<UV> uvPts = new List<UV>();
+                BoundingBoxUV bb = face.GetBoundingBox();
+                UV min=bb.Min;
+                UV max=bb.Max;
+                uvPts.Add(new UV(min.U,min.V));
+                uvPts.Add(new UV(max.U,max.V));
+                FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvPts);
+                List<double> doubeList=new List<double>();
+                IList<ValueAtPoint> valList=new List<ValueAtPoint>();
+                doubeList.Add(0);
+                valList.Add(new ValueAtPoint(doubeList));
+                doubeList.Clear();
+                doubeList.Add(10);
+                valList.Add(new ValueAtPoint(doubeList));
+                FieldValues vals = new FieldValues(valList);
+                AnalysisResultSchema resultSchema = new AnalysisResultSchema("Schema Name", "Description");
+                int schemaIndex = sfm.RegisterResult(resultSchema);
+                sfm.UpdateSpatialFieldPrimitive(idx,pnts,vals,schemaIndex);
+            }
+             
+            
 
             return Result.Succeeded;
         }

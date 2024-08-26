@@ -39,5 +39,7 @@ namespace BMCIModule.Views.Window
         {
             this.DialogResult=true;
         }
+
+
     }
 }

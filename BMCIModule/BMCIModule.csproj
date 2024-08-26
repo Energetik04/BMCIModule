@@ -113,6 +113,7 @@
     <Compile Include="Infrastructure\Commands\DefaultDialogService.cs" />
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
     <Compile Include="Infrastructure\Interface\Base\IDialogService.cs" />
+    <Compile Include="Models\Extension\ExtensionFloor.cs" />
     <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />
     <Compile Include="Models\Extension\ExtensionDouble.cs" />
     <Compile Include="Models\Extension\ExtensionFace.cs" />
@@ -126,6 +127,7 @@
     </Compile>
     <Compile Include="ViewModel\Base\ViewModel.cs" />
     <Compile Include="ViewModel\CreateFloorCloudPointVM.cs" />
+    <Compile Include="ViewModel\GetLinkForFilePreparingVM.cs" />
     <Compile Include="ViewModel\RibbonPanel\BMCIModule_Application.cs" />
     <Compile Include="Models\PreparingTheFile\CreateWorkset.cs" />
     <Compile Include="Models\PreparingTheFile\CopyLevel.cs" />
@@ -139,6 +141,9 @@
     <Compile Include="Views\Window\CreateFloorCloudPointWindow.xaml.cs">
       <DependentUpon>CreateFloorCloudPointWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Window\GetLinkForFilePreparingWindow.xaml.cs">
+      <DependentUpon>GetLinkForFilePreparingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Window\SelectWorksetWindow.xaml.cs">
       <DependentUpon>SelectWorksetWindow.xaml</DependentUpon>
     </Compile>
@@ -150,6 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\Window\CreateFloorCloudPointWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Window\GetLinkForFilePreparingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

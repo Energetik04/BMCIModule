@@ -1,9 +1,13 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using BMCIModule.ViewModel;
+
 using System.Collections.Generic;
 using System.IO;
-
+using System.Linq;
+using BMCIModule.Views.Window;
+using BMCIModule.ViewModel.Base;
 
 
 namespace BMCIModule
@@ -11,75 +15,101 @@ namespace BMCIModule
     [Transaction(TransactionMode.Manual)]
     public class CoordinationFile:IExternalCommand
     {
+        //GetLinkForFilePreparingVM getLinkVM = new GetLinkForFilePreparingVM();
+        //GetLinkForFilePreparingWindow getLinkWindow = new GetLinkForFilePreparingWindow();
         public Result Execute(ExternalCommandData commandData,ref string message, ElementSet element)
         {
             Document doc = commandData.Application.ActiveUIDocument.Document;
-            try
-            {
-                
-                FilteredElementCollector collector=new FilteredElementCollector(doc);
-                IList<Element> rvtLink= collector.WhereElementIsNotElementType().OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
-                //переборка коллекции
-                if (rvtLink.Count == 0)
+            //getLinkWindow.DataContext = getLinkVM;
+            //getLinkVM.Close = getLinkWindow.Close;
+            //if (getLinkWindow.ShowDialog() == false)
+            //{
+            //    return Result.Succeeded;
+            //}
+            //else
+            //{
+                try
                 {
-                    message = "Нету связанных файлов. Добавьте файл для координации проекта.";
-                    return Result.Cancelled;
-                }
-                else
-                {
-                    foreach (Element element1 in rvtLink)
+                    FilteredElementCollector collector = new FilteredElementCollector(doc);
+                    IList<Element> rvtLink = collector.WhereElementIsNotElementType()
+                        .OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
+                    //переборка коллекции
+                    if (rvtLink.Count == 0)
                     {
-                    
-                        using (Transaction t = new Transaction(doc, "Координация точек"))
+                        message = "Нету связанных файлов. Добавьте файл для координации проекта.";
+                        return Result.Cancelled;
+                    }
+                    else
+                    {
+                        //getLinkVM.Links = rvtLink.Select(x => x.Name).ToList();
+                        foreach (Element element1 in rvtLink)
                         {
-                            t.Start();
-                            Parameter projectBasePointNorthSouth = BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
-                            Parameter projectBasePointEastWest = BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
-                            Parameter projectBasePointElevation = BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
-                            Parameter projectSurveyPointNorthSouth = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
-                            Parameter projectSurveyPointEastWest = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
-                            Parameter projectSurveyPointElev = BasePoint.GetSurveyPoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
-                            if (element1.Name.Contains("Координационный"))
+
+                            using (Transaction t = new Transaction(doc, "Координация точек"))
                             {
-                                if ((projectBasePointEastWest.AsDouble() == 0) && (projectBasePointElevation.AsDouble() == 0) && (projectBasePointNorthSouth.AsDouble() == 0)
-                                    &&(projectSurveyPointEastWest.AsDouble()==0)&&(projectSurveyPointNorthSouth.AsDouble()==0)&&(projectSurveyPointElev.AsDouble()==0))
+                                t.Start();
+                                Parameter projectBasePointNorthSouth = BasePoint.GetProjectBasePoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
+                                Parameter projectBasePointEastWest = BasePoint.GetProjectBasePoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
+                                Parameter projectBasePointElevation = BasePoint.GetProjectBasePoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
+                                Parameter projectSurveyPointNorthSouth = BasePoint.GetSurveyPoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM);
+                                Parameter projectSurveyPointEastWest = BasePoint.GetSurveyPoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM);
+                                Parameter projectSurveyPointElev = BasePoint.GetSurveyPoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM);
+                                if (element1.Name.Contains("Координационный"))
                                 {
-                                    doc.AcquireCoordinates(element1.Id);
+                                    if ((projectBasePointEastWest.AsDouble() == 0) &&
+                                        (projectBasePointElevation.AsDouble() == 0) &&
+                                        (projectBasePointNorthSouth.AsDouble() == 0)
+                                        && (projectSurveyPointEastWest.AsDouble() == 0) &&
+                                        (projectSurveyPointNorthSouth.AsDouble() == 0) &&
+                                        (projectSurveyPointElev.AsDouble() == 0))
+                                    {
+                                        doc.AcquireCoordinates(element1.Id);
+                                    }
+                                    else
+                                    {
+                                        TaskDialog.Show("Координация точек проекта",
+                                            "Базовая точка проекта или точка съемки не находятся в позиции 0.0.0");
+                                        return Result.Cancelled;
+                                    }
                                 }
                                 else
                                 {
-                                    TaskDialog.Show("Координация точек проекта", "Базовая точка проекта или точка съемки не находятся в позиции 0.0.0");
-                                    return Result.Cancelled;
+                                    throw new FileNotFoundException();
                                 }
-                            }
-                            else
-                            {
-                                throw new FileNotFoundException();
-                            }
-                            // работа с базовой точкой
-                            BasePoint.GetSurveyPoint(doc).Clipped = false;
 
-                            // работа с точкой съемки
-                            projectSurveyPointNorthSouth.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM).AsDouble());
-                            projectSurveyPointEastWest.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM).AsDouble());
-                            projectSurveyPointElev.Set(BasePoint.GetProjectBasePoint(doc).get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM).AsDouble());
-                            
-                            BasePoint.GetProjectBasePoint(doc).Pinned = true;
-                            BasePoint.GetSurveyPoint(doc).Clipped = true;
+                                // работа с базовой точкой
+                                BasePoint.GetSurveyPoint(doc).Clipped = false;
 
-                            t.Commit();
+                                // работа с точкой съемки
+                                projectSurveyPointNorthSouth.Set(BasePoint.GetProjectBasePoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM).AsDouble());
+                                projectSurveyPointEastWest.Set(BasePoint.GetProjectBasePoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM).AsDouble());
+                                projectSurveyPointElev.Set(BasePoint.GetProjectBasePoint(doc)
+                                    .get_Parameter(BuiltInParameter.BASEPOINT_ELEVATION_PARAM).AsDouble());
+
+                                BasePoint.GetProjectBasePoint(doc).Pinned = true;
+                                BasePoint.GetSurveyPoint(doc).Clipped = true;
+
+                                t.Commit();
+                            }
                         }
-                    }
 
+                    }
+                    return Result.Succeeded;
                 }
-                                             
-                return Result.Succeeded;
-            }
-            catch (FileNotFoundException)
-            {
-                message = "Нету связанной модели с именем Координационный. Проверьте диспетчер связей";
-                return Result.Cancelled;
-            }
+                catch (FileNotFoundException)
+                {
+                    message = "Нету связанной модели с именем Координационный. Проверьте диспетчер связей";
+                    return Result.Cancelled;
+                }
+            //}
         }
     }
 }

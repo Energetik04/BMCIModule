@@ -76,7 +76,7 @@ namespace BMCIModule.Department
             new Department("Отдел водопровода и канализации", "ОВиК", WSSD),
             new Department("Химико-технолгический отдел", "ХТО", CTD),
             new Department("Электротехнический отдел", "ЭТО", ETO),
-            new Department("Отдел инженерных изысканий", "ОИИ", ESD),
+            new Department("Отдел инженерных обследований", "ОИО", ESD),
             new Department("Горный отдел", "ГО", MD),
         };
         

@@ -120,7 +120,8 @@ namespace BMCIModule
                 // Объединение кнопок в одну
                 SplitButtonData splitCopy = new SplitButtonData("splitCoordination", "Split");
                 SplitButton splitButtonCopy = panel.AddItem(splitCopy) as SplitButton;
-                 
+
+                splitButtonCopy.AddPushButton(dataButtonCoordination);
                 splitButtonCopy.AddPushButton(copyGridButtonData);
                 splitButtonCopy.AddPushButton(copyLevelButtonData);
 

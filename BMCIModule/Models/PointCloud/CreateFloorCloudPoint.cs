@@ -392,8 +392,8 @@ namespace BMCIModule
                         Reference reffa = edge.GetEndPointReference(0);
                         SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
                             vertexMin.Position,
-                            new XYZ(vertexMin.Position.X + 2, vertexMin.Position.Y + 2, vertexMin.Position.Z),
-                            new XYZ(vertexMax.Position.X + 4, vertexMin.Position.Y + 2, vertexMin.Position.Z),
+                            new XYZ(vertexMin.Position.X + 2, vertexMin.Position.Y + 2, 0),
+                            new XYZ(vertexMax.Position.X + 4, vertexMin.Position.Y + 2, 0),
                             vertexMax.Position, true);
                         break;
                     }
@@ -528,7 +528,7 @@ namespace BMCIModule
             #region Options
 
             Options op = doc.Application.Create.NewGeometryOptions();// Определить Options для объекта заредачить
-            op.ComputeReferences = false;
+            op.ComputeReferences = true;
             op.DetailLevel = ViewDetailLevel.Undefined;
             op.IncludeNonVisibleObjects = false;
 

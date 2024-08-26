@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-2-296188164
+3-1591606205
 
-25-1262290634
+281395168427
 11981356399
-Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
+Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\GetLinkForFilePreparingWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
 
 False
 

@@ -43,3 +43,5 @@ D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
 D:\BMCIModule\BMCIModule\BMCIModule\bin\Debug\UIFramework.dll
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateFloorCloudPointWindow.g.cs
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateFloorCloudPointWindow.baml
+D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\GetLinkForFilePreparingWindow.g.cs
+D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\GetLinkForFilePreparingWindow.baml
