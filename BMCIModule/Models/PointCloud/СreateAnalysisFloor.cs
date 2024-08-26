@@ -68,7 +68,7 @@ namespace BMCIModule
             //    int schemaIndex = sfm.RegisterResult(resultSchema);
             //    sfm.UpdateSpatialFieldPrimitive(idx,pnts,vals,schemaIndex);
             //}
-             
+            
             
 
             return Result.Succeeded;
