@@ -15,36 +15,37 @@ namespace BMCIModule
     [Transaction(TransactionMode.Manual)]
     public class CoordinationFile:IExternalCommand
     {
-        //GetLinkForFilePreparingVM getLinkVM = new GetLinkForFilePreparingVM();
-        //GetLinkForFilePreparingWindow getLinkWindow = new GetLinkForFilePreparingWindow();
+        GetLinkForFilePreparingVM getLinkVM = new GetLinkForFilePreparingVM();
+        GetLinkForFilePreparingWindow getLinkWindow = new GetLinkForFilePreparingWindow();
         public Result Execute(ExternalCommandData commandData,ref string message, ElementSet element)
         {
             Document doc = commandData.Application.ActiveUIDocument.Document;
-            //getLinkWindow.DataContext = getLinkVM;
-            //getLinkVM.Close = getLinkWindow.Close;
-            //if (getLinkWindow.ShowDialog() == false)
-            //{
-            //    return Result.Succeeded;
-            //}
-            //else
-            //{
+            getLinkWindow.DataContext = getLinkVM;
+            getLinkVM.Close = getLinkWindow.Close;
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            IList<Element> rvtLink = collector.WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
+            var list = rvtLink.Select(x => x.Name).ToList();
+            getLinkVM.Links = rvtLink.Select(x => x.Name).ToList();
+            if (getLinkWindow.ShowDialog() == false)
+            {
+                return Result.Succeeded;
+            }
+            else
+            {
                 try
                 {
-                    FilteredElementCollector collector = new FilteredElementCollector(doc);
-                    IList<Element> rvtLink = collector.WhereElementIsNotElementType()
-                        .OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
-                    //переборка коллекции
-                    if (rvtLink.Count == 0)
+                    
+                //переборка коллекции
+                if (rvtLink.Count == 0)
                     {
                         message = "Нету связанных файлов. Добавьте файл для координации проекта.";
                         return Result.Cancelled;
                     }
                     else
                     {
-                        //getLinkVM.Links = rvtLink.Select(x => x.Name).ToList();
                         foreach (Element element1 in rvtLink)
                         {
-
                             using (Transaction t = new Transaction(doc, "Координация точек"))
                             {
                                 t.Start();
@@ -109,7 +110,7 @@ namespace BMCIModule
                     message = "Нету связанной модели с именем Координационный. Проверьте диспетчер связей";
                     return Result.Cancelled;
                 }
-            //}
+            }
         }
     }
 }
