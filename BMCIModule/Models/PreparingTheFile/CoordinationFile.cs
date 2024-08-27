@@ -15,24 +15,24 @@ namespace BMCIModule
     [Transaction(TransactionMode.Manual)]
     public class CoordinationFile:IExternalCommand
     {
-        GetLinkForFilePreparingVM getLinkVM = new GetLinkForFilePreparingVM();
-        GetLinkForFilePreparingWindow getLinkWindow = new GetLinkForFilePreparingWindow();
+        //GetLinkForFilePreparingVM getLinkVM = new GetLinkForFilePreparingVM();
+        //GetLinkForFilePreparingWindow getLinkWindow = new GetLinkForFilePreparingWindow();
         public Result Execute(ExternalCommandData commandData,ref string message, ElementSet element)
         {
             Document doc = commandData.Application.ActiveUIDocument.Document;
-            getLinkWindow.DataContext = getLinkVM;
-            getLinkVM.Close = getLinkWindow.Close;
+            //getLinkWindow.DataContext = getLinkVM;
+            //getLinkVM.Close = getLinkWindow.Close;
             FilteredElementCollector collector = new FilteredElementCollector(doc);
             IList<Element> rvtLink = collector.WhereElementIsNotElementType()
                 .OfCategory(BuiltInCategory.OST_RvtLinks).ToElements();
-            var list = rvtLink.Select(x => x.Name).ToList();
-            getLinkVM.Links = rvtLink.Select(x =>(x as RevitLinkInstance).Name.Split(':').First()).ToList(); // убрал все что полсе двоеточия, но надо проверить для других файлов
-            if (getLinkWindow.ShowDialog() == false)
-            {
-                return Result.Succeeded;
-            }
-            else
-            {
+            //var list = rvtLink.Select(x => x.Name).ToList();
+            //getLinkVM.Links = rvtLink.Select(x =>(x as RevitLinkInstance).Name.Split(':').First()).ToList(); // убрал все что полсе двоеточия, но надо проверить для других файлов
+            //if (getLinkWindow.ShowDialog() == false)
+            //{
+            //    return Result.Succeeded;
+            //}
+            //else
+            //{
                 try
                 {
                     
@@ -102,14 +102,14 @@ namespace BMCIModule
                             }
                         }
                 }
-                    return Result.Succeeded;
+                return Result.Succeeded;
                 }
                 catch (FileNotFoundException)
                 {
                     message = "Нету связанной модели с именем Координационный. Проверьте диспетчер связей";
                     return Result.Cancelled;
                 }
-            }
+            //}
         }
     }
 }

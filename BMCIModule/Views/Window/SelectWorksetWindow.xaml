@@ -32,12 +32,13 @@
         </Style>
     </Window.Resources>
 
-
     <StackPanel Orientation="Vertical"
                 VerticalAlignment="Top"
                 Width="Auto"
-                Height="Auto"
-                >
+                Height="Auto">
+        <StackPanel.Background>
+            <ImageBrush ImageSource="{Binding BackgroundWindow}" Opacity="0.4" Stretch="Fill"></ImageBrush>
+        </StackPanel.Background>
         <Grid>
        <Grid.ColumnDefinitions>
             <ColumnDefinition/>

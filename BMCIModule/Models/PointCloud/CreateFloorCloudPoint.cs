@@ -48,10 +48,6 @@ namespace BMCIModule
             {
                 try
                 {
-                    //установил свойства из Window в VM 
-                    createFloorCloudPointVm.Step = double.Parse(createFloorCloudPoint.stepMinWindow.Text);
-                    createFloorCloudPointVm.NumberPoint = int.Parse(createFloorCloudPoint.numberPoint.Text);
-                    createFloorCloudPointVm.CaptureRange=double.Parse(createFloorCloudPoint.captureRange.Text);
                     // передал свойства в класс
                     captureRange=createFloorCloudPointVm.CaptureRange*0.003281d; // 0,003281 перевод в футы
                     stepMin = createFloorCloudPointVm.Step * 0.003281d;
@@ -350,57 +346,71 @@ namespace BMCIModule
                 TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
                 tr2.Commit();
             }
-
-            using (Transaction tr3 = new Transaction(doc, "Отметка максимума и минимума пола") )
+            if (createFloorCloudPointVm.CheckBoxMax == true || createFloorCloudPointVm.CheckBoxMin == true)
             {
-                tr3.Start();
-                ElementId floorId = selectFloorId;
-                Options op = new Options()
+                using (Transaction tr3 = new Transaction(doc, "Отметка максимума и минимума пола"))
                 {
-                    ComputeReferences = true // открывает вычисление ссылок на геометрии
-                };
-                
-                SlabShapeVertexArray vertexArray = (doc.GetElement(floorId) as Floor).SlabShapeEditor.SlabShapeVertices;
-                List<SlabShapeVertex> vertexList=new List< SlabShapeVertex >();
-                foreach (SlabShapeVertex vertex in vertexArray)
-                {
-                    vertexList.Add(vertex);
-                }
-                SlabShapeVertex vertexMin = vertexList.Where(x => x.VertexType==SlabShapeVertexType.Interior).OrderBy(x => x.Position.Z).Select(x => x).First();
-                SlabShapeVertex vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior).OrderByDescending(x => x.Position.Z).Select(x => x).First();
-                View view = doc.ActiveView;
-                var edgeArray = (doc.GetElement(floorId).get_Geometry(op).Where(x => x is Solid).First() as Solid).Edges;
-                foreach (Edge edge in edgeArray)
-                {
-                    XYZ point0 = edge.AsCurve().GetEndPoint(0);
-                    if (point0.IsAlmostEqualTo(vertexMax.Position))
+                    tr3.Start();
+                    ElementId floorId = selectFloorId;
+                    Options op = new Options()
                     {
-                        Reference reffa = edge.GetEndPointReference(0);
-                        SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
-                    vertexMax.Position,
-                    new XYZ(vertexMax.Position.X + 2, vertexMax.Position.Y + 2, vertexMax.Position.Z),
-                    new XYZ(vertexMax.Position.X + 4, vertexMax.Position.Y + 2, vertexMax.Position.Z),
-                    vertexMax.Position, true);
-                        break;
-                    }
-                }
-                foreach (Edge edge in edgeArray)
-                {
-                    XYZ point0 = edge.AsCurve().GetEndPoint(0);
-                    if (point0.IsAlmostEqualTo(vertexMin.Position))
+                        ComputeReferences = true // открывает вычисление ссылок на геометрии
+                    };
+
+                    SlabShapeVertexArray vertexArray =
+                        (doc.GetElement(floorId) as Floor).SlabShapeEditor.SlabShapeVertices;
+                    List<SlabShapeVertex> vertexList = new List<SlabShapeVertex>();
+                    foreach (SlabShapeVertex vertex in vertexArray)
                     {
-                        Reference reffa = edge.GetEndPointReference(0);
-                        SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
-                            vertexMin.Position,
-                            new XYZ(vertexMin.Position.X + 2, vertexMin.Position.Y + 2, 0),
-                            new XYZ(vertexMax.Position.X + 4, vertexMin.Position.Y + 2, 0),
-                            vertexMax.Position, true);
-                        break;
+                        vertexList.Add(vertex);
                     }
+
+                    SlabShapeVertex vertexMin = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
+                        .OrderBy(x => x.Position.Z).Select(x => x).First();
+                    SlabShapeVertex vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
+                        .OrderByDescending(x => x.Position.Z).Select(x => x).First();
+                    View view = doc.ActiveView;
+                    var edgeArray = (doc.GetElement(floorId).get_Geometry(op).Where(x => x is Solid).First() as Solid)
+                        .Edges;
+                    if (createFloorCloudPointVm.CheckBoxMax == true)
+                    {
+                        foreach (Edge edge in edgeArray)
+                        {
+                            XYZ point0 = edge.AsCurve().GetEndPoint(0);
+                            if (point0.IsAlmostEqualTo(vertexMax.Position))
+                            {
+                                Reference reffa = edge.GetEndPointReference(0);
+                                SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
+                                    vertexMax.Position,
+                                    new XYZ(vertexMax.Position.X + 2, vertexMax.Position.Y + 2, vertexMax.Position.Z),
+                                    new XYZ(vertexMax.Position.X + 4, vertexMax.Position.Y + 2, vertexMax.Position.Z),
+                                    vertexMax.Position, true);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (createFloorCloudPointVm.CheckBoxMin == true)
+                    {
+                        foreach (Edge edge in edgeArray)
+                        {
+                            XYZ point0 = edge.AsCurve().GetEndPoint(0);
+                            if (point0.IsAlmostEqualTo(vertexMin.Position))
+                            {
+                                Reference reffa = edge.GetEndPointReference(0);
+                                SpotDimension spot = doc.Create.NewSpotElevation(view, reffa,
+                                    vertexMin.Position,
+                                    new XYZ(vertexMin.Position.X + 2, vertexMin.Position.Y + 2, 0),
+                                    new XYZ(vertexMax.Position.X + 4, vertexMin.Position.Y + 2, 0),
+                                    vertexMax.Position, true);
+                                break;
+                            }
+                        }
+                    }
+                    tr3.Commit();
                 }
-                
-                tr3.Commit();
             }
+
             return Result.Succeeded;
         }
 

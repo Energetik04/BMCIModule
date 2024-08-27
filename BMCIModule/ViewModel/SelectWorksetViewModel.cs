@@ -5,6 +5,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 
@@ -25,6 +27,11 @@ namespace BMCIModule.ViewModel
         }
         #endregion Заголовок
 
+        public ImageSource BackgroundWindow
+        {
+            get => new BitmapImage(
+                new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoBack.png"));
+        }
         #region Команды
 
         #region CloseAplicationCommand
@@ -32,7 +39,7 @@ namespace BMCIModule.ViewModel
         /// Пока не работает
         /// </summary>
         /// 
-               
+
         internal Action Close;
         public ICommand CloseAplicationCommand {  get; } // Создание комманды
 

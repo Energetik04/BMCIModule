@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Autodesk.Revit.DB;
 using BMCIModule.Infrastructure.Commands;
+using Color = Autodesk.Revit.DB.Color;
 
 namespace BMCIModule.ViewModel
 {
@@ -18,6 +23,21 @@ namespace BMCIModule.ViewModel
         private double stepMin;
         private double captureRange;
 
+        public ImageSource BackgroundWindow
+        {
+            get => new BitmapImage(
+                    new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoBack.png"));
+        }
+        public ImageSource LogoForWindow
+        {
+            get => new BitmapImage(
+                new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoForWindow.png"));
+        }
+
+        public Color TrueType
+        {
+            get => new Color(Colors.LawnGreen.R, Colors.LawnGreen.G, Colors.LawnGreen.B);
+        }
         public string Title
         {
             get => _Title;
@@ -28,7 +48,16 @@ namespace BMCIModule.ViewModel
             get => stepMin;
             set
             {
-                Set(ref stepMin, value);
+                if (value is double)
+                {
+                    Set(ref stepMin, value);
+
+                }
+                else
+                {
+
+                }
+                
             }
         }
 
@@ -43,6 +72,37 @@ namespace BMCIModule.ViewModel
             get => captureRange;
             set => Set(ref captureRange, value);
         }
+
+        private bool _checkBoxMax;
+        public bool CheckBoxMax
+        {
+            get => _checkBoxMax;
+            set => Set(ref _checkBoxMax, value);
+        }
+
+        private bool _checkBoxMin;
+
+        public bool CheckBoxMin
+        {
+            get => _checkBoxMin;
+            set => Set(ref _checkBoxMin, value);
+        }
+
+        public string ToolTipStepMin
+        {
+            get => "При создании треугольников внутри фигуры" + "\n" + "будет использоваться равносторонний треугольник" + "\n" + "с сторонами указанными в этом параметре.";
+        }
+
+        public string ToolTipNumberPoint
+        {
+            get => "Количество точек из облака точек," + "\n" + "попадающих в область треугольника," + "\n" + "для определения высотной отметки";
+        }
+
+        public string ToolTipCaptureRange
+        {
+            get => "Диапазон по вертикали для захвата облако точек в области треугольника," + "\n" + "применяется если облако точек охватывает все сооружение";
+        }
+
         public ICommand CloseAplicationCommand { get; } // Создание комманды
 
         private void OnCloseAplicationCommandExecuted(object p)

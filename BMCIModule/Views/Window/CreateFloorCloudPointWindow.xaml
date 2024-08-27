@@ -6,22 +6,68 @@
              xmlns:vm="clr-namespace:BMCIModule.ViewModel"
              xmlns:local="clr-namespace:BMCIModule"
              mc:Ignorable="d" 
-             Height="250" Width="360"
+             Height="250" Width="400"
              ResizeMode="NoResize"
              Title="{Binding Path=Title}">
     <Window.DataContext>
         <vm:CreateFloorCloudPointVM></vm:CreateFloorCloudPointVM>
     </Window.DataContext>
-    <Canvas>
-        <Label Content="Шаг сетки триангуляции, мм" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="20"/>
-        <Label Content="Количество точек в ячейке" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="14" Canvas.Top="63"/>
-        <Label Content="Диапазон захвата облака точек" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="19" Canvas.Top="108"/>
-        <TextBox x:Name="stepMinWindow" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="20" Width="120" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" />
-        <TextBox x:Name="numberPoint" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="63" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
-        <TextBox x:Name="captureRange" Canvas.Left="208" TextWrapping="Wrap" Text="TextBox" Canvas.Top="108" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26"/>
-        <Button Content="Применить" Canvas.Left="19" Canvas.Top="154" HorizontalAlignment="Left" VerticalAlignment="Top" Width="121"   Command="{Binding ApplyAplicationCommand}" Click="ClickApplyWindow"/>
-        <Button Content="Отмена/Закрыть" Canvas.Left="207" Canvas.Top="154" Width="121" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding CloseAplicationCommand}" Click="ClickCloseWindow"/>
-    </Canvas>
 
-
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding BackgroundWindow}" Stretch="Uniform" TileMode="None" Opacity="0.4"></ImageBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"></RowDefinition>
+            <RowDefinition Height="40*"></RowDefinition>
+            <RowDefinition Height="20*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Расставить точки триангуляции">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}"/>
+                <TextBox Grid.Row="0" Grid.Column="1"   TextWrapping="Wrap" Text="{Binding Step}" Height="20" TextAlignment="Center" Background="{Binding TrueType}"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="0"  Text="Количество точек в ячейке:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textNumberPoint" Margin="10 0 0 0 " ToolTip="{Binding ToolTipNumberPoint}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="numberPoint" TextWrapping="Wrap" Text="{Binding NumberPoint}" Height="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="2"  Text="шт." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Диапазон захвата облака точек:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textCaptureRange" Margin="10 0 0 0 " ToolTip="{Binding ToolTipCaptureRange}"/>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="captureRange" TextWrapping="Wrap" Text="{Binding CaptureRange}" Height="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Добавление высотной отметки">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Максимальная отметка пола:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Минимальная отметка пола:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0"/>
+                <CheckBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding CheckBoxMax}"/>
+                <CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding CheckBoxMin}"/>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Применить" HorizontalAlignment="Center" VerticalAlignment="Center" Width="121" Command="{Binding ApplyAplicationCommand}" Click="ClickApplyWindow"/>
+            <Button Grid.Column="1" Content="Отмена/Закрыть" Width="121" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CloseAplicationCommand}" Click="ClickCloseWindow"/>
+        </Grid>
+    </Grid>
 </Window>

@@ -31,6 +31,7 @@ namespace BMCIModule.ViewModel
 
         #endregion
 
+
         #region CloseApplicationCommand
 
         internal Action Close;

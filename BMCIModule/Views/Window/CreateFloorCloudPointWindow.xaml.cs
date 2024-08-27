@@ -24,10 +24,11 @@ namespace BMCIModule.Views.Window
         public CreateFloorCloudPointWindow()
         {
             InitializeComponent();
-            stepMinWindow.Text = "0";
-            numberPoint.Text = "0";
-            captureRange.Text = "0";
             Topmost = true;
+            //textStepMin.ToolTip = "При создании треугольников внутри фигуры"+"\n"+"будет использоваться равносторонний треугольник"+"\n"+"с сторонами указанными в этом параметре.";
+            //textNumberPoint.ToolTip = "Количество точек из облака точек,"+"\n"+"попадающих в область треугольника,"+"\n"+ "для определения высотной отметки";
+            //textCaptureRange.ToolTip = "Диапазон по вертикали для захвата облако точек в области треугольника,"+"\n"+"применяется если облако точек охватывает все сооружение";
+
         }
 
         private void ClickCloseWindow(object sender, RoutedEventArgs e)
