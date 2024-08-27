@@ -35,7 +35,7 @@
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}"/>
-                <TextBox Grid.Row="0" Grid.Column="1"   TextWrapping="Wrap" Text="{Binding Step}" Height="20" TextAlignment="Center" Background="{Binding TrueType}"/>
+                <TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step}" Height="20" TextAlignment="Center" />
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="0"  Text="Количество точек в ячейке:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textNumberPoint" Margin="10 0 0 0 " ToolTip="{Binding ToolTipNumberPoint}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="numberPoint" TextWrapping="Wrap" Text="{Binding NumberPoint}" Height="20" TextAlignment="Center"/>
@@ -66,8 +66,8 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Применить" HorizontalAlignment="Center" VerticalAlignment="Center" Width="121" Command="{Binding ApplyAplicationCommand}" Click="ClickApplyWindow"/>
-            <Button Grid.Column="1" Content="Отмена/Закрыть" Width="121" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CloseAplicationCommand}" Click="ClickCloseWindow"/>
+            <Button Grid.Column="0" Content="Применить" HorizontalAlignment="Center" VerticalAlignment="Center" Width="121" Command="{Binding ApplyApplicationCommand}" Click="ClickApplyWindow"/>
+            <Button Grid.Column="1" Content="Отмена/Закрыть" Width="121" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CloseApplicationCommand}" Click="ClickCloseWindow"/>
         </Grid>
     </Grid>
 </Window>

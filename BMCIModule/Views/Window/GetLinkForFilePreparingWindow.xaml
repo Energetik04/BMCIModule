@@ -12,7 +12,6 @@
         <vm:GetLinkForFilePreparingVM></vm:GetLinkForFilePreparingVM>
     </Window.DataContext>
     <Grid>
-        <ComboBox x:Name="rvtLinkList" HorizontalAlignment="Left" Margin="327,167,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Links}"/>
 
     </Grid>
 </Window>

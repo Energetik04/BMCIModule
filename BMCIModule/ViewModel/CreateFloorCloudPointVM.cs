@@ -46,19 +46,7 @@ namespace BMCIModule.ViewModel
         public double Step
         {
             get => stepMin;
-            set
-            {
-                if (value is double)
-                {
-                    Set(ref stepMin, value);
-
-                }
-                else
-                {
-
-                }
-                
-            }
+            set => Set(ref stepMin, value);
         }
 
         public int NumberPoint
@@ -103,14 +91,14 @@ namespace BMCIModule.ViewModel
             get => "Диапазон по вертикали для захвата облако точек в области треугольника," + "\n" + "применяется если облако точек охватывает все сооружение";
         }
 
-        public ICommand CloseAplicationCommand { get; } // Создание комманды
+        public ICommand CloseApplicationCommand { get; } // Создание комманды
 
-        private void OnCloseAplicationCommandExecuted(object p)
+        private void OnCloseApplicationCommandExecuted(object p)
         {
             Close();
         }
 
-        private bool CanCloseAplicationCommandExecute(object p) => true;
+        private bool CanCloseApplicationCommandExecute(object p) => true;
         #endregion
 
         #region Apply
@@ -118,22 +106,22 @@ namespace BMCIModule.ViewModel
         /// Применение рабочих наборов
         /// </summary>
 
-        public ICommand ApplyAplicationCommand { get; }
-        private void OnApplyAplicationCommandExecuted(object p)
+        public ICommand ApplyApplicationCommand { get; }
+        private void OnApplyApplicationCommandExecuted(object p)
         {
             Close();
         }
 
-        private bool CanApplyAplicationCommandExecuted(object p) => true;
+        private bool CanApplyApplicationCommandExecuted(object p) => true;
         
         #endregion
 
         public CreateFloorCloudPointVM()
         {
-            CloseAplicationCommand =
-                new RelayCommand(OnCloseAplicationCommandExecuted, CanCloseAplicationCommandExecute);
-            ApplyAplicationCommand =
-                new RelayCommand(OnApplyAplicationCommandExecuted, CanApplyAplicationCommandExecuted);
+            CloseApplicationCommand =
+                new RelayCommand(OnCloseApplicationCommandExecuted, CanCloseApplicationCommandExecute);
+            ApplyApplicationCommand =
+                new RelayCommand(OnApplyApplicationCommandExecuted, CanApplyApplicationCommandExecuted);
         }
     }
 }
