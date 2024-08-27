@@ -34,10 +34,10 @@ namespace BMCIModule.ViewModel
                 new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoForWindow.png"));
         }
 
-        public Color TrueType
-        {
-            get => new Color(Colors.LawnGreen.R, Colors.LawnGreen.G, Colors.LawnGreen.B);
-        }
+        //public Color TrueType
+        //{
+        //    get => new Color(Colors.LawnGreen.R, Colors.LawnGreen.G, Colors.LawnGreen.B);
+        //}
         public string Title
         {
             get => _Title;

@@ -24,8 +24,6 @@ namespace BMCIModule.Views.Window
         public CreateFloorCloudPointWindow()
         {
             InitializeComponent();
-            Topmost = true;
-
         }
 
         private void ClickCloseWindow(object sender, RoutedEventArgs e)

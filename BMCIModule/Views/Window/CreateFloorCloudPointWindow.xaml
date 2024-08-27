@@ -8,7 +8,8 @@
              mc:Ignorable="d" 
              Height="250" Width="400"
              ResizeMode="NoResize"
-             Title="{Binding Path=Title}">
+             Title="{Binding Title}"
+             Topmost="True">
     <Window.DataContext>
         <vm:CreateFloorCloudPointVM></vm:CreateFloorCloudPointVM>
     </Window.DataContext>
