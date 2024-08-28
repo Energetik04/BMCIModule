@@ -9,7 +9,7 @@ using Color = Autodesk.Revit.DB.Color;
 
 namespace BMCIModule.ViewModel
 {
-    internal class CreateFloorCloudPointVM:ViewModel.Base.ViewModel
+    public class CreateFloorCloudPointVM:ViewModel.Base.ViewModel
     {
         #region CloseAplicationCommand
         /// <summary>
@@ -33,12 +33,8 @@ namespace BMCIModule.ViewModel
             get => new BitmapImage(
                 new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoForWindow.png"));
         }
-
-        //public Color TrueType
-        //{
-        //    get => new Color(Colors.LawnGreen.R, Colors.LawnGreen.G, Colors.LawnGreen.B);
-        //}
-        public string Title
+       
+       public string Title
         {
             get => _Title;
             set => Set(ref _Title, value);
@@ -52,7 +48,7 @@ namespace BMCIModule.ViewModel
         public int NumberPoint
         {
             get => numberPoint;
-            set { Set(ref numberPoint, value); }
+            set => Set(ref numberPoint, value);
         }
 
         public double CaptureRange
@@ -74,6 +70,13 @@ namespace BMCIModule.ViewModel
         {
             get => _checkBoxMin;
             set => Set(ref _checkBoxMin, value);
+        }
+
+        private bool _checkBoxBottomFace;
+        public bool CheckBoxBottomFace
+        {
+            get => _checkBoxBottomFace;
+            set => Set(ref _checkBoxBottomFace, value);
         }
 
         public string ToolTipStepMin

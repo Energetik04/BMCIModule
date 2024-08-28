@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace BMCIModule.ViewModel.Base
 {
-    internal abstract class ViewModel:INotifyPropertyChanged
+    public abstract class ViewModel:INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -29,6 +29,7 @@
                     <RowDefinition Height="1*"></RowDefinition>
                     <RowDefinition Height="1*"></RowDefinition>
                     <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -36,7 +37,7 @@
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}"/>
-                <TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step}" Height="20" TextAlignment="Center" />
+                <TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step}" Height="20" TextAlignment="Center"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="0"  Text="Количество точек в ячейке:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textNumberPoint" Margin="10 0 0 0 " ToolTip="{Binding ToolTipNumberPoint}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="numberPoint" TextWrapping="Wrap" Text="{Binding NumberPoint}" Height="20" TextAlignment="Center"/>
@@ -44,6 +45,8 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Диапазон захвата облака точек:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textCaptureRange" Margin="10 0 0 0 " ToolTip="{Binding ToolTipCaptureRange}"/>
                 <TextBox Grid.Row="2" Grid.Column="1" x:Name="captureRange" TextWrapping="Wrap" Text="{Binding CaptureRange}" Height="20" TextAlignment="Center"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Использовать нижнюю грань плиты" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 "/>
+                <CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding CheckBoxBottomFace}"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Header="Добавление высотной отметки">

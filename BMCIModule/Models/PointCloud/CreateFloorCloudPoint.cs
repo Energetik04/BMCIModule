@@ -230,7 +230,7 @@ namespace BMCIModule
                 List<Face> topFaceArray = new List<Face>();
                 //обработка облака вне зависимости от фигуры перекрытия
                 double thicknesFloor = 0;
-                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint, captureRange, ref thicknesFloor);
+                Dictionary<Face,List<XYZ>> collectionPointCloudInTriangle = GetDictionaryFaceAndCloudPoint(selectorNewFloor, selectPointCloud,ref doc,ref topFaceArray,numberPoint, captureRange, ref thicknesFloor, ref createFloorCloudPointVm);
                 SlabShapeVertexArray vertexToCheck = (selectorNewFloor as Floor).SlabShapeEditor.SlabShapeVertices;
                 Dictionary<Face,List<XYZ>> dictionaryFaceAndPointFace=new Dictionary<Face,List<XYZ>>(); //точки плоскость и точки ограничивающие плоскость
                 foreach (var face in topFaceArray)
@@ -415,7 +415,7 @@ namespace BMCIModule
         }
 
 
-        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint, double captureRage, ref double thicknesFloor)
+        public Dictionary<Face, List<XYZ>> GetDictionaryFaceAndCloudPoint(Element selectorNewFloor, Element selectPointCloud,ref Document doc,ref List<Face> topFaceArray,int numberPoint, double captureRage, ref double thicknesFloor,ref CreateFloorCloudPointVM createFloorCloudPointVm)
         {
             //толщина пола
             var floorParameters = selectorNewFloor.Parameters;
@@ -443,8 +443,16 @@ namespace BMCIModule
             {
                 if ((face as PlanarFace).FaceNormal.ToString().Equals(normal.ToString())) topFaceArray.Add(face); // не доходят все точки 
             }
-            
-            double zMin = (topFaceArray[0] as PlanarFace).Origin.Z-thicknesFloor-captureRage;
+
+            double zMin;
+            if (createFloorCloudPointVm.CheckBoxBottomFace == true)
+            {
+                zMin = (topFaceArray[0] as PlanarFace).Origin.Z - thicknesFloor;
+            }
+            else
+            {
+                zMin = (topFaceArray[0] as PlanarFace).Origin.Z - thicknesFloor - captureRage;
+            }
             double zMax = (topFaceArray[0] as PlanarFace).Origin.Z + captureRage;
             //double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
             //double zMax = selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
