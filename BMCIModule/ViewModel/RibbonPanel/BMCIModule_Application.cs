@@ -2,6 +2,8 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AW=Autodesk.Windows;
@@ -15,6 +17,20 @@ namespace BMCIModule
     public class BMCIModule_Application : IExternalApplication 
     {
         static AddInId addInId = new AddInId(new Guid("F8AF5982-6FE6-4C62-8F79-E0B6FF252F73"));
+        //получение пути к файлу
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
+
+        private string str = AssemblyDirectory;
+        //
         public Result OnStartup (UIControlledApplication application)
         {
             //adWin.RibbonControl ribbon = adWin.ComponentManager.Ribbon;
