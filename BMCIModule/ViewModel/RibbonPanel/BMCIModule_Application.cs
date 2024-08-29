@@ -28,7 +28,6 @@ namespace BMCIModule
                 return Path.GetDirectoryName(path);
             }
         }
-
         private string str = AssemblyDirectory;
         //
         public Result OnStartup (UIControlledApplication application)
