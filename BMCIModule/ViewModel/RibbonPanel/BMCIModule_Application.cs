@@ -35,7 +35,7 @@ namespace BMCIModule
             //adWin.RibbonControl ribbon = adWin.ComponentManager.Ribbon;
             string namePlugin = "BMCIModule";
             string ribbonCoordination = "Координация";
-            string ribbonFloor = "Полы";
+            string panelFactConstruction = "Фактические конструкции";
             string ribbonLogo = "ОАО Белгорхимпром";
             string  wayForApplication=@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll";
             
@@ -43,7 +43,7 @@ namespace BMCIModule
 
             RibbonPanel logo = application.CreateRibbonPanel(namePlugin, ribbonLogo);
             RibbonPanel panelCoordination=application.CreateRibbonPanel(namePlugin,ribbonCoordination);
-            RibbonPanel panelFloor= application.CreateRibbonPanel(namePlugin, ribbonFloor);
+            RibbonPanel panelFloor= application.CreateRibbonPanel(namePlugin, panelFactConstruction);
             
 
 
@@ -101,12 +101,19 @@ namespace BMCIModule
             // Работа с полами,панель
             void AddButtonFloor(RibbonPanel panel)
             {
-                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPointWindow", "Пол", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
+                //пол
+                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPointWindow", "Пол", wayForApplication, "BMCIModule.CreateFloorOrRoofCloudPoint");
                 changeFloorToPointCloudData.ToolTip = "Изменение формы пола по облаку точек";
                 // путь к картинкам либо изменить либо пересмотреть 
                 changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
                 PushButton createFloorToPointCloudDataButton = panel.AddItem(changeFloorToPointCloudData) as PushButton;
-
+                //кровля
+                PushButtonData changeRoofToPointCloudData = new PushButtonData("CreateRoofCloudPointWindow", "Кровля", wayForApplication, "BMCIModule.CreateFloorOrRoofCloudPoint");
+                changeRoofToPointCloudData.ToolTip = "Изменение формы кровли по облаку точек";
+                // путь к картинкам либо изменить либо пересмотреть 
+                changeRoofToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                PushButton createRoofToPointCloudDataButton = panel.AddItem(changeRoofToPointCloudData) as PushButton;
+                //анализ
                 PushButtonData createAnalysisFloor = new PushButtonData("createAnalysisFloor", "Анализ пола", wayForApplication, "BMCIModule.СreateAnalysisFloor");
                 createAnalysisFloor.ToolTip = "Создание вида с аналитической поверхностью, для более наглядного представления неровностей пола, путем нанесенгия цветной диаграммы";
                 // путь к картинкам либо изменить либо пересмотреть 

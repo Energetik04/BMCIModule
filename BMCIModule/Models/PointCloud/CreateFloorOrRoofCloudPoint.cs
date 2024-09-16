@@ -22,7 +22,7 @@ using Point = Autodesk.Revit.DB.Point;
 namespace BMCIModule
 {
     [Transaction((TransactionMode.Manual))]
-    public class CreateFloorCloudPoint:IExternalCommand
+    public class CreateFloorOrRoofCloudPoint:IExternalCommand
     {
         CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
         CreateFloorCloudPointWindow createFloorCloudPoint=new CreateFloorCloudPointWindow();
