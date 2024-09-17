@@ -8,16 +8,15 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Net;
-using System.Windows.Media.Animation;
 using Autodesk.Revit.DB.PointClouds;
 using BMCIModule.Models;
 using BMCIModule.Models.Extension;
 using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
 using POINT=BMCIModule.Models.PointCloud;
-using System.Windows.Shapes;
 using Point = Autodesk.Revit.DB.Point;
+using AW = Autodesk.Windows;
+
 
 namespace BMCIModule
 {
@@ -37,8 +36,9 @@ namespace BMCIModule
             double stepMin,captureRange;
             int numberPoint;
             #endregion
-            
-            
+            createFloorCloudPoint.DataContext = createFloorCloudPointVm;
+            createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
+            var pushButtonInModule = BMCIModule_Application.ExecutedItem;
             if (createFloorCloudPoint.ShowDialog() == false)
             {
                 return Result.Succeeded;
@@ -59,41 +59,48 @@ namespace BMCIModule
                 }
             }
 
-            #region SelectFloor
-            TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
-            Selection choiceFloor = uidoc.Selection;
-            Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента (пол / перекрытие)");
-            Element selectFloor = doc.GetElement(choiceFloorRef);
-            ElementId selectFloorId = selectFloor.Id;
+            Element selectElement=null;
+            ElementId selectElementId = null;
 
-            createFloorCloudPoint.DataContext = createFloorCloudPointVm;
-            createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
-            #endregion
-
-            #region SelectFloor
-
-            TaskDialog.Show("Выбор элемента", "Выберите элемент крыша");
-            Selection choiceRoof = uidoc.Selection;
-            Reference choiceRoofRef = choiceRoof.PickObject(ObjectType.Element, "Выбор элемента (кровля)");
-            Element selectRoof = doc.GetElement(choiceRoofRef);
-            ElementId selectRoofId= selectRoof.Id;
-
-            #endregion
-
+            if (pushButtonInModule.AutomationName.Equals("Пол"))
+            {
+                #region SelectFloor
+                TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
+                Selection choiceFloor = uidoc.Selection;
+                Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента (пол / перекрытие)");
+                selectElement = doc.GetElement(choiceFloorRef);
+                selectElementId = selectElement.Id;
+                #endregion
+            }
+            else
+            {
+                if (pushButtonInModule.AutomationName.Equals("Кровля"))
+                {
+                    #region SelectRoof
+                    TaskDialog.Show("Выбор элемента", "Выберите элемент крыша");
+                    Selection choiceRoof = uidoc.Selection;
+                    Reference choiceRoofRef = choiceRoof.PickObject(ObjectType.Element, "Выбор элемента (кровля)");
+                    selectElement = doc.GetElement(choiceRoofRef);
+                    selectElementId = selectElement.Id;
+                    #endregion
+                }
+            }
             #region SelectPointCloud
 
             TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
             Selection choicePointCloud = uidoc.Selection;
             Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
             Element selectPointCloud = doc.GetElement(choicePointCloudRef);
-            
-            #endregion
-            
 
+            #endregion
             //Получить Верхнюю грань
-            Face topFace=GetTopFace(selectFloor, doc);
-            #region Триангуляция
+            Face topFace=null;
+            if (selectElement is Floor)
+            {
+                 topFace= GetTopFace(selectElement, doc);
+            }
             
+            #region Триангуляция
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
             ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace,ref stepMin);
@@ -131,9 +138,9 @@ namespace BMCIModule
             using (Transaction tr = new Transaction(doc, "Триангуляция поверхности"))
             {
                 tr.Start();
-                SlabShapeEditor slabFloor = (selectFloor as Floor).SlabShapeEditor;
+                SlabShapeEditor slabFloor = (selectElement as Floor).SlabShapeEditor;
                 //slabFloor.Enable();// открываем на редактирование
-                var face=GetTopFace(selectFloor, doc);
+                var face=GetTopFace(selectElement, doc);
                 var list = face.GetListPointInFace();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
@@ -233,10 +240,10 @@ namespace BMCIModule
                 tr2.Start();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
-                ElementId floorId = selectFloor.Id;
-                SlabShapeEditor shapeEditor = (selectFloor as Floor).SlabShapeEditor;
+                ElementId floorId = selectElement.Id;
+                SlabShapeEditor shapeEditor = (selectElement as Floor).SlabShapeEditor;
                 Options op = new Options();// default setting
-                Element selectorNewFloor = doc.GetElement(selectFloorId);
+                Element selectorNewFloor = doc.GetElement(selectElementId);
                 List<Face> topFaceArray = new List<Face>();
                 //обработка облака вне зависимости от фигуры перекрытия
                 double thicknesFloor = 0;
@@ -361,7 +368,7 @@ namespace BMCIModule
                 using (Transaction tr3 = new Transaction(doc, "Отметка максимума и минимума пола"))
                 {
                     tr3.Start();
-                    ElementId floorId = selectFloorId;
+                    ElementId floorId = selectElementId;
                     Options op = new Options()
                     {
                         ComputeReferences = true // открывает вычисление ссылок на геометрии

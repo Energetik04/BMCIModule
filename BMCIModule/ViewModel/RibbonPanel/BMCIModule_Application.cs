@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows.Media;
@@ -14,8 +15,16 @@ using Color = System.Windows.Media.Color;
 namespace BMCIModule
 {
     [Transaction(TransactionMode.Manual)]
-    public class BMCIModule_Application : IExternalApplication 
+    public class BMCIModule_Application : IExternalApplication
     {
+        private static AW.RibbonItem _executedRibbon;
+
+        public static AW.RibbonItem ExecutedItem
+        {
+            get { return _executedRibbon; }
+        }
+
+
         static AddInId addInId = new AddInId(new Guid("F8AF5982-6FE6-4C62-8F79-E0B6FF252F73"));
         //получение пути к файлу
         public static string AssemblyDirectory
@@ -38,14 +47,13 @@ namespace BMCIModule
             string panelFactConstruction = "Фактические конструкции";
             string ribbonLogo = "ОАО Белгорхимпром";
             string  wayForApplication=@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll";
+            AW.ComponentManager.UIElementActivated += ComponentManager_UIElementActivated;
             
             application.CreateRibbonTab(namePlugin);
 
             RibbonPanel logo = application.CreateRibbonPanel(namePlugin, ribbonLogo);
             RibbonPanel panelCoordination=application.CreateRibbonPanel(namePlugin,ribbonCoordination);
             RibbonPanel panelFloor= application.CreateRibbonPanel(namePlugin, panelFactConstruction);
-            
-
 
             AW.RibbonControl ribbon = AW.ComponentManager.Ribbon;
             // картинку на фон кнопок
@@ -110,6 +118,7 @@ namespace BMCIModule
                 //кровля
                 PushButtonData changeRoofToPointCloudData = new PushButtonData("CreateRoofCloudPointWindow", "Кровля", wayForApplication, "BMCIModule.CreateFloorOrRoofCloudPoint");
                 changeRoofToPointCloudData.ToolTip = "Изменение формы кровли по облаку точек";
+
                 // путь к картинкам либо изменить либо пересмотреть 
                 changeRoofToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
                 PushButton createRoofToPointCloudDataButton = panel.AddItem(changeRoofToPointCloudData) as PushButton;
@@ -160,6 +169,14 @@ namespace BMCIModule
             return Result.Succeeded;
 
         }
+
+        private void ComponentManager_UIElementActivated(object sender, AW.UIElementActivatedEventArgs e)
+        {
+            _executedRibbon = e.Item;
+        }
+
+        
+
         public AW.RibbonItem GetButton(string tabName,string panelName, string itemName)
         {
             AW.RibbonControl ribbon = AW.ComponentManager.Ribbon;
