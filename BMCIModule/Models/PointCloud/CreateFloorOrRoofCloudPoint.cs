@@ -37,8 +37,7 @@ namespace BMCIModule
             double stepMin,captureRange;
             int numberPoint;
             #endregion
-            createFloorCloudPoint.DataContext = createFloorCloudPointVm;
-            createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
+            
             
             if (createFloorCloudPoint.ShowDialog() == false)
             {
@@ -63,13 +62,24 @@ namespace BMCIModule
             #region SelectFloor
             TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
             Selection choiceFloor = uidoc.Selection;
-            Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
+            Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента (пол / перекрытие)");
             Element selectFloor = doc.GetElement(choiceFloorRef);
             ElementId selectFloorId = selectFloor.Id;
 
+            createFloorCloudPoint.DataContext = createFloorCloudPointVm;
+            createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
+            #endregion
+
+            #region SelectFloor
+
+            TaskDialog.Show("Выбор элемента", "Выберите элемент крыша");
+            Selection choiceRoof = uidoc.Selection;
+            Reference choiceRoofRef = choiceRoof.PickObject(ObjectType.Element, "Выбор элемента (кровля)");
+            Element selectRoof = doc.GetElement(choiceRoofRef);
+            ElementId selectRoofId= selectRoof.Id;
 
             #endregion
-            
+
             #region SelectPointCloud
 
             TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
