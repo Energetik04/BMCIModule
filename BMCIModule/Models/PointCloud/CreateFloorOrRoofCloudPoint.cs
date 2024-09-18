@@ -91,9 +91,10 @@ namespace BMCIModule
             Selection choicePointCloud = uidoc.Selection;
             Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
             Element selectPointCloud = doc.GetElement(choicePointCloudRef);
-
+            
             #endregion
             //Получить Верхнюю грань
+
             Face topFace=null;
             if (selectElement is Floor)
             {
@@ -242,7 +243,7 @@ namespace BMCIModule
                 sw.Start();
                 ElementId floorId = selectElement.Id;
                 SlabShapeEditor shapeEditor = (selectElement as Floor).SlabShapeEditor;
-                Options op = new Options();// default setting
+                Options op = new Options(){ComputeReferences = true};// default setting
                 Element selectorNewFloor = doc.GetElement(selectElementId);
                 List<Face> topFaceArray = new List<Face>();
                 //обработка облака вне зависимости от фигуры перекрытия
@@ -362,6 +363,16 @@ namespace BMCIModule
                     ts.Milliseconds / 10);
                 TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
                 tr2.Commit();
+                //FaceArray faces =((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).Faces;
+                //List<Face> facesList = new List<Face>();
+                //foreach (Face getFace in faces)
+                //{
+                //    var huita=topFaceArray.Where(x => x.Id == getFace.Id);
+                //    foreach (var varFace in huita)
+                //    {
+                //        facesList.Add(varFace);
+                //    }
+                //}
             }
             if (createFloorCloudPointVm.CheckBoxMax == true || createFloorCloudPointVm.CheckBoxMin == true)
             {
@@ -425,6 +436,7 @@ namespace BMCIModule
                         }
                     }
                     tr3.Commit();
+
                 }
             }
 
@@ -446,7 +458,7 @@ namespace BMCIModule
                     break;
                 }
             }
-            Options op = new Options();
+            Options op = new Options(){ComputeReferences = true};
             List<GeometryObject> list = new List<GeometryObject>();
             //
             foreach (var instance in selectorNewFloor.get_Geometry(op))
@@ -558,7 +570,7 @@ namespace BMCIModule
         }
 
         //получение верхней грани, только если пол плоский
-        public Face GetTopFace(Element selectFloor, Document doc)
+        public Face GetTopFace(Element selectElement, Document doc)
         {
             #region Options
 
@@ -569,7 +581,7 @@ namespace BMCIModule
 
             #endregion
 
-            GeometryElement getGeometryElement = selectFloor.get_Geometry(op);
+            GeometryElement getGeometryElement = selectElement.get_Geometry(op);
             List<GeometryObject> list = new List<GeometryObject>();
             foreach (GeometryObject geometryObject in getGeometryElement)// вытянул перечислением фигуры которые внутри
             {

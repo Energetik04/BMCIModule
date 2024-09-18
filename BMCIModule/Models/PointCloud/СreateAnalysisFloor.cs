@@ -25,24 +25,27 @@ namespace BMCIModule
             var doc = uidoc.Document;// сам документ
 
             #endregion
+
+
             //SpatialFieldManager sfm=SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
             //if(sfm==null) sfm=SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView,1);
-            
-            //#region Выбор пола
 
-            //TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
-            //Selection choiceFloor = uidoc.Selection;
-            //Reference choiceFloorRef = choiceFloor.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
-            //Element selectFloor = doc.GetElement(choiceFloorRef);
-            //ElementId selectFloorId = selectFloor.Id;
-           
+            #region Выбор поверзности
 
-            //#endregion
+            TaskDialog.Show("Выбор элемента", "Выберите поверхности (пол/крыша)");
+            Selection choiceElement = uidoc.Selection;
+            Reference choiceFloorRef = choiceElement.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
+            Element selectElement = doc.GetElement(choiceFloorRef);
+            ElementId selectElementId = selectElement.Id;
 
-            //Options op = new Options()
-            //{
-            //    ComputeReferences = true
-            //};
+            #endregion
+            Options op = new Options()
+            {
+                ComputeReferences = true
+            };
+
+            List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
+
             //FaceArray faceArray = ((selectFloor as Floor).get_Geometry(op).First() as Solid).Faces;
             //var topFaceArray = (selectFloor as Floor).GetListTopFaceArray(doc);
             //foreach (Face face in topFaceArray)
@@ -68,8 +71,8 @@ namespace BMCIModule
             //    int schemaIndex = sfm.RegisterResult(resultSchema);
             //    sfm.UpdateSpatialFieldPrimitive(idx,pnts,vals,schemaIndex);
             //}
-            
-            
+
+
 
             return Result.Succeeded;
         }
