@@ -48,25 +48,26 @@ namespace BMCIModule
             };
 
             List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
+            // три строчки мусора
             bool analyticalModel=selectElement.CanHaveAnalyticalModel();
             if (analyticalModel == true && analyticalModel != null)
             {
                 AnalyticalModel model = selectElement.GetAnalyticalModel();
 
             }
+            //Создание типа легенды и стиля отображения
             using (Transaction tr = new Transaction(doc, "что-то"))
             {
                 tr.Start();
-
                 AnalysisDisplayStyle analysisDisplay = null;
                 FilteredElementCollector collector1 = new FilteredElementCollector(doc);
                 ICollection<Element> collection = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
                 var displayStyle = collection.Where(x => x.Name == "Display Style 1").Select(x => x);
                 if (displayStyle.Count() == 0)
                 {
-                    AnalysisDisplayMarkersAndTextSettings coloredSurfaceSettings =
-                        new AnalysisDisplayMarkersAndTextSettings();
-                    //coloredSurfaceSettings.ShowGridLines = true;
+                    AnalysisDisplayColoredSurfaceSettings coloredSurfaceSettings =
+                        new AnalysisDisplayColoredSurfaceSettings();
+                    coloredSurfaceSettings.ShowGridLines = true;
                     AnalysisDisplayColorSettings coloreSettings = new AnalysisDisplayColorSettings();
                     Color orange = new Color(255, 205, 0);
                     Color purple = new Color(200, 0, 200);
@@ -116,35 +117,42 @@ namespace BMCIModule
                 //    sfm.UpdateSpatialFieldPrimitive(idx,pnts,vals,schemaIndex);
                 tr.Commit();
             }
-            SpatialFieldManager spf=SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
-            if (spf == null) spf=SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView,1);
-            foreach (var face in topFaces)
+
+            using (Transaction tr1=new Transaction(doc,"чего-то"))
             {
-                Reference reference = face.Reference;
-                int idx = spf.AddSpatialFieldPrimitive(reference);
-                IList<UV> uvpts = new List<UV>();
-                BoundingBoxUV bb = face.GetBoundingBox();
-                UV min = bb.Min;
-                UV max = bb.Max;
-                uvpts.Add(new UV(min.U,min.V));
-                uvpts.Add(new UV(max.U,max.V));
-                FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
-                List<double> doubleList = new List<double>();
-                IList<ValueAtPoint> valList=new List<ValueAtPoint>();
-                doubleList.Add(0);
-                valList.Add(new ValueAtPoint(doubleList));
-                doubleList.Clear();
-                doubleList.Add(10);
-                valList.Add(new ValueAtPoint(doubleList));
-                FieldValues vals = new FieldValues(valList);
-                AnalysisResultSchema resultSchema = new AnalysisResultSchema("Display Style 1", "opisanie");
-                int schemaIndex = spf.RegisterResult(resultSchema);
-                spf.UpdateSpatialFieldPrimitive(idx,pnts,vals,schemaIndex);
-                break;
+                tr1.Start();
+                SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
+                if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
+                int i = 0;
+               
+                foreach (var face in topFaces)
+                {
+                    AnalysisResultSchema resultSchema = new AnalysisResultSchema("Display Style 1", "opisanie");
+                    Reference reference = (face as Face).Reference;
+                    int idx = spf.AddSpatialFieldPrimitive(reference);
+                    IList<UV> uvpts = new List<UV>();
+                    BoundingBoxUV bb = face.GetBoundingBox();
+                    UV min = bb.Min;
+                    UV max = bb.Max;
+                    uvpts.Add(new UV(min.U, min.V));
+                    uvpts.Add(new UV(max.U, max.V));
+                    FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
+                    List<double> doubleList = new List<double>();
+                    IList<ValueAtPoint> valList = new List<ValueAtPoint>();
+                    doubleList.Add(0);
+                    valList.Add(new ValueAtPoint(doubleList));
+                    doubleList.Clear();
+                    doubleList.Add(10);
+                    valList.Add(new ValueAtPoint(doubleList));
+                    FieldValues vals = new FieldValues(valList);
+                    AnalysisResultSchema result = new AnalysisResultSchema(resultSchema);
+                    int schemaIndex = spf.RegisterResult(result);
+                    spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
+                    i++;
+                    if (i == 10) break;
+                }
+                tr1.Commit();
             }
-
-           
-
             return Result.Succeeded;
         }
     }
