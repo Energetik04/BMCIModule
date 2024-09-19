@@ -128,6 +128,7 @@ namespace BMCIModule
                 foreach (var face in topFaces)
                 {
                     AnalysisResultSchema resultSchema = new AnalysisResultSchema("Display Style 1", "opisanie");
+                    //опять получаю одну и туже ссылку на разные плокости
                     Reference reference = (face as Face).Reference;
                     int idx = spf.AddSpatialFieldPrimitive(reference);
                     IList<UV> uvpts = new List<UV>();
