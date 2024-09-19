@@ -15,19 +15,12 @@ namespace BMCIModule.Models.Extension
             FaceArray faceArray = solid.Faces;
             foreach (Face getFace in faceArray)
             {
-                if (getFace is PlanarFace)
+                if (getFace != null && getFace is PlanarFace)
                 {
-                    topFace.Add(getFace);
+                    XYZ normalFace = (getFace as PlanarFace).FaceNormal;
+                    if (normalFace.Z > 0) topFace.Add(getFace);
                 }
             }
-            foreach (var face in topFace)
-            {
-                XYZ normalFace = (face as PlanarFace).FaceNormal;
-                XYZ vertexZ = new XYZ(0, 0, normalFace.Z);
-            }
-
-
-
             return topFace;
         }
     }

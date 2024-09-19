@@ -107,29 +107,6 @@ namespace BMCIModule
             ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace,ref stepMin);
             MovieOutFigurePointInBorders(ref collection,ref topFace);
             #endregion
-
-            #region Визуализация точками
-            /*using (Transaction tr = new Transaction(doc,"Визуализация точками"))
-            {
-                tr.Start();
-                foreach (POINT.Point point in pointRevit)
-                {
-                    //if (point.getPointPosition == PointInFigureWithBorders.deleteThisPoint)
-                    //{
-                    //    continue;
-                    //}
-                    //else
-                    //{
-                        //проверка на попадание точки в регион
-                        XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
-                        var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки
-                        directShape.SetShape(new List<GeometryObject>() { Autodesk.Revit.DB.Point.Create(convertPoint) });// размещение обощенной модели точки
-                    //}
-                    
-                }
-                tr.Commit();
-            }*/
-            #endregion
             
             TaskDialog.Show("Количество точек","Количество точек триангуляции попавших в верхнюю грань пола "+collection.Count.ToString()+"шт.");
 
@@ -151,10 +128,8 @@ namespace BMCIModule
                     {
                         continue;
                     }
-                    //XYZ convertPoint = point.CreateXYZFromPoint();
                     XYZ convertPoint = point.CreateXYZFromPoint();
                     SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint);
-                    //SlabShapeVertex vertex = slabFloor.DrawPoint(convertPoint); // вернет null если точки не существует на верхней грании фигуры
                     if (vertex == null)
                     {
                         continue;
@@ -363,16 +338,6 @@ namespace BMCIModule
                     ts.Milliseconds / 10);
                 TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
                 tr2.Commit();
-                //FaceArray faces =((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).Faces;
-                //List<Face> facesList = new List<Face>();
-                //foreach (Face getFace in faces)
-                //{
-                //    var huita=topFaceArray.Where(x => x.Id == getFace.Id);
-                //    foreach (var varFace in huita)
-                //    {
-                //        facesList.Add(varFace);
-                //    }
-                //}
             }
             if (createFloorCloudPointVm.CheckBoxMax == true || createFloorCloudPointVm.CheckBoxMin == true)
             {
@@ -483,8 +448,6 @@ namespace BMCIModule
                 zMin = (topFaceArray[0] as PlanarFace).Origin.Z - thicknesFloor - captureRage;
             }
             double zMax = (topFaceArray[0] as PlanarFace).Origin.Z + captureRage;
-            //double zMin = selectPointCloud.get_BoundingBox(doc.ActiveView).Min.Z;
-            //double zMax = selectPointCloud.get_BoundingBox(doc.ActiveView).Max.Z;
             PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;// можно часть данных утратить
             Dictionary<Face, List<XYZ>> collectionPointCloudInTriangle = new Dictionary<Face, List<XYZ>>();
 
@@ -531,9 +494,6 @@ namespace BMCIModule
 
         public void AproximateXZ(List<XYZ> pointCollection,out double a,out double b)
         {
-            //line function z=a*x+b
-            //a=(a1-sumx*sumy)/(a2-a3)
-            //b=(a2*sumy-sumx*a1)/a2-a3
             a = 0;
             b= 0;
             double  a1=0, a2=0, a3=0, sumx=0, sumy = 0;
@@ -551,9 +511,6 @@ namespace BMCIModule
 
         public void AproximateXY(List<XYZ> pointCollection, out double a, out double b)
         {
-            //line function z=a*x+b
-            //a=(a1-sumx*sumy)/(a2-a3)
-            //b=(a2*sumy-sumx*a1)/a2-a3
             a = 0;
             b = 0;
             double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
