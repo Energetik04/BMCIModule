@@ -47,6 +47,36 @@ namespace BMCIModule
                 ComputeReferences = true
             };
 
+            //найти минимум и максимум
+            SlabShapeVertexArray vertexArray=null;
+            if (selectElement is Floor)
+            {
+                vertexArray = (selectElement as Floor).SlabShapeEditor.SlabShapeVertices;
+            }
+            List<SlabShapeVertex> vertexList = new List<SlabShapeVertex>();
+            if (vertexArray != null)
+            {
+                foreach (SlabShapeVertex vertex in vertexArray)
+                {
+                    vertexList.Add(vertex);
+                }
+            }
+
+            SlabShapeVertex vertexMin = null;
+            SlabShapeVertex vertexMax = null;
+            if (vertexList.Count != 0)
+            {
+                vertexMin = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
+                    .OrderBy(x => x.Position.Z).Select(x => x).First();
+                vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
+                    .OrderByDescending(x => x.Position.Z).Select(x => x).First();
+            }
+            
+            // на основе чего размещен пол (величина от базовой точки проекта)
+            double elevationElement = (doc.GetElement(selectElement.LevelId) as Level).Elevation;
+            //cмещение от уровня
+            double heigtAboveLevel = selectElement.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble();
+
             List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
             // три строчки мусора
             bool analyticalModel=selectElement.CanHaveAnalyticalModel();
@@ -56,7 +86,7 @@ namespace BMCIModule
 
             }
             //Создание типа легенды и стиля отображения
-            using (Transaction tr = new Transaction(doc, "что-то"))
+            using (Transaction tr = new Transaction(doc, "Создание легенды и типа результатов анализа"))
             {
                 tr.Start();
                 AnalysisDisplayStyle analysisDisplay = null;
@@ -95,7 +125,6 @@ namespace BMCIModule
                 {
                     analysisDisplay = displayStyle.Cast<AnalysisDisplayStyle>().ElementAt<AnalysisDisplayStyle>(0);
                 }
-
                 doc.ActiveView.AnalysisDisplayStyleId = analysisDisplay.Id;
                 //    int idx = sfm.AddSpatialFieldPrimitive(reference);// индекс емкости массива данных точки 
                 //    IList<UV> uvPts = new List<UV>();
@@ -118,18 +147,19 @@ namespace BMCIModule
                 tr.Commit();
             }
 
-            using (Transaction tr1=new Transaction(doc,"чего-то"))
+            using (Transaction tr1=new Transaction(doc,"Создание результатов анализа"))
             {
                 tr1.Start();
                 SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
                 if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
                 int i = 0;
                
-                foreach (var face in topFaces)
+                foreach (Face face in topFaces)
                 {
-                    AnalysisResultSchema resultSchema = new AnalysisResultSchema("Display Style 1", "opisanie");
+                    
+                    AnalysisResultSchema resultSchema = new AnalysisResultSchema("Display Style 1"+i.ToString(), "opisanie");
                     //опять получаю одну и туже ссылку на разные плокости
-                    Reference reference = (face as Face).Reference;
+                    Reference reference = face.Reference;
                     int idx = spf.AddSpatialFieldPrimitive(reference);
                     IList<UV> uvpts = new List<UV>();
                     BoundingBoxUV bb = face.GetBoundingBox();
@@ -140,14 +170,13 @@ namespace BMCIModule
                     FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
                     List<double> doubleList = new List<double>();
                     IList<ValueAtPoint> valList = new List<ValueAtPoint>();
-                    doubleList.Add(0);
+                    doubleList.Add(-5);
                     valList.Add(new ValueAtPoint(doubleList));
                     doubleList.Clear();
                     doubleList.Add(10);
                     valList.Add(new ValueAtPoint(doubleList));
                     FieldValues vals = new FieldValues(valList);
-                    AnalysisResultSchema result = new AnalysisResultSchema(resultSchema);
-                    int schemaIndex = spf.RegisterResult(result);
+                    int schemaIndex = spf.RegisterResult(resultSchema);
                     spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
                     i++;
                     if (i == 10) break;
