@@ -149,7 +149,6 @@ namespace BMCIModule
                 tr1.Start();
                 Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
                 sw.Start();
-                (doc.GetElement(selectElementId) as Floor).SlabShapeEditor.ResetSlabShape();
                 SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
                 if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
 
