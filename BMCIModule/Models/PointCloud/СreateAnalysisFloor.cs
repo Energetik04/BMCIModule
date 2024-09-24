@@ -168,36 +168,59 @@ namespace BMCIModule
                     {
                         resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
                     }
-
+                    IList<UV> uvpts = new List<UV>();
                     List<XYZ> listXYZ = face.GetListPointInFace();
                     var faceNormal = (face as PlanarFace).FaceNormal;
                     var surface = face.GetSurface();
-                    UV outUV = null;
-                    double distance;
-                    var bbSurFace = surface.GetBoundingBoxUV();
-                    surface.Project((face as PlanarFace).Origin, out outUV,out distance);
+                    List<double> doubleList = new List<double>();
+                    
+                    IList<ValueAtPoint> valList = new List<ValueAtPoint>();
+                    foreach (var point in listXYZ)
+                    {
+                        UV outUV = null;
+                        double distance;
+                        surface.Project(point, out outUV, out distance);
+                        uvpts.Add(outUV);
+                        UV outVerexMin = null;
+                        surface.Project(vertexMin.Position, out outVerexMin, out distance);
+                        uvpts.Add(outVerexMin);
+                        UV outVertexMax = null;
+                        
+                        surface.Project(vertexMax.Position, out outVertexMax, out distance);
+                        uvpts.Add(outVertexMax);
+                        
+                        doubleList.Add(point.Z*304.8);
+                        valList.Add(new ValueAtPoint(doubleList));
+                        doubleList.Clear();
+                        doubleList.Add(vertexMin.Position.Z*304.8);
+                        valList.Add(new ValueAtPoint(doubleList));
+                        doubleList.Clear();
+                        doubleList.Add(vertexMax.Position.Z*304.8);
+                        valList.Add(new ValueAtPoint(doubleList));
+                        doubleList.Clear();
+
+                    }
                     //опять получаю одну и туже ссылку на разные плокости
                     Reference reference = face.Reference;
                     int idx = spf.AddSpatialFieldPrimitive(reference);
-                    IList<UV> uvpts = new List<UV>();
+                    
                     BoundingBoxUV bb = face.GetBoundingBox();
-                    UV min = bb.Min;
-                    UV max = bb.Max;
-                    uvpts.Add(new UV(min.U, min.V));
-                    uvpts.Add(new UV(max.U, max.V));
+                    //UV min = bb.Min;
+                    //UV max = bb.Max;
+                    //uvpts.Add(new UV(min.U, min.V));
+                    //uvpts.Add(new UV(max.U, max.V));
                     FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
-                    List<double> doubleList = new List<double>();
-                    IList<ValueAtPoint> valList = new List<ValueAtPoint>();
-                    doubleList.Add(-5);
-                    valList.Add(new ValueAtPoint(doubleList));
-                    doubleList.Clear();
-                    doubleList.Add(10);
-                    valList.Add(new ValueAtPoint(doubleList));
+                    
+                    //doubleList.Add(-5);
+                    //valList.Add(new ValueAtPoint(doubleList));
+                    //doubleList.Clear();
+                    //doubleList.Add(10);
+                    //valList.Add(new ValueAtPoint(doubleList));
                     FieldValues vals = new FieldValues(valList);
                     int schemaIndex = spf.RegisterResult(resultSchema);
                     spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
                     i++;
-                    if (i == 100) break;
+                    //if (i == 300) break;
                 }
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
