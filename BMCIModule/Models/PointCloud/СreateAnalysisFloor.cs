@@ -168,6 +168,14 @@ namespace BMCIModule
                     {
                         resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
                     }
+
+                    List<XYZ> listXYZ = face.GetListPointInFace();
+                    var faceNormal = (face as PlanarFace).FaceNormal;
+                    var surface = face.GetSurface();
+                    UV outUV = null;
+                    double distance;
+                    var bbSurFace = surface.GetBoundingBoxUV();
+                    surface.Project((face as PlanarFace).Origin, out outUV,out distance);
                     //опять получаю одну и туже ссылку на разные плокости
                     Reference reference = face.Reference;
                     int idx = spf.AddSpatialFieldPrimitive(reference);
@@ -189,7 +197,7 @@ namespace BMCIModule
                     int schemaIndex = spf.RegisterResult(resultSchema);
                     spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
                     i++;
-                    if (i == 10) break;
+                    if (i == 100) break;
                 }
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
