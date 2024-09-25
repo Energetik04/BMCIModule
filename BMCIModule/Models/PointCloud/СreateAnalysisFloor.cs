@@ -30,6 +30,7 @@ namespace BMCIModule
             var doc = uidoc.Document;// сам документ
             double stepMin, captureRange;
             stepMin = 1;
+            captureRange = 0.5;
             #endregion
 
 
@@ -46,14 +47,14 @@ namespace BMCIModule
 
             #endregion
 
-            #region SelectPointCloud
+            //#region SelectPointCloud
 
-            TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
-            Selection choicePointCloud = uidoc.Selection;
-            Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
-            Element selectPointCloud = doc.GetElement(choicePointCloudRef);
+            //TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
+            //Selection choicePointCloud = uidoc.Selection;
+            //Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
+            //Element selectPointCloud = doc.GetElement(choicePointCloudRef);
 
-            #endregion
+            //#endregion
 
             Options op = new Options()
             {
@@ -61,23 +62,30 @@ namespace BMCIModule
             };
             // верхняя грань
             List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
+
             Face topFace = null;
             topFace = topFaces.FirstOrDefault();
+
             ICollection<POINT.Point> pointRevit = GeneratePointCollection(ref topFace, ref stepMin);
             ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace, ref stepMin);
             MovieOutFigurePointInBorders(ref collection, ref topFace);
             IList<XYZ> listXYZTriangle = new List<XYZ>();
+            
+            MovieOutFigurePointInBorders(ref collection,ref topFace);
             var item = collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
                 .Select(x =>
-            {
-                listXYZTriangle.Add(x.CreateXYZFromPoint());
-                return x;
-            });
+                {
+                    listXYZTriangle.Add(x.CreateXYZFromPoint());
+                    return x;
+                });
+
+            #region Триангуляция поверхности
 
 
 
+            #endregion
             //найти минимум и максимум
-            SlabShapeVertexArray vertexArray=null;
+             SlabShapeVertexArray vertexArray = null;
             if (selectElement is Floor)
             {
                 vertexArray = (selectElement as Floor).SlabShapeEditor.SlabShapeVertices;
@@ -101,12 +109,12 @@ namespace BMCIModule
                 vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
                     .OrderByDescending(x => x.Position.Z).Select(x => x).First();
             }
-           // на основе чего размещен пол (величина от базовой точки проекта)
+            // на основе чего размещен пол (величина от базовой точки проекта)
             double elevationElement = (doc.GetElement(selectElement.LevelId) as Level).Elevation;
             //cмещение от уровня
             double heigtAboveLevel = selectElement.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble();
-
-
+            //var vertexMin = listXYZTriangle.OrderBy(x => x.Z).First();
+            //var vertexMax = listXYZTriangle.OrderByDescending(x => x.Z).First();
 
 
             
@@ -191,6 +199,7 @@ namespace BMCIModule
                 var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
                 var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
                 int i = 0;
+                List<XYZ> listVerifiedXYZ = new List<XYZ>();
                 foreach (Face face in topFaces)
                 {
                     AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
@@ -207,10 +216,17 @@ namespace BMCIModule
                     var faceNormal = (face as PlanarFace).FaceNormal;
                     var surface = face.GetSurface();
                     List<double> doubleList = new List<double>();
-                    
                     IList<ValueAtPoint> valList = new List<ValueAtPoint>();
                     foreach (var point in listXYZ)
                     {
+                        if (listVerifiedXYZ.Contains(point))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            listVerifiedXYZ.Add(point);
+                        }
                         UV outUV = null;
                         double distance;
                         surface.Project(point, out outUV, out distance);
@@ -239,22 +255,12 @@ namespace BMCIModule
                     int idx = spf.AddSpatialFieldPrimitive(reference);
                     
                     BoundingBoxUV bb = face.GetBoundingBox();
-                    //UV min = bb.Min;
-                    //UV max = bb.Max;
-                    //uvpts.Add(new UV(min.U, min.V));
-                    //uvpts.Add(new UV(max.U, max.V));
                     FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
-                    
-                    //doubleList.Add(-5);
-                    //valList.Add(new ValueAtPoint(doubleList));
-                    //doubleList.Clear();
-                    //doubleList.Add(10);
-                    //valList.Add(new ValueAtPoint(doubleList));
                     FieldValues vals = new FieldValues(valList);
                     int schemaIndex = spf.RegisterResult(resultSchema);
                     spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
                     i++;
-                    if (i == 200) break;
+                    if (i == 600) break; 
                 }
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
