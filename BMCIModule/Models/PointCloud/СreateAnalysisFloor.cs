@@ -1,20 +1,20 @@
 ﻿
 using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
-using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using Autodesk.Windows;
 using BMCIModule.Models.Extension;
+using UIFramework.Widget.CustomControls;
 using TaskDialog = Autodesk.Revit.UI.TaskDialog;
+using POINT = BMCIModule.Models.PointCloud;
+using BMCIModule.Models;
+using System.Drawing.Drawing2D;
+using System.Drawing;
 
 namespace BMCIModule
 {
@@ -28,7 +28,8 @@ namespace BMCIModule
             var app = commandData.Application;// пользовательский интерфейс
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
-
+            double stepMin, captureRange;
+            stepMin = 1;
             #endregion
 
 
@@ -44,10 +45,36 @@ namespace BMCIModule
             ElementId selectElementId = selectElement.Id;
 
             #endregion
+
+            #region SelectPointCloud
+
+            TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
+            Selection choicePointCloud = uidoc.Selection;
+            Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
+            Element selectPointCloud = doc.GetElement(choicePointCloudRef);
+
+            #endregion
+
             Options op = new Options()
             {
                 ComputeReferences = true
             };
+            // верхняя грань
+            List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
+            Face topFace = null;
+            topFace = topFaces.FirstOrDefault();
+            ICollection<POINT.Point> pointRevit = GeneratePointCollection(ref topFace, ref stepMin);
+            ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace, ref stepMin);
+            MovieOutFigurePointInBorders(ref collection, ref topFace);
+            IList<XYZ> listXYZTriangle = new List<XYZ>();
+            var item = collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
+                .Select(x =>
+            {
+                listXYZTriangle.Add(x.CreateXYZFromPoint());
+                return x;
+            });
+
+
 
             //найти минимум и максимум
             SlabShapeVertexArray vertexArray=null;
@@ -79,7 +106,10 @@ namespace BMCIModule
             //cмещение от уровня
             double heigtAboveLevel = selectElement.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble();
 
-            List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
+
+
+
+            
             
             //Создание типа легенды и стиля отображения
             using (Transaction tr = new Transaction(doc, "Создание легенды и типа результатов анализа"))
@@ -88,16 +118,20 @@ namespace BMCIModule
                 AnalysisDisplayStyle analysisDisplay = null;
                 AnalysisDisplayStyle analysisDisplayHide = null;
                 FilteredElementCollector collector1 = new FilteredElementCollector(doc);
-                ICollection<Element> collection = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
-                var displayStyle = collection.Where(x => x.Name == "Фактические конструкции").Select(x => x);
+                ICollection<Element> collection1 = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
+                var displayStyle = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
                 if (displayStyle.Count() == 0)
                 {
                     AnalysisDisplayColoredSurfaceSettings coloredSurfaceSettings =
                         new AnalysisDisplayColoredSurfaceSettings();
                    
                     AnalysisDisplayColorSettings coloreSettings = new AnalysisDisplayColorSettings();
-                    Color red = new Color(255, 0, 0);
-                    Color blue = new Color(0, 0, 255);
+                    Autodesk.Revit.DB.Color red = new Autodesk.Revit.DB.Color(255, 0, 0);
+                    Autodesk.Revit.DB.Color blue = new Autodesk.Revit.DB.Color(0, 0, 255);
+                    AnalysisDisplayColorEntry colorIntermediate=new AnalysisDisplayColorEntry(new Autodesk.Revit.DB.Color(0,255,0));
+                    IList<AnalysisDisplayColorEntry> colorEnties = new List<AnalysisDisplayColorEntry>()
+                        { colorIntermediate };
+                    coloreSettings.SetIntermediateColors(colorEnties);
 
                     coloredSurfaceSettings.ShowContourLines = false;
                     coloredSurfaceSettings.ShowGridLines = false;
@@ -153,9 +187,9 @@ namespace BMCIModule
                 if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
 
                 FilteredElementCollector collector1 = new FilteredElementCollector(doc);
-                ICollection<Element> collection = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
-                var analysisDisplay = collection.Where(x => x.Name == "Фактические конструкции").Select(x => x);
-                var analysisDisplayHide = collection.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
+                ICollection<Element> collection1 = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
+                var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
+                var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
                 int i = 0;
                 foreach (Face face in topFaces)
                 {
@@ -220,7 +254,7 @@ namespace BMCIModule
                     int schemaIndex = spf.RegisterResult(resultSchema);
                     spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
                     i++;
-                    //if (i == 300) break;
+                    if (i == 200) break;
                 }
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
@@ -229,8 +263,204 @@ namespace BMCIModule
                 TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
                 tr1.Commit();
             }
-
             return Result.Succeeded;
+        }
+        public ICollection<POINT.Point> GeneratePointCollection(ref Face topface, ref double stepmin)
+        {
+            var pointTopFace = topface.GetListPointInFace(); // точки верхней грани
+            XYZ xMin, yMin;
+            XYZ xMax, yMax;
+            //Z координата верхней грани
+            xMax = new XYZ(double.MinValue, 0, pointTopFace[0].Z);
+            yMax = new XYZ(0, double.MinValue, pointTopFace[0].Z);
+            xMin = new XYZ(double.MaxValue, 0, pointTopFace[0].Z);
+            yMin = new XYZ(0, double.MaxValue, pointTopFace[0].Z);
+            //координаты минимума и максимума 
+            foreach (var point in pointTopFace)
+            {
+                if (point.X >= xMax.X) xMax = point;
+                if (point.Y >= yMax.Y) yMax = point;
+                if (point.X <= xMin.X) xMin = point;
+                if (point.Y <= yMin.Y) yMin = point;
+            }
+            List<POINT.Point> pointGenerate = new List<POINT.Point>();
+            double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
+            bool offset = false;
+            int huita = (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle) + 1;
+            for (int i = 0; i <= ((int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle)) + 1; i++)
+            {
+                for (int j = 0; j <= (int)(Math.Abs((xMax.X - xMin.X) / stepmin)) + 1; j++)
+                {
+                    double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
+                    double posY = yMin.Y + heightTriangle * i;
+                    pointGenerate.Add(new POINT.Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), pointTopFace[0].Z));
+                }
+                offset = !offset;
+            }
+            double stepMinForLinq = stepmin;
+            foreach (var point in pointGenerate)
+            {
+                var pointCollection = pointGenerate
+                    .Where(x => ((Math.Abs(x.X - point.X) <= stepMinForLinq + 0.01 * stepMinForLinq) ||
+                                 (Math.Abs(x.X - point.X) <= stepMinForLinq - 0.01 * stepMinForLinq))
+                                && ((Math.Abs(x.Y - point.Y) <= heightTriangle + 0.01 * heightTriangle) ||
+                                    (Math.Abs(x.Y - point.Y) <= heightTriangle - 0.01 * heightTriangle) || (x.Y == point.Y)) && (x.Equals(point) == false));
+                foreach (var pointToHex in pointCollection)
+                {
+                    point.pointForHex.Add(pointToHex);
+                }
+            }
+            return pointGenerate;
+        }
+
+        public ICollection<POINT.Point> IsInFigureWithBordersFace(ICollection<POINT.Point> points, Face topFace, ref double stepMin)
+        {
+            var pointInFace = topFace.GetListPointInFace();
+            foreach (var point in points)
+            {
+                if (VisiblePointInRegion(pointInFace, point) == true)
+                {
+                    point.getPointPosition = PointInFigureWithBorders.inFigure;
+                    continue;
+                }
+                else
+                {
+                    point.getPointPosition = PointInFigureWithBorders.outFigure;
+                }
+            }
+            foreach (var point in points)
+            {
+                point.getPointPosition = ChangeStatusPoint(point, ref topFace);
+            }
+            return points;
+        }
+        public bool VisiblePointInRegion(List<XYZ> listPointInTopFace, POINT.Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
+        {
+            GraphicsPath graphicsPath = new GraphicsPath();
+            listPointInTopFace.Add(listPointInTopFace[0]);
+            for (int i = 0; i < listPointInTopFace.Count - 1; i++)
+            {
+                graphicsPath.AddLine((float)listPointInTopFace[i].X, (float)listPointInTopFace[i].Y, (float)listPointInTopFace[i + 1].X, (float)listPointInTopFace[i + 1].Y);
+            }
+            Region region = new Region(graphicsPath);
+            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
+            return false;
+        }
+        public PointInFigureWithBorders ChangeStatusPoint(POINT.Point point, ref Face topFace)
+        {
+            IList<CurveLoop> curveArray = topFace.GetEdgesAsCurveLoops();
+            foreach (var curveLoop in curveArray)
+            {
+                foreach (var curve in curveLoop)
+                {
+                    XYZ pointA = curve.GetEndPoint(0);
+                    XYZ pointB = curve.GetEndPoint(1);
+                    double vecScalyar = (point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
+                                        (curve.GetEndPoint(1).Y.DoubleToNumbers(3) -
+                                         curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
+                                        ((curve.GetEndPoint(1).X.DoubleToNumbers(3) -
+                                          curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
+                                         (point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3)));
+                    if (vecScalyar == 0)
+                    {
+                        return PointInFigureWithBorders.inBorders;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+            return point.getPointPosition;
+        }
+        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection, ref Face topFace)
+        {
+            var pointTopface = topFace.GetListPointInFace();
+            int countPointInFigure = 0;
+            // центр масс
+            foreach (var point in pointCollection)
+            {
+                if (point.getPointPosition == PointInFigureWithBorders.inFigure || point.getPointPosition == PointInFigureWithBorders.inBorders)
+                {
+                    continue;
+                }
+                else
+                {
+                    double superPositionX = 0;
+                    double superPositionY = 0;
+                    double superPositionZ = pointTopface[0].Z;
+                    int countPointInFigureHex = 0;
+                    foreach (var pointToHex in point.pointForHex)
+                    {
+
+                        if (pointToHex.getPointPosition == PointInFigureWithBorders.inFigure)
+                        {
+                            countPointInFigureHex++;
+                            superPositionX = superPositionX + pointToHex.X;
+                            superPositionY = superPositionY + pointToHex.Y;
+                        }
+                    }
+                    if (countPointInFigureHex == 0)
+                    {
+                        point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
+                        continue;
+                    }
+                    superPositionX = (superPositionX / countPointInFigureHex).DoubleToNumbers(3);
+                    superPositionY = (superPositionY / countPointInFigureHex).DoubleToNumbers(3);
+                    if (point.getPointPosition == PointInFigureWithBorders.outFigure)
+                    {
+                        XYZ origin = new XYZ(superPositionX, superPositionY, superPositionZ);
+                        XYZ direction = new XYZ((point.X - origin.X), (point.Y - origin.Y), superPositionZ);
+                        //метод полная херумпула, потому что непонятно что выдает
+                        var line = (Autodesk.Revit.DB.Line.CreateBound(point.CreateXYZFromPoint(), origin) as Curve);
+                        line.MakeUnbound();
+                        List<XYZ> pointCross = new List<XYZ>();
+                        foreach (var curveLoop in topFace.GetEdgesAsCurveLoops())
+                        {
+                            foreach (var curve in curveLoop)
+                            {
+                                //разобрать  с результатом
+                                var result = curve.Intersect(line, out IntersectionResultArray resultArray);
+                                //List<double> distanceIntersectPoint=new List<double>();
+                                if (result == SetComparisonResult.Overlap)
+                                {
+                                    foreach (var getResult in resultArray)
+                                    {
+                                        var getResultIntersectionResult = getResult as IntersectionResult;
+                                        var intersectPoint = getResultIntersectionResult.XYZPoint;
+                                        pointCross.Add(intersectPoint);
+                                        if (intersectPoint == null)
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        XYZ convertPoint = new XYZ(point.X, point.Y, superPositionZ);
+                        XYZ tempPoint = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
+                        foreach (var intersectPoint in pointCross)
+                        {
+                            if (intersectPoint.DistanceTo(convertPoint) <= convertPoint.DistanceTo(tempPoint))
+                            {
+                                tempPoint = intersectPoint;
+                            }
+                        }
+                        if (pointCross.Count == 0)
+                        {
+                            //динамически изменить коллекцию
+                            point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
+                        }
+                        else
+                        {
+                            point.X = tempPoint.X;
+                            point.Y = tempPoint.Y;
+                            point.Z = superPositionZ;
+                            point.getPointPosition = PointInFigureWithBorders.moviePointFromOutFigure;
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -93,6 +93,7 @@ namespace BMCIModule
             Element selectPointCloud = doc.GetElement(choicePointCloudRef);
             
             #endregion
+
             //Получить Верхнюю грань
 
             Face topFace=null;

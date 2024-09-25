@@ -50,22 +50,9 @@
               "RelativeDocumentMoniker": "Models\\PointCloud\\\u0421reateAnalysisFloor.cs",
               "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloor.cs*",
               "RelativeToolTip": "Models\\PointCloud\\\u0421reateAnalysisFloor.cs*",
-              "ViewState": "AQIAAGoAAAAAAAAAAAAgwM0AAAAUAAAA",
+              "ViewState": "AQIAABkAAAAAAAAAAAAgwEsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-18T07:39:22.205Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CreateFloorOrRoofCloudPoint.cs",
-              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
-              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
-              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
-              "RelativeToolTip": "Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
-              "ViewState": "AQIAABIBAAAAAAAAAAAgwKYAAAA2AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-18T10:50:27.335Z",
               "EditorCaption": ""
             },
             {
@@ -76,9 +63,10 @@
               "RelativeDocumentMoniker": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
               "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
               "RelativeToolTip": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ViewState": "AQIAAHkAAAAAAAAAAAAEwK0AAAAIAAAA",
+              "ViewState": "AQIAAIQAAAAAAAAAAAAUwK0AAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T08:19:42.419Z"
+              "WhenOpened": "2024-09-23T08:19:42.419Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -103,6 +91,25 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAADEAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-19T07:18:25.996Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreateFloorOrRoofCloudPoint.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
+              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateFloorOrRoofCloudPoint.cs",
+              "ViewState": "AQIAALUAAAAAAAAAAAAgwNoAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-18T10:50:27.335Z",
+              "EditorCaption": ""
             }
           ]
         }
