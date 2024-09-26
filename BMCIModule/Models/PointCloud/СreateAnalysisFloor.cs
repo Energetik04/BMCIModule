@@ -70,8 +70,8 @@ namespace BMCIModule
             MovieOutFigurePointInBorders(ref collection, ref topFace,ref stepMin);
 
             var listPointWithoutDeletePoint
-                =collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
-                            .Select(x=>x);
+                = collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
+                            .ToList();
 
             #region Триангуляция поверхности
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
