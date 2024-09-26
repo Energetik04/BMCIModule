@@ -110,7 +110,7 @@ namespace BMCIModule
             void AddButtonFloor(RibbonPanel panel)
             {
                 //пол
-                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPointWindow", "Пол", wayForApplication, "BMCIModule.CreateFloorOrRoofCloudPoint");
+                PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPointWindow", "Пол", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
                 changeFloorToPointCloudData.ToolTip = "Изменение формы пола по облаку точек";
                 // путь к картинкам либо изменить либо пересмотреть 
                 changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));

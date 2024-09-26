@@ -116,7 +116,7 @@
     <Compile Include="Models\Extension\ExtensionFloor.cs" />
     <Compile Include="Models\Extension\ExtensionSolid.cs" />
     <Compile Include="Models\Extension\ExtensionXYZ.cs" />
-    <Compile Include="Models\PointCloud\CreateFloorOrRoofCloudPoint.cs" />
+    <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />
     <Compile Include="Models\Extension\ExtensionDouble.cs" />
     <Compile Include="Models\Extension\ExtensionFace.cs" />
     <Compile Include="Models\PointCloud\Point.cs" />

@@ -21,7 +21,7 @@ using AW = Autodesk.Windows;
 namespace BMCIModule
 {
     [Transaction((TransactionMode.Manual))]
-    public class CreateFloorOrRoofCloudPoint:IExternalCommand
+    public class CreateFloorCloudPoint:IExternalCommand
     {
         CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
         CreateFloorCloudPointWindow createFloorCloudPoint=new CreateFloorCloudPointWindow();
@@ -38,7 +38,6 @@ namespace BMCIModule
             #endregion
             createFloorCloudPoint.DataContext = createFloorCloudPointVm;
             createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
-            var pushButtonInModule = BMCIModule_Application.ExecutedItem;
             if (createFloorCloudPoint.ShowDialog() == false)
             {
                 return Result.Succeeded;
@@ -61,9 +60,7 @@ namespace BMCIModule
 
             Element selectElement=null;
             ElementId selectElementId = null;
-
-            if (pushButtonInModule.AutomationName.Equals("Пол"))
-            {
+            
                 #region SelectFloor
                 TaskDialog.Show("Выбор элемента", "Выберите Пол/Перекрытие");
                 Selection choiceFloor = uidoc.Selection;
@@ -71,20 +68,7 @@ namespace BMCIModule
                 selectElement = doc.GetElement(choiceFloorRef);
                 selectElementId = selectElement.Id;
                 #endregion
-            }
-            else
-            {
-                if (pushButtonInModule.AutomationName.Equals("Кровля"))
-                {
-                    #region SelectRoof
-                    TaskDialog.Show("Выбор элемента", "Выберите элемент крыша");
-                    Selection choiceRoof = uidoc.Selection;
-                    Reference choiceRoofRef = choiceRoof.PickObject(ObjectType.Element, "Выбор элемента (кровля)");
-                    selectElement = doc.GetElement(choiceRoofRef);
-                    selectElementId = selectElement.Id;
-                    #endregion
-                }
-            }
+            
             #region SelectPointCloud
 
             TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
@@ -106,9 +90,9 @@ namespace BMCIModule
             // создаю сетку точек, так же их нужно проверить
             ICollection<POINT.Point> pointRevit= GeneratePointCollection(ref topFace,ref stepMin);
             ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace,ref stepMin);
-            MovieOutFigurePointInBorders(ref collection,ref topFace);
+            MovieOutFigurePointInBorders(ref collection,ref topFace, ref stepMin);
             #endregion
-            
+
             TaskDialog.Show("Количество точек","Количество точек триангуляции попавших в верхнюю грань пола "+collection.Count.ToString()+"шт.");
 
             #region Построение ребер на поверхности
@@ -717,7 +701,7 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection, ref Face topFace)
+        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection, ref Face topFace,ref double stepMin)
         {
             var pointTopface = topFace.GetListPointInFace();
             int countPointInFigure = 0;
@@ -790,9 +774,9 @@ namespace BMCIModule
                                 tempPoint = intersectPoint;
                             }
                         }
-                        if (pointCross.Count == 0)
+
+                        if (convertPoint.DistanceTo(tempPoint) <= 0.25 * stepMin || pointCross.Count == 0)
                         {
-                            //динамически изменить коллекцию
                             point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
                         }
                         else

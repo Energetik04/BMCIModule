@@ -34,8 +34,8 @@ namespace BMCIModule
             #endregion
 
 
-            //SpatialFieldManager sfm=SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
-            //if(sfm==null) sfm=SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView,1);
+            SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
+            if (sfm == null) sfm = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
 
             #region Выбор поверзности
 
@@ -47,45 +47,40 @@ namespace BMCIModule
 
             #endregion
 
-            //#region SelectPointCloud
+            #region SelectPointCloud
 
-            //TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
-            //Selection choicePointCloud = uidoc.Selection;
-            //Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
-            //Element selectPointCloud = doc.GetElement(choicePointCloudRef);
+            TaskDialog.Show("Выбор элемента", "Выберите облако точек для построения пола");
+            Selection choicePointCloud = uidoc.Selection;
+            Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
+            Element selectPointCloud = doc.GetElement(choicePointCloudRef);
 
-            //#endregion
+            #endregion
 
             Options op = new Options()
             {
                 ComputeReferences = true
             };
             // верхняя грань
-            List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
-
             Face topFace = null;
-            topFace = topFaces.FirstOrDefault();
+            List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
+            if (topFaces.Count == 1) topFace = topFaces.First();
 
             ICollection<POINT.Point> pointRevit = GeneratePointCollection(ref topFace, ref stepMin);
-            ICollection<POINT.Point> collection = IsInFigureWithBordersFace(pointRevit, topFace, ref stepMin);
-            MovieOutFigurePointInBorders(ref collection, ref topFace);
-            IList<XYZ> listXYZTriangle = new List<XYZ>();
-            
-            MovieOutFigurePointInBorders(ref collection,ref topFace);
-            var item = collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
-                .Select(x =>
-                {
-                    listXYZTriangle.Add(x.CreateXYZFromPoint());
-                    return x;
-                });
+            ICollection<POINT.Point> collection = IsInFigureWithBordersFace(ref pointRevit,ref topFace, ref stepMin);
+            MovieOutFigurePointInBorders(ref collection, ref topFace,ref stepMin);
+
+            var listPointWithoutDeletePoint
+                =collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
+                            .Select(x=>x);
 
             #region Триангуляция поверхности
+            double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
 
 
 
             #endregion
             //найти минимум и максимум
-             SlabShapeVertexArray vertexArray = null;
+            SlabShapeVertexArray vertexArray = null;
             if (selectElement is Floor)
             {
                 vertexArray = (selectElement as Floor).SlabShapeEditor.SlabShapeVertices;
@@ -273,6 +268,7 @@ namespace BMCIModule
         }
         public ICollection<POINT.Point> GeneratePointCollection(ref Face topface, ref double stepmin)
         {
+            if(topface==null) return null;
             var pointTopFace = topface.GetListPointInFace(); // точки верхней грани
             XYZ xMin, yMin;
             XYZ xMax, yMax;
@@ -319,8 +315,9 @@ namespace BMCIModule
             return pointGenerate;
         }
 
-        public ICollection<POINT.Point> IsInFigureWithBordersFace(ICollection<POINT.Point> points, Face topFace, ref double stepMin)
+        public ICollection<POINT.Point> IsInFigureWithBordersFace(ref ICollection<POINT.Point> points, ref Face topFace, ref double stepMin)
         {
+            if(points==null || topFace==null) return null;
             var pointInFace = topFace.GetListPointInFace();
             foreach (var point in points)
             {
@@ -379,7 +376,7 @@ namespace BMCIModule
             }
             return point.getPointPosition;
         }
-        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection, ref Face topFace)
+        public void MovieOutFigurePointInBorders(ref ICollection<POINT.Point> pointCollection, ref Face topFace,ref double stepMin)
         {
             var pointTopface = topFace.GetListPointInFace();
             int countPointInFigure = 0;
@@ -416,8 +413,6 @@ namespace BMCIModule
                     if (point.getPointPosition == PointInFigureWithBorders.outFigure)
                     {
                         XYZ origin = new XYZ(superPositionX, superPositionY, superPositionZ);
-                        XYZ direction = new XYZ((point.X - origin.X), (point.Y - origin.Y), superPositionZ);
-                        //метод полная херумпула, потому что непонятно что выдает
                         var line = (Autodesk.Revit.DB.Line.CreateBound(point.CreateXYZFromPoint(), origin) as Curve);
                         line.MakeUnbound();
                         List<XYZ> pointCross = new List<XYZ>();
@@ -452,9 +447,9 @@ namespace BMCIModule
                                 tempPoint = intersectPoint;
                             }
                         }
-                        if (pointCross.Count == 0)
+
+                        if (convertPoint.DistanceTo(tempPoint) <= 0.25 * stepMin || pointCross.Count == 0)
                         {
-                            //динамически изменить коллекцию
                             point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
                         }
                         else
