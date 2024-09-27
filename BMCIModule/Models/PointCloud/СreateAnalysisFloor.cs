@@ -76,7 +76,7 @@ namespace BMCIModule
                         x.GetListEdgeForPoint();
                         return x;
                     })
-                            .ToList();
+                    .ToList();
 
             #region Триангуляция поверхности
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
