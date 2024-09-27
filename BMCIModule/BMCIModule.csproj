@@ -119,6 +119,7 @@
     <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />
     <Compile Include="Models\Extension\ExtensionDouble.cs" />
     <Compile Include="Models\Extension\ExtensionFace.cs" />
+    <Compile Include="Models\PointCloud\Edge.cs" />
     <Compile Include="Models\PointCloud\Point.cs" />
     <Compile Include="Models\PointCloud\PointInFigureWithBorders.cs" />
     <Compile Include="Models\PointCloud\СreateAnalysisFloor.cs" />

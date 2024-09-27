@@ -71,6 +71,11 @@ namespace BMCIModule
 
             var listPointWithoutDeletePoint
                 = collection.Where(x => x.getPointPosition != PointInFigureWithBorders.deleteThisPoint)
+                    .Select(x =>
+                    {
+                        x.GetListEdgeForPoint();
+                        return x;
+                    })
                             .ToList();
 
             #region Триангуляция поверхности
