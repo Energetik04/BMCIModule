@@ -32,7 +32,7 @@ namespace BMCIModule
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
             double stepMin, captureRange;
-            stepMin = 0.5;
+            stepMin = 0.75;
             captureRange = 0.5;
             #endregion
 
