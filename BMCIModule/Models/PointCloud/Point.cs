@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
 
@@ -53,6 +54,22 @@ namespace BMCIModule.Models.PointCloud
             Y = y;
             Z = z;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Point point=obj as Point;
+            if (point.GetType() != this.GetType()) return false;
+            if (this.X == point.X && this.Y == point.Y && this.Z == point.Z)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
 

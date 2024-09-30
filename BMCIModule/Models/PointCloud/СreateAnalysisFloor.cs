@@ -15,6 +15,9 @@ using POINT = BMCIModule.Models.PointCloud;
 using BMCIModule.Models;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using Point = Autodesk.Revit.DB.Point;
+using Autodesk.Revit.DB.PointClouds;
+using Autodesk.Revit.DB.DirectContext3D;
 
 namespace BMCIModule
 {
@@ -29,7 +32,7 @@ namespace BMCIModule
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
             double stepMin, captureRange;
-            stepMin = 1;
+            stepMin = 0.5;
             captureRange = 0.5;
             #endregion
 
@@ -77,48 +80,184 @@ namespace BMCIModule
                         return x;
                     })
                     .ToList();
+            List<XYZ> pointTopFace = topFace.GetListPointInFace();
+            foreach (var XYZToPoint in pointTopFace)
+            {
+                listPointWithoutDeletePoint.Add(new POINT.Point(XYZToPoint.X,XYZToPoint.Y,XYZToPoint.Z));
+            }
+            //using (Transaction tr = new Transaction(doc,"Визуализация точками"))
+            //{
+            //    tr.Start();
+            //    foreach (POINT.Point point in listPointWithoutDeletePoint)
+            //    {
+            //        XYZ convertPoint = new XYZ(point.X, point.Y, point.Z);
+            //        var directShape = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));// размещение обобщенной модели точки
+            //        directShape.SetShape(new List<GeometryObject>() { Autodesk.Revit.DB.Point.Create(convertPoint) });// размещение обощенной модели точки
+            //    }
+            //tr.Commit();
+            //}
 
             #region Триангуляция поверхности
-            double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
-
-
-
-            #endregion
-            //найти минимум и максимум
-            SlabShapeVertexArray vertexArray = null;
-            if (selectElement is Floor)
+            Stopwatch sw1 = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+            sw1.Start();
+            var floorParameters = selectElement.Parameters;
+            double thicknesFloor=0;
+            foreach (Parameter parameter in floorParameters)
             {
-                vertexArray = (selectElement as Floor).SlabShapeEditor.SlabShapeVertices;
-            }
-            List<SlabShapeVertex> vertexList = new List<SlabShapeVertex>();
-            List<XYZ> listVertexPosition = new List<XYZ>();
-            if (vertexArray != null)
-            {
-                foreach (SlabShapeVertex vertex in vertexArray)
+                //Высота пола
+                ElementId searchElementId = new ElementId(-1001900);
+                if (parameter.Id == searchElementId)
                 {
-                    vertexList.Add(vertex);
-                    listVertexPosition.Add(vertex.Position);
+                    thicknesFloor = parameter.AsDouble();
+                    break;
                 }
             }
-            SlabShapeVertex vertexMin = null;
-            SlabShapeVertex vertexMax = null;
-            if (vertexList.Count != 0)
+            double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
+            Dictionary<XYZ, List<XYZ>> dictionaryVertexAndPointCloud = new Dictionary<XYZ, List<XYZ>>();
+            double zMin = (topFace as PlanarFace).Origin.Z - thicknesFloor;
+            double zMax = (topFace as PlanarFace).Origin.Z + 0.75;
+            PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;
+            foreach (var pointToTriangulate in listPointWithoutDeletePoint)
             {
-                vertexMin = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
-                    .OrderBy(x => x.Position.Z).Select(x => x).First();
-                vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
-                    .OrderByDescending(x => x.Position.Z).Select(x => x).First();
+                // создадим треугольник с вершинами ABC B известная
+                XYZ pointB = pointToTriangulate.CreateXYZFromPoint();
+                XYZ pointA = new XYZ(pointB.X - hight, pointB.Y - stepMin, pointB.Z);
+                XYZ pointC = new XYZ(pointA.X+stepMin, pointA.Y, pointA.Z);
+                List<XYZ> listPointFace = new List<XYZ>() { pointB, pointA, pointC,pointB };
+                //планы боковые
+                List<Plane> planeFace=new List<Plane>();
+                for (int i = 0; i < listPointFace.Count - 1; i++)
+                {
+                    XYZ newPointInBottomFace = new XYZ(listPointFace[i].X, listPointFace[i].Y, zMin);
+                    Plane getPlaneFace = Plane.CreateByThreePoints(listPointFace[i], listPointFace[i + 1], newPointInBottomFace);
+                    planeFace.Add(getPlaneFace);
+                }
+                IList<Plane> faceToPlane = new List<Plane>();
+                foreach (Plane plane in planeFace)
+                {
+                    XYZ reversNormalPlane = new XYZ(plane.Normal.X, plane.Normal.Y, plane.Normal.Z);
+                    Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormalPlane, plane.Origin);
+                    faceToPlane.Add(reversPlane);
+                }
+                Plane planeMinHeight = Plane.CreateByThreePoints(
+                    new XYZ(listPointFace[0].X, listPointFace[0].Y, zMin),
+                    new XYZ(listPointFace[1].X, listPointFace[1].Y, zMin),
+                    new XYZ(listPointFace[2].X, listPointFace[2].Y, zMin));
+                Plane planeMaxHeight = Plane.CreateByThreePoints(new XYZ(listPointFace[0].X, listPointFace[0].Y, zMax),
+                    new XYZ(listPointFace[1].X, listPointFace[1].Y, zMax),
+                    new XYZ(listPointFace[2].X, listPointFace[2].Y, zMax));
+                XYZ reversNormalMaxheight = new XYZ(planeMaxHeight.Normal.X, planeMaxHeight.Normal.Y, planeMaxHeight.Normal.Z * (-1));
+                Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
+                faceToPlane.Add(reversPlaneMaxHeight);
+                faceToPlane.Add(planeMinHeight);
+                PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
+                Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
+
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 3000);// как-будто надо увеличить количество точек
+                var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
+                dictionaryVertexAndPointCloud.Add(pointB,variable);
             }
-            // на основе чего размещен пол (величина от базовой точки проекта)
-            double elevationElement = (doc.GetElement(selectElement.LevelId) as Level).Elevation;
-            //cмещение от уровня
-            double heigtAboveLevel = selectElement.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble();
-            //var vertexMin = listXYZTriangle.OrderBy(x => x.Z).First();
-            //var vertexMax = listXYZTriangle.OrderByDescending(x => x.Z).First();
+            Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
+            foreach (var VARIABLE in dictionaryVertexAndPointCloud)
+            {
+                double zPredict;
+                if (VARIABLE.Value.Count > 0 && VARIABLE.Value.Count > 10)
+                {
+                    AproximateXZ(VARIABLE.Value, out double a, out double b);
+                    zPredict = a * VARIABLE.Key.X + b;
+                }
+                else
+                {
+                    zPredict = VARIABLE.Key.Z;
+                }
+                XYZAndPredictZ.Add(VARIABLE.Key, zPredict);
+            }
+            sw1.Stop();
+            TimeSpan ts1 = sw1.Elapsed;
+            string elapsedTime1 = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts1.Hours, ts1.Minutes, ts1.Seconds,
+                ts1.Milliseconds / 10);
+            TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime1);
+            #endregion
+            //IList<Plane> listPlaneForCloudPoint = new List<Plane>();
+            //foreach (var point in listPointWithoutDeletePoint)
+            //{
+            //    List<POINT.Point> pointCollectionForPlane= new List<POINT.Point>();
+            //    pointCollectionForPlane.Add(point);
+            //    foreach (var pointForHex in point.pointForHex)
+            //    {
+            //        foreach (var crossPoint in pointForHex.pointForHex)
+            //        {
+            //            if (point.pointForHex.Contains(crossPoint) && crossPoint.Equals(point)==false)
+            //            {
+            //                pointCollectionForPlane.Add(crossPoint);
+            //            }
+            //        }
+            //        if(pointCollectionForPlane.Count==1) continue;
+            //        if (pointCollectionForPlane.Count > 2)
+            //        {
+            //            foreach (var getPoint in pointCollectionForPlane)
+            //            {
+            //                Plane getPlane = Plane.CreateByThreePoints(point.CreateXYZFromPoint(),
+            //                    getPoint.CreateXYZFromPoint(), pointForHex.CreateXYZFromPoint());
+            //                if (listPlaneForCloudPoint.Count > 0)
+            //                {
+            //                    bool equalsParameter = false;
+            //                    foreach (var plane in listPlaneForCloudPoint)
+            //                    {
+            //                        if (getPlane.EqualsPlane(plane) == true)
+            //                        {
+            //                            equalsParameter = false;
+            //                            break;
+            //                        }
+            //                        else
+            //                        {
+            //                            equalsParameter = true;
+            //                        }
+            //                    }
+            //                    if (equalsParameter == true) listPlaneForCloudPoint.Add(getPlane);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
 
-            
-            
+            //#endregion
+            ////найти минимум и максимум
+            //SlabShapeVertexArray vertexArray = null;
+            //if (selectElement is Floor)
+            //{
+            //    vertexArray = (selectElement as Floor).SlabShapeEditor.SlabShapeVertices;
+            //}
+            //List<SlabShapeVertex> vertexList = new List<SlabShapeVertex>();
+            //List<XYZ> listVertexPosition = new List<XYZ>();
+            //if (vertexArray != null)
+            //{
+            //    foreach (SlabShapeVertex vertex in vertexArray)
+            //    {
+            //        vertexList.Add(vertex);
+            //        listVertexPosition.Add(vertex.Position);
+            //    }
+            //}
+            //SlabShapeVertex vertexMin = null;
+            //SlabShapeVertex vertexMax = null;
+            //if (vertexList.Count != 0)
+            //{
+            //    vertexMin = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
+            //        .OrderBy(x => x.Position.Z).Select(x => x).First();
+            //    vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
+            //        .OrderByDescending(x => x.Position.Z).Select(x => x).First();
+            //}
+            //// на основе чего размещен пол (величина от базовой точки проекта)
+            //double elevationElement = (doc.GetElement(selectElement.LevelId) as Level).Elevation;
+            ////cмещение от уровня
+            //double heigtAboveLevel = selectElement.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble();
+            ////var vertexMin = listXYZTriangle.OrderBy(x => x.Z).First();
+            ////var vertexMax = listXYZTriangle.OrderByDescending(x => x.Z).First();
+
+
+
+
             //Создание типа легенды и стиля отображения
             using (Transaction tr = new Transaction(doc, "Создание легенды и типа результатов анализа"))
             {
@@ -186,6 +325,90 @@ namespace BMCIModule
                tr.Commit();
             }
 
+            //using (Transaction tr1 = new Transaction(doc, "Создание результатов анализа"))
+            //{
+            //    tr1.Start();
+            //    Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+            //    sw.Start();
+            //    SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
+            //    if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
+
+            //    FilteredElementCollector collector1 = new FilteredElementCollector(doc);
+            //    ICollection<Element> collection1 = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
+            //    var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
+            //    var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
+            //    int i = 0;
+            //    List<XYZ> listVerifiedXYZ = new List<XYZ>();
+            //    foreach (Face face in topFaces)
+            //    {
+            //        AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
+            //        if (i == 0)
+            //        {
+            //            resultSchema.AnalysisDisplayStyleId = analysisDisplay?.First().Id ?? null;
+            //        }
+            //        else
+            //        {
+            //            resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
+            //        }
+            //        IList<UV> uvpts = new List<UV>();
+            //        List<XYZ> listXYZ = face.GetListPointInFace();
+            //        var faceNormal = (face as PlanarFace).FaceNormal;
+            //        var surface = face.GetSurface();
+            //        List<double> doubleList = new List<double>();
+            //        IList<ValueAtPoint> valList = new List<ValueAtPoint>();
+            //        foreach (var point in listXYZ)
+            //        {
+            //            if (listVerifiedXYZ.Contains(point))
+            //            {
+            //                continue;
+            //            }
+            //            else
+            //            {
+            //                listVerifiedXYZ.Add(point);
+            //            }
+            //            UV outUV = null;
+            //            double distance;
+            //            surface.Project(point, out outUV, out distance);
+            //            uvpts.Add(outUV);
+            //            UV outVerexMin = null;
+            //            surface.Project(vertexMin.Position, out outVerexMin, out distance);
+            //            uvpts.Add(outVerexMin);
+            //            UV outVertexMax = null;
+                        
+            //            surface.Project(vertexMax.Position, out outVertexMax, out distance);
+            //            uvpts.Add(outVertexMax);
+                        
+            //            doubleList.Add(point.Z*304.8);
+            //            valList.Add(new ValueAtPoint(doubleList));
+            //            doubleList.Clear();
+            //            doubleList.Add(vertexMin.Position.Z*304.8);
+            //            valList.Add(new ValueAtPoint(doubleList));
+            //            doubleList.Clear();
+            //            doubleList.Add(vertexMax.Position.Z*304.8);
+            //            valList.Add(new ValueAtPoint(doubleList));
+            //            doubleList.Clear();
+
+            //        }
+            //        //опять получаю одну и туже ссылку на разные плокости
+            //        Reference reference = face.Reference;
+            //        int idx = spf.AddSpatialFieldPrimitive(reference);
+                    
+            //        BoundingBoxUV bb = face.GetBoundingBox();
+            //        FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
+            //        FieldValues vals = new FieldValues(valList);
+            //        int schemaIndex = spf.RegisterResult(resultSchema);
+            //        spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
+            //        i++;
+            //        if (i == 600) break; 
+            //    }
+            //    sw.Stop();
+            //    TimeSpan ts = sw.Elapsed;
+            //    string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+            //        ts.Milliseconds / 10);
+            //    TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
+            //    tr1.Commit();
+            //}
+
             using (Transaction tr1 = new Transaction(doc, "Создание результатов анализа"))
             {
                 tr1.Start();
@@ -199,69 +422,46 @@ namespace BMCIModule
                 var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
                 var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
                 int i = 0;
-                List<XYZ> listVerifiedXYZ = new List<XYZ>();
-                foreach (Face face in topFaces)
+                
+                //List<XYZ> listXYZ = face.GetListPointInFace();
+                var faceNormal = (topFace as PlanarFace).FaceNormal;
+                var surface = topFace.GetSurface();
+                
+                var minValue = XYZAndPredictZ.OrderBy(x => x.Value).First();
+                var maxValue = XYZAndPredictZ.OrderByDescending(x => x.Value).First();
+                IList<UV> uvpts = new List<UV>();
+                IList<ValueAtPoint> valList = new List<ValueAtPoint>();
+                AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
+                if (i == 0)
                 {
-                    AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
-                    if (i == 0)
-                    {
-                        resultSchema.AnalysisDisplayStyleId = analysisDisplay?.First().Id ?? null;
-                    }
-                    else
-                    {
-                        resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
-                    }
-                    IList<UV> uvpts = new List<UV>();
-                    List<XYZ> listXYZ = face.GetListPointInFace();
-                    var faceNormal = (face as PlanarFace).FaceNormal;
-                    var surface = face.GetSurface();
-                    List<double> doubleList = new List<double>();
-                    IList<ValueAtPoint> valList = new List<ValueAtPoint>();
-                    foreach (var point in listXYZ)
-                    {
-                        if (listVerifiedXYZ.Contains(point))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            listVerifiedXYZ.Add(point);
-                        }
-                        UV outUV = null;
-                        double distance;
-                        surface.Project(point, out outUV, out distance);
-                        uvpts.Add(outUV);
-                        UV outVerexMin = null;
-                        surface.Project(vertexMin.Position, out outVerexMin, out distance);
-                        uvpts.Add(outVerexMin);
-                        UV outVertexMax = null;
-                        
-                        surface.Project(vertexMax.Position, out outVertexMax, out distance);
-                        uvpts.Add(outVertexMax);
-                        
-                        doubleList.Add(point.Z*304.8);
-                        valList.Add(new ValueAtPoint(doubleList));
-                        doubleList.Clear();
-                        doubleList.Add(vertexMin.Position.Z*304.8);
-                        valList.Add(new ValueAtPoint(doubleList));
-                        doubleList.Clear();
-                        doubleList.Add(vertexMax.Position.Z*304.8);
-                        valList.Add(new ValueAtPoint(doubleList));
-                        doubleList.Clear();
-
-                    }
-                    //опять получаю одну и туже ссылку на разные плокости
-                    Reference reference = face.Reference;
-                    int idx = spf.AddSpatialFieldPrimitive(reference);
-                    
-                    BoundingBoxUV bb = face.GetBoundingBox();
-                    FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
-                    FieldValues vals = new FieldValues(valList);
-                    int schemaIndex = spf.RegisterResult(resultSchema);
-                    spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
-                    i++;
-                    if (i == 600) break; 
+                    resultSchema.AnalysisDisplayStyleId = analysisDisplay?.First().Id ?? null;
                 }
+                else
+                {
+                    resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
+                }
+                foreach (var dictionaryItem in XYZAndPredictZ)
+                {
+                    
+                    List<double> doubleList = new List<double>();
+                    UV outUV = null; 
+                    double distance;
+                    surface.Project(dictionaryItem.Key, out outUV, out distance); 
+                    uvpts.Add(outUV);
+                    double zPredict = dictionaryItem.Value;
+                    doubleList.Add(zPredict * 304.8);
+                    valList.Add(new ValueAtPoint(doubleList));
+                    doubleList.Clear();
+                    //опять получаю одну и туже ссылку на разные плокости
+                    i++;
+                    //if (i == 100) break;
+                }
+                Reference reference = topFace.Reference;
+                int idx = spf.AddSpatialFieldPrimitive(reference);
+                FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
+                FieldValues vals = new FieldValues(valList);
+                int schemaIndex = spf.RegisterResult(resultSchema);
+                spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
@@ -467,6 +667,38 @@ namespace BMCIModule
                     }
                 }
             }
+        }
+        public bool EqualsPlane(Plane currentPlane, Plane plane)
+        {
+            if (ReferenceEquals(currentPlane, plane)) return true;
+            if (plane == null || currentPlane == null) return false;
+            if (currentPlane.Normal.IsAlmostEqualTo(plane.Normal) &&
+                currentPlane.Origin.IsAlmostEqualTo(plane.Origin) &&
+                currentPlane.XVec.IsAlmostEqualTo(plane.XVec) &&
+                currentPlane.YVec.IsAlmostEqualTo(plane.XVec))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void AproximateXZ(List<XYZ> pointCollection, out double a, out double b)
+        {
+            a = 0;
+            b = 0;
+            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
+            foreach (var point in pointCollection)
+            {
+                a1 = a1 + point.X * point.Z;
+                sumx = sumx + point.X;
+                sumy = sumy + point.Z;
+                a2 = a2 + Math.Pow(point.X, 2);
+            }
+            a3 = Math.Pow(sumx, 2);
+            a = (pointCollection.Count * a1 - sumx * sumy) / (pointCollection.Count * a2 - a3);
+            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
         }
     }
 }

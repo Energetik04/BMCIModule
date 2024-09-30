@@ -114,6 +114,7 @@
     <Compile Include="Infrastructure\Commands\RelayCommand.cs" />
     <Compile Include="Infrastructure\Interface\Base\IDialogService.cs" />
     <Compile Include="Models\Extension\ExtensionFloor.cs" />
+    <Compile Include="Models\Extension\ExtensionPlane.cs" />
     <Compile Include="Models\Extension\ExtensionSolid.cs" />
     <Compile Include="Models\Extension\ExtensionXYZ.cs" />
     <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />
