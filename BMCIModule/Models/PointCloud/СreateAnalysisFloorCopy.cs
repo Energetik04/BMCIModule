@@ -96,48 +96,7 @@ namespace BMCIModule
             //    }
             //tr.Commit();
             //}
-            Stopwatch sw2 = new Stopwatch(); // чтобы увидеть время выполнения транзакции
-            sw2.Start();
-            var listFace=((selectElement as Floor).get_Geometry(op).First() as Solid).Faces;
-            List<Plane> listPlane=new List<Plane>();
-            foreach (Face face in listFace)
-            {
-                double normalz = (face as PlanarFace).FaceNormal.Z;
-                if (normalz>0 || normalz<0)
-                {
-                    continue;
-                }
-                else
-                {
-                    listPlane.Add(face.GetSurface() as Plane);
-                }
-            }
-            double zMinCopy = (topFace as PlanarFace).Origin.Z;
-            Plane planeMinHeightCopy = Plane.CreateByThreePoints(
-                new XYZ(pointTopFace[0].X, pointTopFace[0].Y, zMinCopy),
-                new XYZ(pointTopFace[1].X, pointTopFace[1].Y, zMinCopy),
-                new XYZ(pointTopFace[2].X, pointTopFace[2].Y, zMinCopy));
-            Plane planeMaxHeightCopy = Plane.CreateByThreePoints(
-                new XYZ(pointTopFace[0].X, pointTopFace[0].Y, pointTopFace[0].Z + 0.5),
-                new XYZ(pointTopFace[1].X, pointTopFace[1].Y, pointTopFace[1].Z + 0.5),
-                new XYZ(pointTopFace[2].X, pointTopFace[2].Y, pointTopFace[2].Z + 0.5));
-            XYZ reversNormalMaxheightCopy = new XYZ(planeMaxHeightCopy.Normal.X, planeMaxHeightCopy.Normal.Y, (planeMaxHeightCopy.Normal.Z+0.5) * (-1));
-            Plane reversPlaneMaxHeightCopy = Plane.CreateByNormalAndOrigin(reversNormalMaxheightCopy, planeMaxHeightCopy.Origin);
-            listPlane.Add(reversPlaneMaxHeightCopy);
-            listPlane.Add(planeMinHeightCopy);
-            PointCloudInstance pcInstanceCloud = selectPointCloud as PointCloudInstance;
-            PointCloudFilter filterCopy = PointCloudFilterFactory.CreateMultiPlaneFilter(listPlane);
-            Autodesk.Revit.DB.Transform pointTransformCopy = pcInstanceCloud.GetTotalTransform();
-
-            PointCollection pointCollection = pcInstanceCloud.GetPoints(filterCopy, 0.0001, 5000);// как-будто надо увеличить количество точек
-            var variableCopy = pointCollection.Select(x => pointTransformCopy.OfPoint((XYZ)x)).ToList();
-            sw2.Stop();
-            TimeSpan ts2 = sw2.Elapsed;
-            string elapsedTime2 = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts2.Hours, ts2.Minutes, ts2.Seconds,
-                ts2.Milliseconds / 10);
-
-
-
+           
             #region Триангуляция поверхности
             Stopwatch sw1 = new Stopwatch(); // чтобы увидеть время выполнения транзакции
             sw1.Start();
@@ -194,7 +153,7 @@ namespace BMCIModule
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                PointCollection pointCollectionCopy = pcInstance.GetPoints(filter, 0.0001, 500);// как-будто надо увеличить количество точек
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 500);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
                 dictionaryVertexAndPointCloud.Add(pointB,variable);
             }
