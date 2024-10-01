@@ -123,6 +123,7 @@
     <Compile Include="Models\PointCloud\Edge.cs" />
     <Compile Include="Models\PointCloud\Point.cs" />
     <Compile Include="Models\PointCloud\PointInFigureWithBorders.cs" />
+    <Compile Include="Models\PointCloud\СreateAnalysisFloorCopy.cs" />
     <Compile Include="Models\PointCloud\СreateAnalysisFloor.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

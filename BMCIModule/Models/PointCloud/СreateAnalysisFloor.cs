@@ -32,7 +32,7 @@ namespace BMCIModule
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
             double stepMin, captureRange;
-            stepMin = 0.75;
+            stepMin = 0.5;
             captureRange = 0.5;
             #endregion
 
@@ -153,7 +153,7 @@ namespace BMCIModule
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 3000);// как-будто надо увеличить количество точек
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 500);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
                 dictionaryVertexAndPointCloud.Add(pointB,variable);
             }
@@ -178,85 +178,6 @@ namespace BMCIModule
                 ts1.Milliseconds / 10);
             TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime1);
             #endregion
-            //IList<Plane> listPlaneForCloudPoint = new List<Plane>();
-            //foreach (var point in listPointWithoutDeletePoint)
-            //{
-            //    List<POINT.Point> pointCollectionForPlane= new List<POINT.Point>();
-            //    pointCollectionForPlane.Add(point);
-            //    foreach (var pointForHex in point.pointForHex)
-            //    {
-            //        foreach (var crossPoint in pointForHex.pointForHex)
-            //        {
-            //            if (point.pointForHex.Contains(crossPoint) && crossPoint.Equals(point)==false)
-            //            {
-            //                pointCollectionForPlane.Add(crossPoint);
-            //            }
-            //        }
-            //        if(pointCollectionForPlane.Count==1) continue;
-            //        if (pointCollectionForPlane.Count > 2)
-            //        {
-            //            foreach (var getPoint in pointCollectionForPlane)
-            //            {
-            //                Plane getPlane = Plane.CreateByThreePoints(point.CreateXYZFromPoint(),
-            //                    getPoint.CreateXYZFromPoint(), pointForHex.CreateXYZFromPoint());
-            //                if (listPlaneForCloudPoint.Count > 0)
-            //                {
-            //                    bool equalsParameter = false;
-            //                    foreach (var plane in listPlaneForCloudPoint)
-            //                    {
-            //                        if (getPlane.EqualsPlane(plane) == true)
-            //                        {
-            //                            equalsParameter = false;
-            //                            break;
-            //                        }
-            //                        else
-            //                        {
-            //                            equalsParameter = true;
-            //                        }
-            //                    }
-            //                    if (equalsParameter == true) listPlaneForCloudPoint.Add(getPlane);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-
-            //#endregion
-            ////найти минимум и максимум
-            //SlabShapeVertexArray vertexArray = null;
-            //if (selectElement is Floor)
-            //{
-            //    vertexArray = (selectElement as Floor).SlabShapeEditor.SlabShapeVertices;
-            //}
-            //List<SlabShapeVertex> vertexList = new List<SlabShapeVertex>();
-            //List<XYZ> listVertexPosition = new List<XYZ>();
-            //if (vertexArray != null)
-            //{
-            //    foreach (SlabShapeVertex vertex in vertexArray)
-            //    {
-            //        vertexList.Add(vertex);
-            //        listVertexPosition.Add(vertex.Position);
-            //    }
-            //}
-            //SlabShapeVertex vertexMin = null;
-            //SlabShapeVertex vertexMax = null;
-            //if (vertexList.Count != 0)
-            //{
-            //    vertexMin = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
-            //        .OrderBy(x => x.Position.Z).Select(x => x).First();
-            //    vertexMax = vertexList.Where(x => x.VertexType == SlabShapeVertexType.Interior)
-            //        .OrderByDescending(x => x.Position.Z).Select(x => x).First();
-            //}
-            //// на основе чего размещен пол (величина от базовой точки проекта)
-            //double elevationElement = (doc.GetElement(selectElement.LevelId) as Level).Elevation;
-            ////cмещение от уровня
-            //double heigtAboveLevel = selectElement.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble();
-            ////var vertexMin = listXYZTriangle.OrderBy(x => x.Z).First();
-            ////var vertexMax = listXYZTriangle.OrderByDescending(x => x.Z).First();
-
-
-
 
             //Создание типа легенды и стиля отображения
             using (Transaction tr = new Transaction(doc, "Создание легенды и типа результатов анализа"))
