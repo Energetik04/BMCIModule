@@ -117,13 +117,9 @@ namespace BMCIModule
             double zMin = (topFace as PlanarFace).Origin.Z - thicknesFloor;
             double zMax = (topFace as PlanarFace).Origin.Z + 0.75;
             PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;
-            foreach (var pointToTriangulate in listPointWithoutDeletePoint)
-            {
-                // создадим треугольник с вершинами ABC B известная
-                XYZ pointB = pointToTriangulate.CreateXYZFromPoint();
-                XYZ pointA = new XYZ(pointB.X - hight, pointB.Y - stepMin, pointB.Z);
-                XYZ pointC = new XYZ(pointA.X+stepMin, pointA.Y, pointA.Z);
-                List<XYZ> listPointFace = new List<XYZ>() { pointB, pointA, pointC,pointB };
+            
+                List<XYZ> listPointFace = topFace.GetListPointInFace();
+                listPointFace.Add(listPointFace[0]);
                 //планы боковые
                 List<Plane> planeFace=new List<Plane>();
                 for (int i = 0; i < listPointFace.Count - 1; i++)
@@ -153,25 +149,32 @@ namespace BMCIModule
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 500);// как-будто надо увеличить количество точек
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 999999);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
-                dictionaryVertexAndPointCloud.Add(pointB,variable);
-            }
-            Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
-            foreach (var VARIABLE in dictionaryVertexAndPointCloud)
-            {
-                double zPredict;
-                if (VARIABLE.Value.Count > 0 && VARIABLE.Value.Count > 10)
+                Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
+                foreach (var pointToTriangulate in listPointWithoutDeletePoint)
                 {
-                    AproximateXZ(VARIABLE.Value, out double a, out double b);
-                    zPredict = a * VARIABLE.Key.X + b;
+                    XYZ pointB = pointToTriangulate.CreateXYZFromPoint();
+                    XYZ pointA = new XYZ(pointB.X - stepMin/2, pointB.Y - hight, pointB.Z);
+                    XYZ pointC = new XYZ(pointA.X + stepMin, pointA.Y, pointA.Z);
+                    List<XYZ> listPointFaceTriangle = new List<XYZ>() { pointB, pointA, pointC};
+                    var collectFilterX = variable.Where(x => (x.X >= pointA.X && x.X <= pointC.X)).ToList();//Select(x=>x).Where(x=> x.Y<=pointB.Y && x.Y>=pointC.Y).ToList();
+                    var collectFilterY=collectFilterX.Where(x => x.Y <= pointB.Y && x.Y >= pointC.Y).ToList();
+                    var collectionPointInTriangle=collectFilterY
+                        .Where(x => VisiblePointInRegion(listPointFaceTriangle, x) == true).ToList();
+                        double zPredict;
+                        if (collectionPointInTriangle.Count() > 0)
+                        {
+                            AproximateXZ(collectionPointInTriangle, out double a, out double b);
+                            zPredict = a * pointB.X + b;
+                        }
+                        else
+                        {
+                            zPredict = pointToTriangulate.Z;
+                        }
+                        XYZAndPredictZ.Add(pointB, zPredict);
                 }
-                else
-                {
-                    zPredict = VARIABLE.Key.Z;
-                }
-                XYZAndPredictZ.Add(VARIABLE.Key, zPredict);
-            }
+                
             sw1.Stop();
             TimeSpan ts1 = sw1.Elapsed;
             string elapsedTime1 = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts1.Hours, ts1.Minutes, ts1.Seconds,
@@ -464,6 +467,19 @@ namespace BMCIModule
             return points;
         }
         public bool VisiblePointInRegion(List<XYZ> listPointInTopFace, POINT.Point point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
+        {
+            GraphicsPath graphicsPath = new GraphicsPath();
+            listPointInTopFace.Add(listPointInTopFace[0]);
+            for (int i = 0; i < listPointInTopFace.Count - 1; i++)
+            {
+                graphicsPath.AddLine((float)listPointInTopFace[i].X, (float)listPointInTopFace[i].Y, (float)listPointInTopFace[i + 1].X, (float)listPointInTopFace[i + 1].Y);
+            }
+            Region region = new Region(graphicsPath);
+            if (region.IsVisible((float)point.X, (float)point.Y) == true) return true;
+            return false;
+        }
+
+        public bool VisiblePointInRegion(List<XYZ> listPointInTopFace,XYZ point)//переписать проверку попадания в треугольник, из-за беконечной линии есть фантом точки за треугольником. 
         {
             GraphicsPath graphicsPath = new GraphicsPath();
             listPointInTopFace.Add(listPointInTopFace[0]);

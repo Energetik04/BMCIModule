@@ -117,11 +117,12 @@ namespace BMCIModule
             double zMin = (topFace as PlanarFace).Origin.Z - thicknesFloor;
             double zMax = (topFace as PlanarFace).Origin.Z + 0.75;
             PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;
+            Dictionary<XYZ, double> XYZAndPredictZ = new Dictionary<XYZ, double>();
             foreach (var pointToTriangulate in listPointWithoutDeletePoint)
             {
                 // создадим треугольник с вершинами ABC B известная
                 XYZ pointB = pointToTriangulate.CreateXYZFromPoint();
-                XYZ pointA = new XYZ(pointB.X - hight, pointB.Y - stepMin, pointB.Z);
+                XYZ pointA = new XYZ(pointB.X - stepMin/2, pointB.Y - hight, pointB.Z);
                 XYZ pointC = new XYZ(pointA.X+stepMin, pointA.Y, pointA.Z);
                 List<XYZ> listPointFace = new List<XYZ>() { pointB, pointA, pointC,pointB };
                 //планы боковые
@@ -153,25 +154,38 @@ namespace BMCIModule
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 500);// как-будто надо увеличить количество точек
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.003, 4000);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
-                dictionaryVertexAndPointCloud.Add(pointB,variable);
-            }
-            Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
-            foreach (var VARIABLE in dictionaryVertexAndPointCloud)
-            {
+                variable.TrimExcess();
                 double zPredict;
-                if (VARIABLE.Value.Count > 0 && VARIABLE.Value.Count > 10)
+                if (variable.Count > 0)
                 {
-                    AproximateXZ(VARIABLE.Value, out double a, out double b);
-                    zPredict = a * VARIABLE.Key.X + b;
+                    AproximateXZ(variable, out double a, out double b);
+                    zPredict = a * pointB.X + b;
                 }
                 else
                 {
-                    zPredict = VARIABLE.Key.Z;
+                    zPredict = pointB.Z;
                 }
-                XYZAndPredictZ.Add(VARIABLE.Key, zPredict);
+                XYZAndPredictZ.Add(pointB, zPredict);
             }
+            //dictionaryVertexAndPointCloud.OrderByDescending(x => x.Value.Count).Select(x=>x);
+            //Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
+            //foreach (var VARIABLE in dictionaryVertexAndPointCloud)
+            //{
+            //    double zPredict;
+            //    if (VARIABLE.Value.Count > 0 && VARIABLE.Value.Count > 10)
+            //    {
+            //        AproximateXZ(VARIABLE.Value, out double a, out double b);
+            //        zPredict = a * VARIABLE.Key.X + b;
+            //    }
+            //    else
+            //    {
+            //        zPredict = VARIABLE.Key.Z;
+            //    }
+                
+            //}
+
             sw1.Stop();
             TimeSpan ts1 = sw1.Elapsed;
             string elapsedTime1 = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts1.Hours, ts1.Minutes, ts1.Seconds,

@@ -14,7 +14,6 @@ using BMCIModule.Models.Extension;
 using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
 using POINT=BMCIModule.Models.PointCloud;
-using Point = Autodesk.Revit.DB.Point;
 using AW = Autodesk.Windows;
 
 
