@@ -115,9 +115,11 @@ namespace BMCIModule
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
             Dictionary<XYZ, List<XYZ>> dictionaryVertexAndPointCloud = new Dictionary<XYZ, List<XYZ>>();
             double zMin = (topFace as PlanarFace).Origin.Z - thicknesFloor;
-            double zMax = (topFace as PlanarFace).Origin.Z + 0.75;
+            double zMax = (topFace as PlanarFace).Origin.Z + captureRange;
             PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;
             Dictionary<XYZ, double> XYZAndPredictZ = new Dictionary<XYZ, double>();
+            Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
+            //коэффициет детерминации нужен 
             foreach (var pointToTriangulate in listPointWithoutDeletePoint)
             {
                 // создадим треугольник с вершинами ABC B известная
@@ -152,26 +154,31 @@ namespace BMCIModule
                 faceToPlane.Add(reversPlaneMaxHeight);
                 faceToPlane.Add(planeMinHeight);
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
-                Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
-
+                
                 PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
                 variable.TrimExcess();
                 double zPredict;
-                if (variable.Count > 0)
+                if (variable.Count > 10)
                 {
                     AproximateXZ(variable, out double a, out double b);
                     zPredict = a * pointB.X + b;
-                    if (zPredict > reversPlaneMaxHeight.Origin.Z)
+                    if (zPredict.Equals(Double.NaN))
                     {
-
+                        zPredict = pointB.Z;
+                    }
+                    if (Math.Abs((topFace as PlanarFace).Origin.Z - zPredict)>=captureRange || Math.Abs((topFace as PlanarFace).Origin.Z - zPredict-thicknesFloor) >= captureRange)
+                    {
+                        zPredict= pointB.Z;
                     }
                 }
                 else
                 {
                     zPredict = pointB.Z;
                 }
+                
                 XYZAndPredictZ.Add(pointB, zPredict);
+                
             }
             //dictionaryVertexAndPointCloud.OrderByDescending(x => x.Value.Count).Select(x=>x);
             //Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
@@ -263,90 +270,6 @@ namespace BMCIModule
                 doc.ActiveView.AnalysisDisplayStyleId = analysisDisplay.Id;//примененение 
                tr.Commit();
             }
-
-            //using (Transaction tr1 = new Transaction(doc, "Создание результатов анализа"))
-            //{
-            //    tr1.Start();
-            //    Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
-            //    sw.Start();
-            //    SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
-            //    if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
-
-            //    FilteredElementCollector collector1 = new FilteredElementCollector(doc);
-            //    ICollection<Element> collection1 = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
-            //    var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
-            //    var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
-            //    int i = 0;
-            //    List<XYZ> listVerifiedXYZ = new List<XYZ>();
-            //    foreach (Face face in topFaces)
-            //    {
-            //        AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
-            //        if (i == 0)
-            //        {
-            //            resultSchema.AnalysisDisplayStyleId = analysisDisplay?.First().Id ?? null;
-            //        }
-            //        else
-            //        {
-            //            resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
-            //        }
-            //        IList<UV> uvpts = new List<UV>();
-            //        List<XYZ> listXYZ = face.GetListPointInFace();
-            //        var faceNormal = (face as PlanarFace).FaceNormal;
-            //        var surface = face.GetSurface();
-            //        List<double> doubleList = new List<double>();
-            //        IList<ValueAtPoint> valList = new List<ValueAtPoint>();
-            //        foreach (var point in listXYZ)
-            //        {
-            //            if (listVerifiedXYZ.Contains(point))
-            //            {
-            //                continue;
-            //            }
-            //            else
-            //            {
-            //                listVerifiedXYZ.Add(point);
-            //            }
-            //            UV outUV = null;
-            //            double distance;
-            //            surface.Project(point, out outUV, out distance);
-            //            uvpts.Add(outUV);
-            //            UV outVerexMin = null;
-            //            surface.Project(vertexMin.Position, out outVerexMin, out distance);
-            //            uvpts.Add(outVerexMin);
-            //            UV outVertexMax = null;
-                        
-            //            surface.Project(vertexMax.Position, out outVertexMax, out distance);
-            //            uvpts.Add(outVertexMax);
-                        
-            //            doubleList.Add(point.Z*304.8);
-            //            valList.Add(new ValueAtPoint(doubleList));
-            //            doubleList.Clear();
-            //            doubleList.Add(vertexMin.Position.Z*304.8);
-            //            valList.Add(new ValueAtPoint(doubleList));
-            //            doubleList.Clear();
-            //            doubleList.Add(vertexMax.Position.Z*304.8);
-            //            valList.Add(new ValueAtPoint(doubleList));
-            //            doubleList.Clear();
-
-            //        }
-            //        //опять получаю одну и туже ссылку на разные плокости
-            //        Reference reference = face.Reference;
-            //        int idx = spf.AddSpatialFieldPrimitive(reference);
-                    
-            //        BoundingBoxUV bb = face.GetBoundingBox();
-            //        FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
-            //        FieldValues vals = new FieldValues(valList);
-            //        int schemaIndex = spf.RegisterResult(resultSchema);
-            //        spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
-            //        i++;
-            //        if (i == 600) break; 
-            //    }
-            //    sw.Stop();
-            //    TimeSpan ts = sw.Elapsed;
-            //    string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
-            //        ts.Milliseconds / 10);
-            //    TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
-            //    tr1.Commit();
-            //}
 
             using (Transaction tr1 = new Transaction(doc, "Создание результатов анализа"))
             {
@@ -636,8 +559,9 @@ namespace BMCIModule
                 a2 = a2 + Math.Pow(point.X, 2);
             }
             a3 = Math.Pow(sumx, 2);
-            a = (pointCollection.Count * a1 - sumx * sumy) / (pointCollection.Count * a2 - a3);
-            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
+            double a4 = (pointCollection.Count * a1 - sumx * sumy);
+            a = (Math.Round((pointCollection.Count * a1 - sumx * sumy),9) / (Math.Round((pointCollection.Count * a2 - a3),9)));
+            b = Math.Round((a2 * sumy - sumx * a1),9) / Math.Round((pointCollection.Count * a2 - a3),9);
         }
     }
 }
