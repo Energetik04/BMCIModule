@@ -154,7 +154,7 @@ namespace BMCIModule
                 PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                 Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
-                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.003, 4000);// как-будто надо увеличить количество точек
+                PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
                 var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
                 variable.TrimExcess();
                 double zPredict;
@@ -162,6 +162,10 @@ namespace BMCIModule
                 {
                     AproximateXZ(variable, out double a, out double b);
                     zPredict = a * pointB.X + b;
+                    if (zPredict > reversPlaneMaxHeight.Origin.Z)
+                    {
+
+                    }
                 }
                 else
                 {
