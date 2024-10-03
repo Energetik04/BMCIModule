@@ -163,10 +163,18 @@ namespace BMCIModule
                     var collectionPointInTriangle=collectFilterY
                         .Where(x => VisiblePointInRegion(listPointFaceTriangle, x) == true).ToList();
                         double zPredict;
-                        if (collectionPointInTriangle.Count() > 0)
+                        if (collectionPointInTriangle.Count() > 10)
                         {
-                            AproximateXZ(collectionPointInTriangle, out double a, out double b);
+                            AproximateXZ(variable, out double a, out double b);
                             zPredict = a * pointB.X + b;
+                            if (zPredict.Equals(Double.NaN))
+                            {
+                                zPredict = pointB.Z;
+                            }
+                            if (Math.Abs((topFace as PlanarFace).Origin.Z - zPredict) >= captureRange || Math.Abs((topFace as PlanarFace).Origin.Z - zPredict - thicknesFloor) >= captureRange)
+                            {
+                                zPredict = pointB.Z;
+                            }
                         }
                         else
                         {
@@ -634,8 +642,9 @@ namespace BMCIModule
                 a2 = a2 + Math.Pow(point.X, 2);
             }
             a3 = Math.Pow(sumx, 2);
-            a = (pointCollection.Count * a1 - sumx * sumy) / (pointCollection.Count * a2 - a3);
-            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
+            double a4 = (pointCollection.Count * a1 - sumx * sumy);
+            a = (Math.Round((pointCollection.Count * a1 - sumx * sumy), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
+            b = Math.Round((a2 * sumy - sumx * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
         }
     }
 }

@@ -1,37 +1,37 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\BMCI\\BMCIModule\\BMCIModule\\",
+  "WorkspaceRootPath": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|E:\\BMCI\\BMCIModule\\BMCIModule\\models\\pointcloud\\\u0441reateanalysisfloor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\pointcloud\\\u0441reateanalysisfloor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\\u0441reateanalysisfloor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|E:\\BMCI\\BMCIModule\\BMCIModule\\models\\pointcloud\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|e:\\bmci\\bmcimodule\\bmcimodule\\models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|e:\\bmci\\bmcimodule\\bmcimodule\\models\\pointcloud\\\u0441reateanalysisfloorcopy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\\u0441reateanalysisfloorcopy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|e:\\bmci\\bmcimodule\\bmcimodule\\models\\extension\\extensiondouble.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\extension\\extensiondouble.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|E:\\BMCI\\BMCIModule\\BMCIModule\\viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\BMCIModule\\BMCIModule\\BMCIModule\\viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|E:\\BMCI\\BMCIModule\\BMCIModule\\models\\extension\\extensionplane.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\pointcloud\\\u0441reateanalysisfloorcopy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\\u0441reateanalysisfloorcopy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\BMCIModule\\BMCIModule\\BMCIModule\\models\\pointcloud\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\BMCIModule\\BMCIModule\\BMCIModule\\models\\extension\\extensiondouble.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\extension\\extensiondouble.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\BMCIModule\\BMCIModule\\BMCIModule\\models\\extension\\extensionplane.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\extension\\extensionplane.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|E:\\BMCI\\BMCIModule\\BMCIModule\\models\\pointcloud\\edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\BMCIModule\\BMCIModule\\BMCIModule\\models\\pointcloud\\edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\edge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -52,17 +52,17 @@
         },
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "\u0421reateAnalysisFloorCopy.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloorCopy.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloorCopy.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\\u0421reateAnalysisFloorCopy.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloorCopy.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloorCopy.cs",
               "RelativeToolTip": "Models\\PointCloud\\\u0421reateAnalysisFloorCopy.cs",
-              "ViewState": "AQIAABEBAAAAAAAAAAAswEcBAAAcAAAA",
+              "ViewState": "AQIAAHAAAAAAAAAAAAAYwHoAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-01T10:01:33.875Z",
               "EditorCaption": ""
@@ -71,9 +71,9 @@
               "$type": "Document",
               "DocumentIndex": 6,
               "Title": "ExtensionPlane.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionPlane.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionPlane.cs",
               "RelativeDocumentMoniker": "Models\\Extension\\ExtensionPlane.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionPlane.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionPlane.cs",
               "RelativeToolTip": "Models\\Extension\\ExtensionPlane.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAB4AAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -83,9 +83,9 @@
               "$type": "Document",
               "DocumentIndex": 7,
               "Title": "Edge.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Edge.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Edge.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\Edge.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Edge.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Edge.cs",
               "RelativeToolTip": "Models\\PointCloud\\Edge.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACQAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -93,15 +93,35 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "BMCIModule_Application.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
               "RelativeDocumentMoniker": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
               "RelativeToolTip": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ViewState": "AQIAAEcAAAAAAAAAAAAwwE8AAABeAAAA",
+              "ViewState": "AQIAACcAAAAAAAAAAAAowE0AAABAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-23T08:19:42.419Z"
+              "WhenOpened": "2024-09-23T08:19:42.419Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreateFloorCloudPoint.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs",
+              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateFloorCloudPoint.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateFloorCloudPoint.cs",
+              "ViewState": "AQIAANwAAAAAAAAAAAAgwCwBAABjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T04:59:15.144Z",
+              "EditorCaption": ""
             }
           ]
         }
@@ -113,8 +133,8 @@
       "FloatingWindowState": {
         "Id": "2af08a78-7945-4d86-bc78-d82aa8c4ced7",
         "Display": 0,
-        "X": 1331,
-        "Y": 33,
+        "X": 813,
+        "Y": 10,
         "Width": 1067,
         "Height": 1023,
         "WindowState": 0
@@ -126,75 +146,39 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ExtensionDouble.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionDouble.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionDouble.cs",
               "RelativeDocumentMoniker": "Models\\Extension\\ExtensionDouble.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionDouble.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\Extension\\ExtensionDouble.cs",
               "RelativeToolTip": "Models\\Extension\\ExtensionDouble.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-02T18:35:50.728Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-02T18:35:50.728Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Point.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Point.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Point.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\Point.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Point.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\Point.cs",
               "RelativeToolTip": "Models\\PointCloud\\Point.cs",
               "ViewState": "AQIAAAIAAAAAAAAAAAAlwBkAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-27T05:14:43.026Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-27T05:14:43.026Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "\u0421reateAnalysisFloor.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloor.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloor.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\\u0421reateAnalysisFloor.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloor.cs",
-              "RelativeToolTip": "Models\\PointCloud\\\u0421reateAnalysisFloor.cs",
-              "ViewState": "AQIAAAoCAAAAAAAAAAAuwDYCAAABAAAA",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\\u0421reateAnalysisFloor.cs*",
+              "RelativeToolTip": "Models\\PointCloud\\\u0421reateAnalysisFloor.cs*",
+              "ViewState": "AQIAABUBAAAAAAAAAAAgwC4BAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-18T07:39:22.205Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "2d73b13d-3f6d-4b36-a4f4-305da6009b53",
-        "Display": 0,
-        "X": -5,
-        "Y": 3,
-        "Width": 1290,
-        "Height": 1405,
-        "WindowState": 0
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CreateFloorCloudPoint.cs",
-              "DocumentMoniker": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs",
-              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateFloorCloudPoint.cs",
-              "ToolTip": "E:\\BMCI\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs",
-              "RelativeToolTip": "Models\\PointCloud\\CreateFloorCloudPoint.cs",
-              "ViewState": "AQIAAOQAAAAAAAAAAAAqwBUBAACcAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-27T04:59:15.144Z",
               "EditorCaption": ""
             }
           ]

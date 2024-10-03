@@ -106,11 +106,7 @@ namespace BMCIModule
             {
                 //Высота пола
                 ElementId searchElementId = new ElementId(-1001900);
-                if (parameter.Id == searchElementId)
-                {
-                    thicknesFloor = parameter.AsDouble();
-                    break;
-                }
+                if (parameter.Id == searchElementId) thicknesFloor = parameter.AsDouble();
             }
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
             Dictionary<XYZ, List<XYZ>> dictionaryVertexAndPointCloud = new Dictionary<XYZ, List<XYZ>>();
@@ -310,7 +306,10 @@ namespace BMCIModule
                     double distance;
                     surface.Project(dictionaryItem.Key, out outUV, out distance); 
                     uvpts.Add(outUV);
-                    double zPredict = dictionaryItem.Value;
+                    double zPredict=0;
+                    if (dictionaryItem.Key.Z < dictionaryItem.Value) zPredict = dictionaryItem.Value - dictionaryItem.Key.Z;
+                    if (dictionaryItem.Key.Z > dictionaryItem.Value) zPredict = (-1) * Math.Abs(dictionaryItem.Key.Z -dictionaryItem.Value);
+                    //double zPredict = dictionaryItem.Value;
                     doubleList.Add(zPredict * 304.8);
                     valList.Add(new ValueAtPoint(doubleList));
                     doubleList.Clear();
