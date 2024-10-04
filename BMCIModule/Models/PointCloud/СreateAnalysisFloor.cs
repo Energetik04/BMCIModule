@@ -361,7 +361,7 @@ namespace BMCIModule
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
-                    pointGenerate.Add(new POINT.Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), pointTopFace[0].Z));
+                    pointGenerate.Add(new POINT.Point(Math.Round(posX,3), Math.Round(posY,3), pointTopFace[0].Z));
                 }
                 offset = !offset;
             }
@@ -418,18 +418,20 @@ namespace BMCIModule
         public PointInFigureWithBorders ChangeStatusPoint(POINT.Point point, ref Face topFace)
         {
             IList<CurveLoop> curveArray = topFace.GetEdgesAsCurveLoops();
+            List<double> vecScal = new List<double>();
             foreach (var curveLoop in curveArray)
             {
                 foreach (var curve in curveLoop)
                 {
                     XYZ pointA = curve.GetEndPoint(0);
                     XYZ pointB = curve.GetEndPoint(1);
-                    double vecScalyar = (point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
-                                        (curve.GetEndPoint(1).Y.DoubleToNumbers(3) -
-                                         curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
-                                        ((curve.GetEndPoint(1).X.DoubleToNumbers(3) -
-                                          curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
-                                         (point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3)));
+                    double vecScalyar = (Math.Round(point.X - curve.GetEndPoint(0).X,3)) *
+                                        (Math.Round(curve.GetEndPoint(1).Y,3) -
+                                         Math.Round(curve.GetEndPoint(0).Y,3)) -
+                                        ((Math.Round(curve.GetEndPoint(1).X,3) -
+                                          Math.Round(curve.GetEndPoint(0).X, 3)) *
+                                         (point.Y - Math.Round(curve.GetEndPoint(0).Y,3)));
+                    vecScal.Add(vecScalyar);
                     if (vecScalyar == 0)
                     {
                         return PointInFigureWithBorders.inBorders;
@@ -474,8 +476,8 @@ namespace BMCIModule
                         point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
                         continue;
                     }
-                    superPositionX = (superPositionX / countPointInFigureHex).DoubleToNumbers(3);
-                    superPositionY = (superPositionY / countPointInFigureHex).DoubleToNumbers(3);
+                    superPositionX = Math.Round((superPositionX / countPointInFigureHex),3);
+                    superPositionY = Math.Round((superPositionY / countPointInFigureHex),3);
                     if (point.getPointPosition == PointInFigureWithBorders.outFigure)
                     {
                         XYZ origin = new XYZ(superPositionX, superPositionY, superPositionZ);

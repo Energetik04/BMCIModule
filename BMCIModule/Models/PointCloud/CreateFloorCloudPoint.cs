@@ -476,11 +476,11 @@ namespace BMCIModule
             return collectionPointCloudInTriangle;
         }
 
-        public void AproximateXZ(List<XYZ> pointCollection,out double a,out double b)
+        public void AproximateXZ(List<XYZ> pointCollection, out double a, out double b)
         {
             a = 0;
-            b= 0;
-            double  a1=0, a2=0, a3=0, sumx=0, sumy = 0;
+            b = 0;
+            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
             foreach (var point in pointCollection)
             {
                 a1 = a1 + point.X * point.Z;
@@ -489,25 +489,9 @@ namespace BMCIModule
                 a2 = a2 + Math.Pow(point.X, 2);
             }
             a3 = Math.Pow(sumx, 2);
-            a=(pointCollection.Count*a1-sumx*sumy)/(pointCollection.Count*a2-a3);
-            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
-        }
-
-        public void AproximateXY(List<XYZ> pointCollection, out double a, out double b)
-        {
-            a = 0;
-            b = 0;
-            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
-            foreach (var point in pointCollection)
-            {
-                a1 = a1 + point.X * point.Y;
-                sumx = sumx + point.X;
-                sumy = sumy + point.Y;
-                a2 = a2 + Math.Pow(point.X, 2);
-            }
-            a3 = Math.Pow(sumx, 2);
-            a = (pointCollection.Count * a1 - sumx * sumy) / (pointCollection.Count * a2 - a3);
-            b = (a2 * sumy - sumx * a1) / (pointCollection.Count * a2 - a3);
+            double a4 = (pointCollection.Count * a1 - sumx * sumy);
+            a = (Math.Round((pointCollection.Count * a1 - sumx * sumy), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
+            b = Math.Round((a2 * sumy - sumx * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
         }
 
         //получение верхней грани, только если пол плоский
@@ -628,18 +612,26 @@ namespace BMCIModule
         public PointInFigureWithBorders ChangeStatusPoint(POINT.Point point, ref Face topFace)
         {
             IList<CurveLoop> curveArray = topFace.GetEdgesAsCurveLoops();
+            List<double> vecScal=new List<double>();
             foreach (var curveLoop in curveArray)
             {
                 foreach (var curve  in curveLoop)
                 {
                     XYZ pointA = curve.GetEndPoint(0);
                     XYZ pointB = curve.GetEndPoint(1);
-                    double vecScalyar = (point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
-                                        (curve.GetEndPoint(1).Y.DoubleToNumbers(3) -
-                                         curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
-                                        ((curve.GetEndPoint(1).X.DoubleToNumbers(3) -
-                                          curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
-                                         (point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3)));
+                    double vecScalyar = (Math.Round(point.X - curve.GetEndPoint(0).X, 3)) *
+                                        (Math.Round(curve.GetEndPoint(1).Y, 3) -
+                                         Math.Round(curve.GetEndPoint(0).Y, 3)) -
+                                        ((Math.Round(curve.GetEndPoint(1).X, 3) -
+                                          Math.Round(curve.GetEndPoint(0).X, 3)) *
+                                         (point.Y - Math.Round(curve.GetEndPoint(0).Y, 3)));
+                    //double vecScalyar = (point.X - curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
+                    //                    (curve.GetEndPoint(1).Y.DoubleToNumbers(3) -
+                    //                     curve.GetEndPoint(0).Y.DoubleToNumbers(3)) -
+                    //                    ((curve.GetEndPoint(1).X.DoubleToNumbers(3) -
+                    //                      curve.GetEndPoint(0).X.DoubleToNumbers(3)) *
+                    //                     (point.Y - curve.GetEndPoint(0).Y.DoubleToNumbers(3)));
+                    vecScal.Add(vecScalyar);
                     if (vecScalyar == 0)
                     {
                         return PointInFigureWithBorders.inBorders;
@@ -673,14 +665,13 @@ namespace BMCIModule
             List<POINT.Point> pointGenerate = new List<POINT.Point>();
             double heightTriangle = (Math.Sqrt(3)) * stepmin / 2.0d;
             bool offset = false;
-            int huita= (int)(Math.Abs(yMax.Y - yMin.Y) / heightTriangle)+1;
             for (int i = 0; i <= ((int)(Math.Abs(yMax.Y - yMin.Y)/ heightTriangle))+1; i++)
             {
                 for (int j = 0; j <=(int)(Math.Abs((xMax.X - xMin.X)/ stepmin))+1; j++)
                 {
                     double posX = xMin.X + stepmin * j + (offset ? stepmin / 2 : 0);
                     double posY = yMin.Y + heightTriangle * i;
-                    pointGenerate.Add(new POINT.Point(posX.DoubleToNumbers(3), posY.DoubleToNumbers(3), pointTopFace[0].Z));
+                    pointGenerate.Add(new POINT.Point(Math.Round(posX,6), Math.Round(posY,6), pointTopFace[0].Z));
                 }
                 offset = !offset;
             }
@@ -732,8 +723,8 @@ namespace BMCIModule
                         point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
                         continue;
                     }
-                    superPositionX = (superPositionX / countPointInFigureHex).DoubleToNumbers(3);
-                    superPositionY = (superPositionY / countPointInFigureHex).DoubleToNumbers(3);
+                    superPositionX = Math.Round((superPositionX / countPointInFigureHex),9);
+                    superPositionY = Math.Round((superPositionY / countPointInFigureHex),9);
                     if (point.getPointPosition == PointInFigureWithBorders.outFigure)
                     {
                         XYZ origin = new XYZ(superPositionX, superPositionY, superPositionZ);
@@ -774,7 +765,7 @@ namespace BMCIModule
                             }
                         }
 
-                        if (convertPoint.DistanceTo(tempPoint) <= 0.25 * stepMin || pointCross.Count == 0)
+                        if ((convertPoint.DistanceTo(tempPoint) <= (0.25 * stepMin)) || pointCross.Count == 0)
                         {
                             point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
                         }
