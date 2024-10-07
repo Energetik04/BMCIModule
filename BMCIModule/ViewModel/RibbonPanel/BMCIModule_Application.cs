@@ -46,7 +46,10 @@ namespace BMCIModule
             string ribbonCoordination = "Координация";
             string panelFactConstruction = "Фактические конструкции";
             string ribbonLogo = "ОАО Белгорхимпром";
-            string  wayForApplication=@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll";
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            AppDomain domain=AppDomain.CurrentDomain;
+            string  wayForApplication= assembly.Location;
+            string wayForIcon = Path.GetDirectoryName(wayForApplication) + @"\icon";
             AW.ComponentManager.UIElementActivated += ComponentManager_UIElementActivated;
             
             application.CreateRibbonTab(namePlugin);
@@ -54,10 +57,11 @@ namespace BMCIModule
             RibbonPanel logo = application.CreateRibbonPanel(namePlugin, ribbonLogo);
             RibbonPanel panelCoordination=application.CreateRibbonPanel(namePlugin,ribbonCoordination);
             RibbonPanel panelFloor= application.CreateRibbonPanel(namePlugin, panelFactConstruction);
+            RibbonPanel panelGrid = application.CreateRibbonPanel(namePlugin, "Оси");
 
             AW.RibbonControl ribbon = AW.ComponentManager.Ribbon;
             // картинку на фон кнопок
-            ImageSource imgbg = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logov2.png"));
+            ImageSource imgbg = new BitmapImage(new Uri(wayForIcon+@"\logov2.png"));
             ImageBrush picBrush = new ImageBrush();
             picBrush.ImageSource = imgbg;
             picBrush.AlignmentX = AlignmentX.Center;
@@ -102,6 +106,7 @@ namespace BMCIModule
             //добавление кнопки координации
             AddButtonCoordination(panelCoordination);
             AddButtonFloor(panelFloor);
+            AddButtonChangeGrid(panelGrid);
             
             #region Действующая панель
 
@@ -113,20 +118,20 @@ namespace BMCIModule
                 PushButtonData changeFloorToPointCloudData = new PushButtonData("CreateFloorCloudPointWindow", "Пол", wayForApplication, "BMCIModule.CreateFloorCloudPoint");
                 changeFloorToPointCloudData.ToolTip = "Изменение формы пола по облаку точек";
                 // путь к картинкам либо изменить либо пересмотреть 
-                changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\Vector.png"));
                 PushButton createFloorToPointCloudDataButton = panel.AddItem(changeFloorToPointCloudData) as PushButton;
                 //кровля
                 PushButtonData changeRoofToPointCloudData = new PushButtonData("CreateRoofCloudPointWindow", "Кровля", wayForApplication, "BMCIModule.CreateFloorOrRoofCloudPoint");
                 changeRoofToPointCloudData.ToolTip = "Изменение формы кровли по облаку точек";
 
                 // путь к картинкам либо изменить либо пересмотреть 
-                changeRoofToPointCloudData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                changeRoofToPointCloudData.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\Vector.png"));
                 PushButton createRoofToPointCloudDataButton = panel.AddItem(changeRoofToPointCloudData) as PushButton;
                 //анализ
                 PushButtonData createAnalysisFloor = new PushButtonData("createAnalysisFloor", "Анализ пола", wayForApplication, "BMCIModule.СreateAnalysisFloor");
                 createAnalysisFloor.ToolTip = "Создание вида с аналитической поверхностью, для более наглядного представления неровностей пола, путем нанесения цветной диаграммы";
                 // путь к картинкам либо изменить либо пересмотреть 
-                createAnalysisFloor.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                createAnalysisFloor.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
                 PushButton createAnalysisFloorButton = panel.AddItem(createAnalysisFloor) as PushButton;
             }
 
@@ -137,17 +142,17 @@ namespace BMCIModule
                 PushButtonData dataButtonCoordination = new PushButtonData("CoordinationButton", "Копирование координат", wayForApplication, "BMCIModule.CoordinationFile");
                 dataButtonCoordination.ToolTip = "Перенос площадки, координат базовой точки и точки съемки с файла имеющий название Координационный";
                 // путь к картинкам либо изменить либо пересмотреть 
-                dataButtonCoordination.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Vector.png"));
+                dataButtonCoordination.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
 
                 // кнопка копирование осей
                 PushButtonData copyGridButtonData = new PushButtonData("CopyGridButton", "Копирование осей", wayForApplication, "BMCIModule.CopyGrids");
                 copyGridButtonData.ToolTip = "Копирование осей из связанного файла имеющего название Координационный, так же создает рабочий набор с именем #BMCI - ОБЩИЕ УРОВНИ И СЕТКИ";
-                copyGridButtonData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Scale-32-Dark.png"));
+                copyGridButtonData.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\Scale-32-Dark.png"));
 
                 // кнопка копирования уровней
                 PushButtonData copyLevelButtonData = new PushButtonData("CopyLevelButton", "Копирование уровней", wayForApplication, "BMCIModule.CopyLevel");
                 copyLevelButtonData.ToolTip = "Копирование уровней из связанного файла имеющего название Координационный, так же создает рабочий набор с именем #BMCI - ОБЩИЕ УРОВНИ И СЕТКИ";
-                copyLevelButtonData.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\Database-32-Light.png"));
+                copyLevelButtonData.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\Database-32-Light.png"));
                 // Объединение кнопок в одну
                 SplitButtonData splitCopy = new SplitButtonData("splitCoordination", "Split");
                 SplitButton splitButtonCopy = panel.AddItem(splitCopy) as SplitButton;
@@ -159,13 +164,22 @@ namespace BMCIModule
                 //кнопка выбора набора марок и создания рабочих наборов
                 PushButtonData selectSetTagWorkset = new PushButtonData("CreareWorkset", "Создание рабочих наборов", wayForApplication, "BMCIModule.CreateWorkset");
                 selectSetTagWorkset.ToolTip = "Создание рабочих набором путем выбора марок комплектов";
-                selectSetTagWorkset.LargeImage = new BitmapImage(new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\CreateWorkSet.png"));
+                selectSetTagWorkset.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\CreateWorkSet.png"));
                 PushButton selectTagName = panel.AddItem(selectSetTagWorkset) as PushButton;
                 
             }
-            
+            void AddButtonChangeGrid(RibbonPanel panel)
+            {
+                //пол
+                PushButtonData changeStatusGrid = new PushButtonData("ChangeStatusGrid", "Оси", wayForApplication, "BMCIModule.ChangeGridStatus");
+                changeStatusGrid.ToolTip = "Перевод осей из 3D в 2D и обратно";
+                // путь к картинкам либо изменить либо пересмотреть 
+                changeStatusGrid.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
+                PushButton createFloorToPointCloudDataButton = panel.AddItem(changeStatusGrid) as PushButton;
+            }
+
             #endregion
-            
+
             return Result.Succeeded;
 
         }
