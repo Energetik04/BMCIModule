@@ -84,7 +84,7 @@ namespace BMCIModule.ViewModel
         }
 
         private bool _checkEnableButtom;
-
+        
         public bool CheckEnableButtom
         {
             get=> _checkEnableButtom;

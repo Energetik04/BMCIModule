@@ -35,10 +35,5 @@ namespace BMCIModule.Views.Window
         {
             this.DialogResult=true;
         }
-
-        private void TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }
