@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -11,13 +13,15 @@ namespace BMCIModule.ViewModel
 {
     public class CreateFloorCloudPointVM:ViewModel.Base.ViewModel
     {
-        #region CloseAplicationCommand
-        /// <summary>
-        /// Пока не работает
-        /// </summary>
-        /// 
-        internal Action Close;
+        #region Сборка
+        static Assembly assembly = Assembly.GetExecutingAssembly();
+        AppDomain domain = AppDomain.CurrentDomain;
+        static string wayForApplication = assembly.Location;
+        //метод статический поэтому инициализатор должен быть статик
+        string wayForIcon = Path.GetDirectoryName(wayForApplication) + @"\icon";
+        #endregion
 
+        internal Action Close;
         private string _Title = "Параметры преобразования пола";
         private int numberPoint;
         private double stepMin;
@@ -26,12 +30,12 @@ namespace BMCIModule.ViewModel
         public ImageSource BackgroundWindow
         {
             get => new BitmapImage(
-                    new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoBack.png"));
+                    new Uri(wayForIcon + @"\logoBack.png"));
         }
         public ImageSource LogoForWindow
         {
             get => new BitmapImage(
-                new Uri(@"C:\ProgramData\Autodesk\Revit\Addins\2021\BMCIModule\BMCIModule\icon\logoForWindow.png"));
+                new Uri(wayForIcon + @"\logoForWindow.png"));
         }
        
        public string Title
@@ -79,6 +83,24 @@ namespace BMCIModule.ViewModel
             set => Set(ref _checkBoxBottomFace, value);
         }
 
+        private bool _checkEnableButtom;
+
+        public bool CheckEnableButtom
+        {
+            get=> _checkEnableButtom;
+            set
+            {
+                if((stepMin.GetType()==typeof(double) || stepMin.GetType()==typeof(int)) && (numberPoint.GetType()==typeof(int))&& (captureRange.GetType() == typeof(double) || captureRange.GetType() == typeof(int)))
+                {
+                    Set(ref _checkEnableButtom,true);
+                }
+                else
+                {
+                    Set(ref _checkEnableButtom, false);
+                }
+            }
+        }
+
         public string ToolTipStepMin
         {
             get => "При создании треугольников внутри фигуры" + "\n" + "будет использоваться равносторонний треугольник" + "\n" + "с сторонами указанными в этом параметре.";
@@ -102,7 +124,6 @@ namespace BMCIModule.ViewModel
         }
 
         private bool CanCloseApplicationCommandExecute(object p) => true;
-        #endregion
 
         #region Apply
         /// <summary>

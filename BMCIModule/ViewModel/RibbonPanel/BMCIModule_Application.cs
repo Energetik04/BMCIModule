@@ -24,21 +24,12 @@ namespace BMCIModule
             get { return _executedRibbon; }
         }
 
-
         static AddInId addInId = new AddInId(new Guid("F8AF5982-6FE6-4C62-8F79-E0B6FF252F73"));
         //получение пути к файлу
-        public static string AssemblyDirectory
-        {
-            get
-            {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
-            }
-        }
-        private string str = AssemblyDirectory;
-        //
+        static Assembly assembly = Assembly.GetExecutingAssembly();
+        AppDomain domain = AppDomain.CurrentDomain;
+        static string wayForApplication = assembly.Location;
+        string wayForIcon = Path.GetDirectoryName(wayForApplication) + @"\icon";
         public Result OnStartup (UIControlledApplication application)
         {
             //adWin.RibbonControl ribbon = adWin.ComponentManager.Ribbon;
@@ -46,10 +37,7 @@ namespace BMCIModule
             string ribbonCoordination = "Координация";
             string panelFactConstruction = "Фактические конструкции";
             string ribbonLogo = "ОАО Белгорхимпром";
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            AppDomain domain=AppDomain.CurrentDomain;
-            string  wayForApplication= assembly.Location;
-            string wayForIcon = Path.GetDirectoryName(wayForApplication) + @"\icon";
+            
             AW.ComponentManager.UIElementActivated += ComponentManager_UIElementActivated;
             
             application.CreateRibbonTab(namePlugin);
@@ -127,12 +115,18 @@ namespace BMCIModule
                 // путь к картинкам либо изменить либо пересмотреть 
                 changeRoofToPointCloudData.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\Vector.png"));
                 PushButton createRoofToPointCloudDataButton = panel.AddItem(changeRoofToPointCloudData) as PushButton;
-                //анализ
-                PushButtonData createAnalysisFloor = new PushButtonData("createAnalysisFloor", "Анализ пола", wayForApplication, "BMCIModule.СreateAnalysisFloor");
+                //анализ пола
+                PushButtonData createAnalysisFloor = new PushButtonData("createAnalysisFace", "Анализ поверхности", wayForApplication, "BMCIModule.СreateAnalysisFloor");
                 createAnalysisFloor.ToolTip = "Создание вида с аналитической поверхностью, для более наглядного представления неровностей пола, путем нанесения цветной диаграммы";
                 // путь к картинкам либо изменить либо пересмотреть 
                 createAnalysisFloor.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
                 PushButton createAnalysisFloorButton = panel.AddItem(createAnalysisFloor) as PushButton;
+                //анализ кровли
+                PushButtonData createAnalysisRoof = new PushButtonData("createAnalysisRoof", "Анализ поверхности", wayForApplication, "BMCIModule.СreateAnalysisRoof");
+                createAnalysisRoof.ToolTip = "Создание вида с аналитической поверхностью, для более наглядного представления неровностей пола, путем нанесения цветной диаграммы";
+                // путь к картинкам либо изменить либо пересмотреть 
+                createAnalysisRoof.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
+                PushButton createAnalysisRoofButton = panel.AddItem(createAnalysisRoof) as PushButton;
             }
 
             void AddButtonCoordination(RibbonPanel panel)

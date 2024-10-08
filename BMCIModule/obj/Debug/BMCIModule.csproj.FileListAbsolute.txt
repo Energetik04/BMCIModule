@@ -49,3 +49,5 @@ E:\BMCI\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cach
 E:\BMCI\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
 E:\BMCI\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 E:\BMCI\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
+D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateAnalysisFace.g.cs
+D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateAnalysisFace.baml

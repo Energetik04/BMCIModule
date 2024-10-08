@@ -18,12 +18,16 @@ using System.Drawing;
 using Point = Autodesk.Revit.DB.Point;
 using Autodesk.Revit.DB.PointClouds;
 using Autodesk.Revit.DB.DirectContext3D;
+using BMCIModule.ViewModel;
+using BMCIModule.Views.Window;
 
 namespace BMCIModule
 {
     [Transaction(TransactionMode.Manual)]
     public class СreateAnalysisFloor:IExternalCommand
     {
+        private CreateAnalysisFace createAnalysisWindow = new CreateAnalysisFace();
+        CreateAnalysisFaceVM createAnalysisFaceVm=new CreateAnalysisFaceVM();
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             #region Поулчение документа и интерфейса
@@ -32,10 +36,30 @@ namespace BMCIModule
             var uidoc = app.ActiveUIDocument;// активный документ
             var doc = uidoc.Document;// сам документ
             double stepMin, captureRange;
-            stepMin = 0.5;
-            captureRange = 0.5;
+            int numberPoint;
             #endregion
 
+            createAnalysisWindow.DataContext = createAnalysisFaceVm;
+            createAnalysisFaceVm.Close = createAnalysisWindow.Close;
+            if (createAnalysisWindow.ShowDialog() == false)
+            {
+                return Result.Succeeded;
+            }
+            else
+            {
+                try
+                {
+                    // передал свойства в класс
+                    captureRange = createAnalysisFaceVm.CaptureRange * 0.003281d; // 0,003281 перевод в футы
+                    stepMin = createAnalysisFaceVm.Step * 0.003281d;
+                    numberPoint = createAnalysisFaceVm.NumberPoint;
+                }
+                catch (NullReferenceException)
+                {
+                    TaskDialog.Show("Ошибка ввода", "Ошибка ввода данных в поля");
+                    return Result.Succeeded;
+                }
+            }
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
             if (sfm == null) sfm = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
