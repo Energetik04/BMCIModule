@@ -83,16 +83,18 @@ namespace BMCIModule.ViewModel
             set => Set(ref _checkBoxBottomFace, value);
         }
 
-        private bool _checkEnableButtom;
-        
+        private bool _checkEnableButtom=false;
+
         public bool CheckEnableButtom
         {
-            get=> _checkEnableButtom;
+            get => _checkEnableButtom;
             set
             {
-                if((stepMin.GetType()==typeof(double) || stepMin.GetType()==typeof(int)) && (numberPoint.GetType()==typeof(int))&& (captureRange.GetType() == typeof(double) || captureRange.GetType() == typeof(int)))
+                if ((stepMin.GetType() == typeof(double) || stepMin.GetType() == typeof(int)) &&
+                    (numberPoint.GetType() == typeof(int)) && (captureRange.GetType() == typeof(double) ||
+                                                               captureRange.GetType() == typeof(int)))
                 {
-                    Set(ref _checkEnableButtom,true);
+                    Set(ref _checkEnableButtom, true);
                 }
                 else
                 {
@@ -124,6 +126,7 @@ namespace BMCIModule.ViewModel
         }
 
         private bool CanCloseApplicationCommandExecute(object p) => true;
+        
 
         #region Apply
         /// <summary>
@@ -136,7 +139,7 @@ namespace BMCIModule.ViewModel
             Close();
         }
 
-        private bool CanApplyApplicationCommandExecuted(object p) => true;
+        private bool CanApplyApplicationCommandExecuted(object p)=> true;
         
         #endregion
 

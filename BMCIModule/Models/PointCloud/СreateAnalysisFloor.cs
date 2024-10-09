@@ -82,11 +82,12 @@ namespace BMCIModule
             Element selectPointCloud = doc.GetElement(choicePointCloudRef);
 
             #endregion
-
             Options op = new Options()
             {
                 ComputeReferences = true
             };
+            if(selectElement is Floor){}
+
             // верхняя грань
             Face topFace = null;
             List<Face> topFaces = ((doc.GetElement(selectElementId) as Floor).get_Geometry(op).First() as Solid).GetTopFace();
