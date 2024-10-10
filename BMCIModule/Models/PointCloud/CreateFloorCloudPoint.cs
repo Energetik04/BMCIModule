@@ -462,7 +462,11 @@ namespace BMCIModule
                 Plane planeMaxHeight = Plane.CreateByThreePoints(new XYZ(listPointFace[0].X, listPointFace[0].Y, zMax),
                     new XYZ(listPointFace[1].X, listPointFace[1].Y, zMax),
                     new XYZ(listPointFace[2].X, listPointFace[2].Y, zMax));
-                XYZ reversNormalMaxheight = new XYZ(planeMaxHeight.Normal.X, planeMaxHeight.Normal.Y, planeMaxHeight.Normal.Z * (-1));
+                XYZ normalFace = planeMaxHeight.Normal;
+                XYZ normalFaceOrigin = planeMinHeight.Origin;
+                XYZ direction = new XYZ(normalFace.X - normalFaceOrigin.X, normalFace.Y - normalFaceOrigin.Y, normalFace.Z - normalFaceOrigin.Z);
+                XYZ reversNormalMaxheight = (-1) * direction;
+                //XYZ reversNormalMaxheight = new XYZ(planeMaxHeight.Normal.X, planeMaxHeight.Normal.Y, planeMaxHeight.Normal.Z * (-1));
                 Plane reversPlaneMaxHeight = Plane.CreateByNormalAndOrigin(reversNormalMaxheight, planeMaxHeight.Origin);
                 faceToPlane.Add(reversPlaneMaxHeight);
                 faceToPlane.Add(planeMinHeight);
@@ -765,7 +769,7 @@ namespace BMCIModule
                             }
                         }
 
-                        if ((convertPoint.DistanceTo(tempPoint) <= (0.25 * stepMin)) || pointCross.Count == 0)
+                        if (/*(convertPoint.DistanceTo(tempPoint) <= (0.25 * stepMin)) ||*/ pointCross.Count == 0)
                         {
                             point.getPointPosition = PointInFigureWithBorders.deleteThisPoint;
                         }
