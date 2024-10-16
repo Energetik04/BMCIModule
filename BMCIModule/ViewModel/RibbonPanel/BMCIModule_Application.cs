@@ -122,7 +122,7 @@ namespace BMCIModule
                 createAnalysisFloor.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
                 PushButton createAnalysisFloorButton = panel.AddItem(createAnalysisFloor) as PushButton;
                 //анализ кровли
-                PushButtonData createAnalysisRoof = new PushButtonData("createAnalysisRoof", "Анализ поверхности", wayForApplication, "BMCIModule.СreateAnalysisRoof");
+                PushButtonData createAnalysisRoof = new PushButtonData("createAnalysisRoof", "Анализ поверхности", wayForApplication, "BMCIModule.CreateAnalysisRoof");
                 createAnalysisRoof.ToolTip = "Создание вида с аналитической поверхностью, для более наглядного представления неровностей пола, путем нанесения цветной диаграммы";
                 // путь к картинкам либо изменить либо пересмотреть 
                 createAnalysisRoof.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
