@@ -13,6 +13,7 @@ namespace BMCIModule.ViewModel
 {
     public class CreateFloorCloudPointVM:ViewModel.Base.ViewModel
     {
+        //TODO проверка вводных данных в поля черезе события
         #region Сборка
         static Assembly assembly = Assembly.GetExecutingAssembly();
         AppDomain domain = AppDomain.CurrentDomain;
