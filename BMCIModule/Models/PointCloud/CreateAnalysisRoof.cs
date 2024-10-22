@@ -10,6 +10,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
 using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.PointClouds;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 
@@ -28,6 +29,7 @@ namespace BMCIModule
 
             //начальные параметры
             stepMin = 0.5;
+            captureRange = 0.3;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
             if (sfm == null) sfm = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
@@ -48,6 +50,8 @@ namespace BMCIModule
             Selection choicePointCloud = uidoc.Selection;
             Reference choicePointCloudRef = choicePointCloud.PickObject(ObjectType.Element, "Выбор элемента");
             Element selectPointCloud = doc.GetElement(choicePointCloudRef);
+            PointCloudInstance pcInstance = selectPointCloud as PointCloudInstance;
+            Autodesk.Revit.DB.Transform pointTransform = pcInstance.GetTotalTransform();
 
             #endregion
 
@@ -80,6 +84,7 @@ namespace BMCIModule
             var cylindricalFace = faceList.Where(x => x is CylindricalFace).Select(x => (x as CylindricalFace))
                 .Where(x=>Math.Round(x.Axis.X,9)>=0 && Math.Round(x.Axis.Y,9)>=0 && Math.Round(x.Axis.Z,9)>=0).Cast<Face>().ToList();
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
+            Dictionary<UV, double> collectionPointCloudPoint = new Dictionary<UV, double>();
             foreach (Face face in cylindricalFace)
             {
                 BoundingBoxUV cylindircalParameterzs = face.GetBoundingBox();
@@ -100,8 +105,97 @@ namespace BMCIModule
                         listPointFace.Add(point);
                     }
                 }
+                foreach (var pointUV in listPointFace)
+                {
+                    //double rx, ry;
+                    //var cosU = Math.Cos(pointUV.U);
+                    //var sinU=Math.Sin(pointUV.U);
+                    //rx = cosU * radius;
+                    //ry = sinU*radius;
+                    XYZ point1 = face.Evaluate(pointUV);
+                    UV point2UV = new UV(pointUV.U - stepSigmentAngle / 2, pointUV.V - 1.73 * stepMin);
+                    UV point3UV= new UV(pointUV.U + stepSigmentAngle / 2, pointUV.V - 1.73 * stepMin);
+                    XYZ point2= face.Evaluate(point2UV);
+                    XYZ point3= face.Evaluate(point3UV);
+                    Plane startPlane = Plane.CreateByThreePoints(point1, point2, point3);
+                    XYZ faceNormal = startPlane.Normal;
+                    XYZ reversNormal = faceNormal * (-1);
+                    XYZ directionReverseNormal = reversNormal - startPlane.Origin;
+                    XYZ buttomOrigin = captureRange * directionReverseNormal;
+                    Plane minHight = Plane.CreateByNormalAndOrigin(startPlane.Normal, buttomOrigin);
+                    XYZ point1MaxHight = point1 + (faceNormal - startPlane.Origin) * captureRange;
+                    XYZ point2MaxHight = point2 + (faceNormal - startPlane.Origin) * captureRange;
+                    XYZ point3MaxHight = point3 + (faceNormal - startPlane.Origin) * captureRange;
+                    Plane maxHight = Plane.CreateByThreePoints(point1MaxHight, point2MaxHight, point3MaxHight);
+                    List<XYZ> listPointMaxHight= new List<XYZ>(){point1MaxHight,point2MaxHight,point3MaxHight,point1MaxHight};
+                    List<Plane> collectionPlane = new List<Plane>();
+                    //collectionPlane.Add(minHight);
+                    //collectionPlane.Add(maxHight);
+                    IList<Plane> faceToPlane = new List<Plane>();
+                    for (int i=0;i<listPointMaxHight.Count-1;i++)
+                    {
+                        XYZ bottomPoint = new XYZ();
+                        bottomPoint = listPointMaxHight[i] + (maxHight.Normal - maxHight.Origin) * (-1) * captureRange * 2;
+                        Plane reversPlane = Plane.CreateByThreePoints(listPointMaxHight[i], listPointMaxHight[i+1],bottomPoint);
+                        collectionPlane.Add(reversPlane);
+                    }
+                    foreach (Plane plane in collectionPlane)
+                    {
+                        XYZ reversNormalPlane = new XYZ(plane.Normal.X, plane.Normal.Y, plane.Normal.Z);
+                        Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormalPlane*(-1), plane.Origin);
+                        faceToPlane.Add(reversPlane);
+                    }
+                    faceToPlane.Add(maxHight);
+                    faceToPlane.Add(minHight);
+                    PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
+                    Autodesk.Revit.DB.PointClouds.PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
+                    var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
+                    variable.TrimExcess();
+                    double zPredict;
+                    if (variable.Count > 10)
+                    {
+                        AproximateXZ(variable, out double a, out double b);
+                        zPredict = a * point1.X + b;
+                        if (zPredict.Equals(Double.NaN))
+                        {
+                            zPredict = 0;
+                        }
+                        if (Math.Abs(point1.Z - zPredict) >= captureRange)
+                        {
+                            zPredict = 0;
+                        }
+                    }
+                    else
+                    {
+                        zPredict = point1.Z;
+                    }
+                    collectionPointCloudPoint.Add(pointUV, zPredict);
+                }
                 dictionaryFaceAndUV.Add(face,listPointFace);
             }
+
+            //#region Работа с облаком
+            //Stopwatch sw1 = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+            //sw1.Start();
+            
+            //foreach (var item in dictionaryFaceAndUV)
+            //{
+                
+            //    foreach (var pointUV in item.Value)
+            //    {
+
+            //    }
+            //}
+
+
+
+            //sw1.Stop();
+            //TimeSpan ts1 = sw1.Elapsed;
+            //string elapsedTime1 = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts1.Hours, ts1.Minutes, ts1.Seconds,
+            //    ts1.Milliseconds / 10);
+            //TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime1);
+            //#endregion
+
 
             #region Создание типа легенды
             using (Transaction tr = new Transaction(doc, "Создание легенды и типа результатов анализа"))
@@ -206,11 +300,20 @@ namespace BMCIModule
 
                     foreach (var UVpoint in dictionaryItem.Value)
                     {
+                        var zPredict = collectionPointCloudPoint.Where(x => x.Key.Equals(UVpoint)).Select(x => x.Value).First();
                         List<double> doubleList = new List<double>();
                         UV outUV = null;
                         double distance;
+                        var result = 0.0;
+                        var zFace = dictionaryItem.Key.Evaluate(UVpoint).Z;
+                        if (zFace != zPredict)
+                        {
+
+                        }
+                        if (zFace < zPredict) result = zPredict - zFace;
+                        if (zFace > zPredict) result = (-1) * Math.Abs(zFace - zPredict);
                         uvpts.Add(UVpoint);
-                        doubleList.Add(1);
+                        doubleList.Add(result);
                         valList.Add(new ValueAtPoint(doubleList));
                         doubleList.Clear();
                     }
@@ -238,6 +341,23 @@ namespace BMCIModule
             //topFaceList.AddRange(cylindricalFace);
 
             return Result.Succeeded;
+        }
+        public void AproximateXZ(List<XYZ> pointCollection, out double a, out double b)
+        {
+            a = 0;
+            b = 0;
+            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
+            foreach (var point in pointCollection)
+            {
+                a1 = a1 + point.X * point.Z;
+                sumx = sumx + point.X;
+                sumy = sumy + point.Z;
+                a2 = a2 + Math.Pow(point.X, 2);
+            }
+            a3 = Math.Pow(sumx, 2);
+            double a4 = (pointCollection.Count * a1 - sumx * sumy);
+            a = (Math.Round((pointCollection.Count * a1 - sumx * sumy), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
+            b = Math.Round((a2 * sumy - sumx * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
         }
     }
 
