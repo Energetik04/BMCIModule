@@ -29,7 +29,7 @@ namespace BMCIModule
 
             //начальные параметры
             stepMin = 0.5;
-            captureRange = 0.3;
+            captureRange = 0.75;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
             if (sfm == null) sfm = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
