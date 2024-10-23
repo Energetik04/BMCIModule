@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
@@ -29,7 +30,7 @@ namespace BMCIModule
 
             //начальные параметры
             stepMin = 0.5;
-            captureRange = 0.75;
+            captureRange = 2;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
             if (sfm == null) sfm = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
@@ -58,8 +59,8 @@ namespace BMCIModule
             Options op = new Options()
             {
                 ComputeReferences = true,
-                IncludeNonVisibleObjects  = true,
-                DetailLevel = ViewDetailLevel.Fine,
+                //IncludeNonVisibleObjects  = true,
+                //DetailLevel = ViewDetailLevel.Fine,
             };
             List<Face> faceList=new List<Face>();
             //List<Face> cylindrical
@@ -85,6 +86,8 @@ namespace BMCIModule
                 .Where(x=>Math.Round(x.Axis.X,9)>=0 && Math.Round(x.Axis.Y,9)>=0 && Math.Round(x.Axis.Z,9)>=0).Cast<Face>().ToList();
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
             Dictionary<UV, double> collectionPointCloudPoint = new Dictionary<UV, double>();
+            List<int> countVariable=new List<int>();
+            Dictionary<XYZ, double> sravnitelnaya = new Dictionary<XYZ, double>();
             foreach (Face face in cylindricalFace)
             {
                 BoundingBoxUV cylindircalParameterzs = face.GetBoundingBox();
@@ -113,19 +116,24 @@ namespace BMCIModule
                     //rx = cosU * radius;
                     //ry = sinU*radius;
                     XYZ point1 = face.Evaluate(pointUV);
-                    UV point2UV = new UV(pointUV.U - stepSigmentAngle / 2, pointUV.V - 1.73 * stepMin);
-                    UV point3UV= new UV(pointUV.U + stepSigmentAngle / 2, pointUV.V - 1.73 * stepMin);
-                    XYZ point2= face.Evaluate(point2UV);
-                    XYZ point3= face.Evaluate(point3UV);
+                    UV point2UV = new UV(pointUV.U - stepSigmentAngle / 2, pointUV.V - 1.73/2 * stepMin);
+                    UV point3UV= new UV(pointUV.U + stepSigmentAngle / 2, pointUV.V - 1.73/2 * stepMin);
+                    XYZ point2 = new XYZ(point1.X - stepMin / 2, point1.Y - stepMin*1.73/2, point1.Z);
+                    XYZ point3 = new XYZ(point1.X + stepMin / 2, point2.Y, point1.Z);
+                    //XYZ point2= face.Evaluate(point2UV);
+                    //XYZ point3= face.Evaluate(point3UV);
                     Plane startPlane = Plane.CreateByThreePoints(point1, point2, point3);
                     XYZ faceNormal = startPlane.Normal;
-                    XYZ reversNormal = faceNormal * (-1);
-                    XYZ directionReverseNormal = reversNormal - startPlane.Origin;
-                    XYZ buttomOrigin = captureRange * directionReverseNormal;
+                    XYZ directionReverseNormal = (faceNormal - startPlane.Origin)*(-1);
+                    //когда верхняя граница через p1, она и есть старт
+                    XYZ ed= directionReverseNormal.Normalize();
+                    XYZ j = captureRange * ed;
+                    XYZ buttomOrigin = captureRange * ed+startPlane.Origin;
+                    double distance = buttomOrigin.DistanceTo(startPlane.Origin);
                     Plane minHight = Plane.CreateByNormalAndOrigin(startPlane.Normal, buttomOrigin);
-                    XYZ point1MaxHight = point1 + (faceNormal - startPlane.Origin) * captureRange;
-                    XYZ point2MaxHight = point2 + (faceNormal - startPlane.Origin) * captureRange;
-                    XYZ point3MaxHight = point3 + (faceNormal - startPlane.Origin) * captureRange;
+                    XYZ point1MaxHight = point1 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
+                    XYZ point2MaxHight = point2 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
+                    XYZ point3MaxHight = point3 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
                     Plane maxHight = Plane.CreateByThreePoints(point1MaxHight, point2MaxHight, point3MaxHight);
                     List<XYZ> listPointMaxHight= new List<XYZ>(){point1MaxHight,point2MaxHight,point3MaxHight,point1MaxHight};
                     List<Plane> collectionPlane = new List<Plane>();
@@ -135,14 +143,14 @@ namespace BMCIModule
                     for (int i=0;i<listPointMaxHight.Count-1;i++)
                     {
                         XYZ bottomPoint = new XYZ();
-                        bottomPoint = listPointMaxHight[i] + (maxHight.Normal - maxHight.Origin) * (-1) * captureRange * 2;
+                        bottomPoint = listPointMaxHight[i] + (maxHight.Normal - maxHight.Origin).Normalize()  * captureRange;
                         Plane reversPlane = Plane.CreateByThreePoints(listPointMaxHight[i], listPointMaxHight[i+1],bottomPoint);
                         collectionPlane.Add(reversPlane);
                     }
                     foreach (Plane plane in collectionPlane)
                     {
                         XYZ reversNormalPlane = new XYZ(plane.Normal.X, plane.Normal.Y, plane.Normal.Z);
-                        Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormalPlane*(-1), plane.Origin);
+                        Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormalPlane, plane.Origin);
                         faceToPlane.Add(reversPlane);
                     }
                     faceToPlane.Add(maxHight);
@@ -150,6 +158,11 @@ namespace BMCIModule
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                     Autodesk.Revit.DB.PointClouds.PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
                     var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
+                    if (variable.Count() == 0)
+                    {
+
+                    }
+                    countVariable.Add(variable.Count());
                     variable.TrimExcess();
                     double zPredict;
                     if (variable.Count > 10)
@@ -169,6 +182,7 @@ namespace BMCIModule
                     {
                         zPredict = point1.Z;
                     }
+                    sravnitelnaya.Add(face.Evaluate(pointUV),zPredict);
                     collectionPointCloudPoint.Add(pointUV, zPredict);
                 }
                 dictionaryFaceAndUV.Add(face,listPointFace);
@@ -283,9 +297,11 @@ namespace BMCIModule
                 //List<XYZ> listXYZ = face.GetListPointInFace();
                 IList<UV> uvpts = new List<UV>();
                 IList<ValueAtPoint> valList = new List<ValueAtPoint>();
-                
+                // хлам для контроля значений
+                List<double> resultCollection = new List<double>();
+                List<double> raznicaCollection = new List<double>();
                 // TODO можно проще сделать
-                
+
                 foreach (var dictionaryItem in dictionaryFaceAndUV)
                 {
                     AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
@@ -305,15 +321,15 @@ namespace BMCIModule
                         UV outUV = null;
                         double distance;
                         var result = 0.0;
+                        
                         var zFace = dictionaryItem.Key.Evaluate(UVpoint).Z;
-                        if (zFace != zPredict)
-                        {
-
-                        }
+                        var raznica = zFace - zPredict;
+                        raznicaCollection.Add(raznica);
                         if (zFace < zPredict) result = zPredict - zFace;
                         if (zFace > zPredict) result = (-1) * Math.Abs(zFace - zPredict);
                         uvpts.Add(UVpoint);
-                        doubleList.Add(result);
+                        doubleList.Add(result*304.8);
+                        resultCollection.Add(result*304.8);
                         valList.Add(new ValueAtPoint(doubleList));
                         doubleList.Clear();
                     }
