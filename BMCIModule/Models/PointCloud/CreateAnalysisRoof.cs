@@ -67,13 +67,6 @@ namespace BMCIModule
             FaceArray faceArray = ((selectElement as RoofBase).get_Geometry(op).First() as Solid).Faces;
             foreach (Face face in faceArray)
             {
-                if (face is CylindricalFace)
-                {
-                    var h=face as CylindricalFace;
-                    h.GetBoundingBox();
-                    var max = h.GetBoundingBox().Max;
-                    var min = h.GetBoundingBox().Min;
-                }
                 faceList.Add(face);
             }
             //var topFaceList=new List<Face>();
@@ -84,6 +77,7 @@ namespace BMCIModule
             
             var cylindricalFace = faceList.Where(x => x is CylindricalFace).Select(x => (x as CylindricalFace))
                 .Where(x=>Math.Round(x.Axis.X,9)>=0 && Math.Round(x.Axis.Y,9)>=0 && Math.Round(x.Axis.Z,9)>=0).Cast<Face>().ToList();
+
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
             Dictionary<UV, double> collectionPointCloudPoint = new Dictionary<UV, double>();
             List<int> countVariable=new List<int>();
@@ -110,58 +104,104 @@ namespace BMCIModule
                 }
                 foreach (var pointUV in listPointFace)
                 {
-                    //double rx, ry;
-                    //var cosU = Math.Cos(pointUV.U);
-                    //var sinU=Math.Sin(pointUV.U);
-                    //rx = cosU * radius;
-                    //ry = sinU*radius;
                     XYZ point1 = face.Evaluate(pointUV);
-                    UV point2UV = new UV(pointUV.U - stepSigmentAngle / 2, pointUV.V - 1.73/2 * stepMin);
-                    UV point3UV= new UV(pointUV.U + stepSigmentAngle / 2, pointUV.V - 1.73/2 * stepMin);
-                    XYZ point2 = new XYZ(point1.X - stepMin / 2, point1.Y - stepMin*1.73/2, point1.Z);
-                    XYZ point3 = new XYZ(point1.X + stepMin / 2, point2.Y, point1.Z);
-                    //XYZ point2= face.Evaluate(point2UV);
-                    //XYZ point3= face.Evaluate(point3UV);
-                    Plane startPlane = Plane.CreateByThreePoints(point1, point2, point3);
-                    XYZ faceNormal = startPlane.Normal;
-                    XYZ directionReverseNormal = (faceNormal - startPlane.Origin)*(-1);
-                    //когда верхняя граница через p1, она и есть старт
-                    XYZ ed= directionReverseNormal.Normalize();
-                    XYZ j = captureRange * ed;
-                    XYZ buttomOrigin = captureRange * ed+startPlane.Origin;
-                    double distance = buttomOrigin.DistanceTo(startPlane.Origin);
-                    Plane minHight = Plane.CreateByNormalAndOrigin(startPlane.Normal, buttomOrigin);
-                    XYZ point1MaxHight = point1 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
-                    XYZ point2MaxHight = point2 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
-                    XYZ point3MaxHight = point3 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
-                    Plane maxHight = Plane.CreateByThreePoints(point1MaxHight, point2MaxHight, point3MaxHight);
-                    List<XYZ> listPointMaxHight= new List<XYZ>(){point1MaxHight,point2MaxHight,point3MaxHight,point1MaxHight};
-                    List<Plane> collectionPlane = new List<Plane>();
-                    //collectionPlane.Add(minHight);
-                    //collectionPlane.Add(maxHight);
+                    //XYZ normalFaceEnd2 = ((face as CylindricalFace).Origin +
+                    //                      (face as CylindricalFace).Axis.Normalize() * pointUV.V);
+                    CylindricalFace getFace=face as CylindricalFace;
+                    XYZ normalFaceEnd2 = getFace.Axis.Normalize() * pointUV.V+getFace.Origin;
+                    XYZ normalToFace=point1-normalFaceEnd2;
+
+                    //UV point2UV = new UV(pointUV.U - stepSigmentAngle / 2, pointUV.V - 1.73/2 * stepMin);
+                    //UV point3UV= new UV(pointUV.U + stepSigmentAngle / 2, pointUV.V - 1.73/2 * stepMin);
+                    //XYZ point2 = new XYZ(point1.X - stepMin / 2, point1.Y - stepMin*1.73/2, point1.Z);
+                    //XYZ point3 = new XYZ(point1.X + stepMin / 2, point2.Y, point1.Z);
+                    //Plane startPlane = Plane.CreateByThreePoints();
+                    Plane startPlane = Plane.CreateByNormalAndOrigin(normalToFace, point1);
+                    BoundingBoxUV bbToTriangle = startPlane.GetBoundingBoxUV();
+                    UV minTriangle = bbToTriangle.Min;
                     IList<Plane> faceToPlane = new List<Plane>();
-                    for (int i=0;i<listPointMaxHight.Count-1;i++)
+                    #region Работа с треугольником
+
+                    double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
+                    //UV pointB = minTriangle;
+                    UV pointB=new UV();
+                    startPlane.Project(point1,out pointB,out double distance);
+                    UV pointA = new UV(pointB.U - stepMin / 2, pointB.V - hight);
+                    UV pointC = new UV(pointA.U + stepMin, pointA.V);
+                    //TODO математически не обосновано 
+                    UV centre=new UV(pointA.U + stepMin/2, pointB.V - hight);
+                    XYZ pointBXYZ = startPlane.Origin + pointB.U * startPlane.XVec + pointB.V * startPlane.YVec;
+                    XYZ pointAXYZ = startPlane.Origin + pointA.U * startPlane.XVec + pointA.V * startPlane.YVec;
+                    XYZ pointCXYZ = startPlane.Origin + pointC.U * startPlane.XVec + pointC.V * startPlane.YVec;
+                    XYZ centreStartPlane = startPlane.Origin + centre.U * startPlane.XVec + centre.V * startPlane.YVec;
+                    List<XYZ> triangleStart= new List<XYZ>(){pointBXYZ,pointAXYZ,pointCXYZ};
+
+                    #endregion
+
+                    #region Сдвигаем треугольник нааверх
+
+                    XYZ pointBXYZMax = pointBXYZ + (normalToFace).Normalize() * captureRange;
+                    XYZ pointAXYZMax = pointAXYZ + (normalToFace).Normalize() * captureRange;
+                    XYZ pointCXYZMax = pointCXYZ + (normalToFace).Normalize() * captureRange;
+
+                    Plane maxHightTriangle = Plane.CreateByThreePoints(pointBXYZMax, pointAXYZMax, pointCXYZMax);
+                    List<XYZ> triangleMaxHight=new List<XYZ>(){ pointBXYZMax , pointAXYZMax , pointCXYZMax , pointBXYZMax };
+
+                    XYZ pointBXYZMin = pointBXYZ + (-1)*(normalToFace).Normalize() * captureRange;
+                    XYZ pointAXYZMin = pointAXYZ + (-1) * (normalToFace).Normalize() * captureRange;
+                    XYZ pointCXYZMin = pointCXYZ + (-1) * (normalToFace).Normalize() * captureRange;
+
+                    Plane minHightTriangle = Plane.CreateByThreePoints(pointBXYZMin, pointAXYZMin, pointCXYZMin);
+                    List<XYZ> triangleMinHight = new List<XYZ>() { pointBXYZMin , pointAXYZMin , pointCXYZMin , pointBXYZMin };
+
+                    #endregion
+
+                    for (int i = 0; i < triangleMaxHight.Count()-1; i++)
                     {
-                        XYZ bottomPoint = new XYZ();
-                        bottomPoint = listPointMaxHight[i] + (maxHight.Normal - maxHight.Origin).Normalize()  * captureRange;
-                        Plane reversPlane = Plane.CreateByThreePoints(listPointMaxHight[i], listPointMaxHight[i+1],bottomPoint);
-                        collectionPlane.Add(reversPlane);
+                        Plane sidePlane = Plane.CreateByThreePoints(triangleMinHight[i], triangleMinHight[i+1], triangleMaxHight[i]);
+                        faceToPlane.Add(sidePlane);
                     }
-                    foreach (Plane plane in collectionPlane)
+                    faceToPlane.Add(minHightTriangle);
+                    faceToPlane.Add(maxHightTriangle);
+                    faceToPlane.Select(x =>
                     {
-                        XYZ reversNormalPlane = new XYZ(plane.Normal.X, plane.Normal.Y, plane.Normal.Z);
-                        Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormalPlane, plane.Origin);
-                        faceToPlane.Add(reversPlane);
-                    }
-                    faceToPlane.Add(maxHight);
-                    faceToPlane.Add(minHight);
+                        XYZ reversNormal = x.Origin - centreStartPlane;
+                        return Plane.CreateByNormalAndOrigin(reversNormal, x.Origin);
+                    });
+
+                    //XYZ faceNormal = startPlane.Normal;
+                    //XYZ directionReverseNormal = (faceNormal - startPlane.Origin)*(-1);
+                    ////когда верхняя граница через p1, она и есть старт
+                    //XYZ ed= directionReverseNormal.Normalize();
+                    //XYZ j = captureRange * ed;
+                    //XYZ buttomOrigin = captureRange * ed+startPlane.Origin;
+                    //double distance = buttomOrigin.DistanceTo(startPlane.Origin);
+                    //Plane minHight = Plane.CreateByNormalAndOrigin(startPlane.Normal, buttomOrigin);
+                    //XYZ point1MaxHight = point1 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
+                    //XYZ point2MaxHight = point1 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
+                    //XYZ point3MaxHight = point1 + (faceNormal - startPlane.Origin).Normalize() * captureRange;
+                    //Plane maxHight = Plane.CreateByThreePoints(point1MaxHight, point2MaxHight, point3MaxHight);
+                    //List<XYZ> listPointMaxHight= new List<XYZ>(){point1MaxHight,point2MaxHight,point3MaxHight,point1MaxHight};
+                    //List<Plane> collectionPlane = new List<Plane>();
+
+                    //for (int i=0;i<listPointMaxHight.Count-1;i++)
+                    //{
+                    //    XYZ bottomPoint = new XYZ();
+                    //    bottomPoint = listPointMaxHight[i] + (maxHight.Normal - maxHight.Origin).Normalize()  * captureRange;
+                    //    Plane reversPlane = Plane.CreateByThreePoints(listPointMaxHight[i], listPointMaxHight[i+1],bottomPoint);
+                    //    collectionPlane.Add(reversPlane);
+                    //}
+                    //foreach (Plane plane in collectionPlane)
+                    //{
+                    //    XYZ reversNormalPlane = new XYZ(plane.Normal.X, plane.Normal.Y, plane.Normal.Z);
+                    //    Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormalPlane, plane.Origin);
+                    //    faceToPlane.Add(reversPlane);
+                    //}
+                    //faceToPlane.Add(maxHight);
+                    //faceToPlane.Add(minHight);
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(faceToPlane);
                     Autodesk.Revit.DB.PointClouds.PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
                     var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
-                    if (variable.Count() == 0)
-                    {
-
-                    }
                     countVariable.Add(variable.Count());
                     variable.TrimExcess();
                     double zPredict;
