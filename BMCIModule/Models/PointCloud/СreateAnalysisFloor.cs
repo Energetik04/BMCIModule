@@ -15,9 +15,7 @@ using POINT = BMCIModule.Models.PointCloud;
 using BMCIModule.Models;
 using System.Drawing.Drawing2D;
 using System.Drawing;
-using Point = Autodesk.Revit.DB.Point;
 using Autodesk.Revit.DB.PointClouds;
-using Autodesk.Revit.DB.DirectContext3D;
 using BMCIModule.ViewModel;
 using BMCIModule.Views.Window;
 
@@ -201,23 +199,7 @@ namespace BMCIModule
                 XYZAndPredictZ.Add(pointB, zPredict);
                 
             }
-            //dictionaryVertexAndPointCloud.OrderByDescending(x => x.Value.Count).Select(x=>x);
-            //Dictionary<XYZ,double> XYZAndPredictZ=new Dictionary<XYZ,double>();
-            //foreach (var VARIABLE in dictionaryVertexAndPointCloud)
-            //{
-            //    double zPredict;
-            //    if (VARIABLE.Value.Count > 0 && VARIABLE.Value.Count > 10)
-            //    {
-            //        AproximateXZ(VARIABLE.Value, out double a, out double b);
-            //        zPredict = a * VARIABLE.Key.X + b;
-            //    }
-            //    else
-            //    {
-            //        zPredict = VARIABLE.Key.Z;
-            //    }
-                
-            //}
-
+            
             sw1.Stop();
             TimeSpan ts1 = sw1.Elapsed;
             string elapsedTime1 = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts1.Hours, ts1.Minutes, ts1.Seconds,
