@@ -92,6 +92,7 @@ namespace BMCIModule
             
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
             Dictionary<UV, double> collectionPointCloudPoint = new Dictionary<UV, double>();
+            Dictionary<XYZ,double> XYZPredict=new Dictionary<XYZ,double>();
             foreach (Face face in cylindricalFace)
             {
                 BoundingBoxUV cylindircalParameterzs = face.GetBoundingBox();
@@ -198,6 +199,7 @@ namespace BMCIModule
                         zPredict = point1.Z;
                     }
                     collectionPointCloudPoint.Add(pointUV, zPredict);
+                    XYZPredict.Add(pointBXYZ,zPredict);
                 }
                 dictionaryFaceAndUV.Add(face,listPointFace);
             }
@@ -319,6 +321,7 @@ namespace BMCIModule
                         zPredict = pointBPlanarFace.Z;
                     }
                     collectionPointCloudPointPlanarFace.Add(pointBPlanarFaceUV,zPredict);
+                    XYZPredict.Add(pointBPlanarFace,zPredict);
                 }
                 dictionaryFaceAndUVPlanarface.Add(face,listPointInPlanarFace);
             }
@@ -401,20 +404,17 @@ namespace BMCIModule
                 sw.Start();
                 SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
                 if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
-
                 FilteredElementCollector collector1 = new FilteredElementCollector(doc);
                 ICollection<Element> collection1 = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
                 var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
                 var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
                 int i = 0;
-
-                //List<XYZ> listXYZ = face.GetListPointInFace();
-                
                 IList<ValueAtPoint> valList = new List<ValueAtPoint>();
                 IList<UV> uvpts = new List<UV>();
                 // хлам для контроля значений
-                List<double> resultCollection = new List<double>();
-                List<double> raznicaCollection = new List<double>();
+                var maxValue = XYZPredict.OrderByDescending(x => x.Value).First();
+                var minValue = XYZPredict.OrderBy(x => x.Value).First();
+                UV outUVmax = null;
                 // TODO можно проще сделать
                 foreach (Face face in listFaceToAnalysis)
                 {
@@ -443,10 +443,15 @@ namespace BMCIModule
                                 if (zFace > zPredict) result = (-1) * Math.Abs(zFace - zPredict);
                                 uvpts.Add(UVpoint);
                                 doubleList.Add(result * 304.8);
-                                resultCollection.Add(result * 304.8);
                                 valList.Add(new ValueAtPoint(doubleList));
                                 doubleList.Clear();
                             }
+                            face.GetSurface().Project(maxValue.Key, out outUVmax, out double distanceMax);
+                            uvpts.Add(outUVmax);
+                            valList.Add(new ValueAtPoint(new List<double>() { maxValue.Value }));
+                            face.GetSurface().Project(maxValue.Key, out outUVmax, out double distanceMin);
+                            uvpts.Add(outUVmax);
+                            valList.Add(new ValueAtPoint(new List<double>() { minValue.Value }));
                             //опять получаю одну и туже ссылку на разные плокости
                             i++;
                             //if (i == 100) break;
@@ -485,13 +490,17 @@ namespace BMCIModule
                                 if (zFace > zPredict) result = (-1) * Math.Abs(zFace - zPredict);
                                 uvpts.Add(UVpoint);
                                 doubleList.Add(result * 304.8);
-                                resultCollection.Add(result * 304.8);
                                 valList.Add(new ValueAtPoint(doubleList));
                                 doubleList.Clear();
                             }
                             //опять получаю одну и туже ссылку на разные плокости
                             i++;
-                            //if (i == 100) break;
+                            face.GetSurface().Project(maxValue.Key, out outUVmax, out double distanceMax);
+                            uvpts.Add(outUVmax);
+                            valList.Add(new ValueAtPoint(new List<double>() { maxValue.Value }));
+                            face.GetSurface().Project(maxValue.Key, out outUVmax, out double distanceMin);
+                            uvpts.Add(outUVmax);
+                            valList.Add(new ValueAtPoint(new List<double>() { minValue.Value }));
                             Reference reference = dictionaryItem.Key.Reference;
                             int idx = spf.AddSpatialFieldPrimitive(reference);
                             FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
