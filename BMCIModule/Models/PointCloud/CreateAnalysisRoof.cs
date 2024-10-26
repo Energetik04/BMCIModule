@@ -13,6 +13,7 @@ using BMCIModule.Models.Extension;
 using BMCIModule.Models;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using System.Net;
 using System.Net.Configuration;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -31,8 +32,8 @@ namespace BMCIModule
             int numberPoint;
 
             //начальные параметры
-            stepMin = 0.5;
-            captureRange = 1;
+            stepMin = 1.5;
+            captureRange = 0.2;
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
@@ -84,7 +85,9 @@ namespace BMCIModule
                 .Where(x=>Math.Round(x.Axis.X,9)>=0 && Math.Round(x.Axis.Y,9)>=0 && Math.Round(x.Axis.Z,9)>=0)
                 .Cast<Face>()
                 .ToList();
-
+            List<Face> listFaceToAnalysis = new List<Face>();
+            listFaceToAnalysis.AddRange(cylindricalFace);
+            listFaceToAnalysis.AddRange(planarFace);
             #region Работа с CylindricalFace
             
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
@@ -203,13 +206,14 @@ namespace BMCIModule
             #region Работа с PlanarFace
             // вообще можно такой же механизм попробовать применить как с круглыми плоскостями
             Dictionary<Face, List<UV>> dictionaryFaceAndUVPlanarface = new Dictionary<Face, List<UV>>();
-            List<UV> listPointInPlanarFace=new List<UV>();
+            
 
             Dictionary<UV, double> collectionPointCloudPointPlanarFace = new Dictionary<UV, double>();
             Dictionary<Face, ICollection<POINT.Point>> dictionaryPlanarFaceAndPoint =
                 new Dictionary<Face, ICollection<POINT.Point>>();
             foreach (Face face in planarFace)
             {
+                List<UV> listPointInPlanarFace = new List<UV>();
                 Face topFace = face;
                 ICollection<POINT.Point> pointRevit = GeneratePointCollection(ref topFace, ref stepMin);
                 ICollection<POINT.Point> collection = IsInFigureWithBordersFace(ref pointRevit, ref topFace, ref stepMin);
@@ -230,29 +234,31 @@ namespace BMCIModule
                 foreach (var pointToTriangulate in listPointWithoutDeletePoint)
                 {
                     IList<Plane> faceToPlanePlaanrFace = new List<Plane>();
-                    XYZ pointBPlanarFace = pointToTriangulate.CreateXYZFromPoint();
+                    XYZ pointCreateFromPoint = pointToTriangulate.CreateXYZFromPoint();
+                    var result = face.Project(pointCreateFromPoint);
+                    if(result==null) continue;
+                    XYZ pointBPlanarFace = result.XYZPoint;
                     XYZ normalToPlanarFace = (face as PlanarFace)?.FaceNormal;
                     Plane startPlanePlanarFace = Plane.CreateByNormalAndOrigin(normalToPlanarFace, pointBPlanarFace);
-                    var bbTrianglePlanarFace = startPlanePlanarFace.GetBoundingBoxUV();
                     UV pointBPlanarFaceUV=new UV();
-                    startPlanePlanarFace.Project(pointBPlanarFace,out pointBPlanarFaceUV,out double distance);
+                    face.GetSurface().Project(pointBPlanarFace,out pointBPlanarFaceUV,out double distance);
                     listPointInPlanarFace.Add(pointBPlanarFaceUV);
                     UV pointAPlanarFaceUV = new UV(pointBPlanarFaceUV.U-stepMin/2,pointBPlanarFaceUV.V-hight);
                     UV pointCPlanarFaceUV = new UV(pointAPlanarFaceUV.U+stepMin,pointAPlanarFaceUV.V);
                     UV centreTrianglePlanarFaceUV = new UV(pointBPlanarFaceUV.U, pointBPlanarFaceUV.V - hight / 2);
-
-                    XYZ pointBXYZPlanarFace = startPlanePlanarFace.Origin +
-                                              pointBPlanarFaceUV.U * startPlanePlanarFace.XVec +
-                                              pointBPlanarFaceUV.V * startPlanePlanarFace.YVec;
-                    XYZ pointAXYZPlanarFace = startPlanePlanarFace.Origin +
-                                              pointAPlanarFaceUV.U * startPlanePlanarFace.XVec +
-                                              pointAPlanarFaceUV.V * startPlanePlanarFace.YVec;
-                    XYZ pointCXYZPlanarFace = startPlanePlanarFace.Origin +
-                                              pointCPlanarFaceUV.U * startPlanePlanarFace.XVec +
-                                              pointCPlanarFaceUV.V * startPlanePlanarFace.YVec;
-                    XYZ centreTrianglePlanarface = startPlanePlanarFace.Origin +
-                                                   centreTrianglePlanarFaceUV.U * startPlanePlanarFace.XVec +
-                                                   centreTrianglePlanarFaceUV.V * startPlanePlanarFace.YVec;
+                    var faceToPlane = ((face as PlanarFace).GetSurface() as Plane);
+                    XYZ pointBXYZPlanarFace = (face as PlanarFace).Origin +
+                                              pointBPlanarFaceUV.U * faceToPlane.XVec +
+                                              pointBPlanarFaceUV.V * faceToPlane.YVec;
+                    XYZ pointAXYZPlanarFace = (face as PlanarFace).Origin +
+                                              pointAPlanarFaceUV.U * faceToPlane.XVec +
+                                              pointAPlanarFaceUV.V * faceToPlane.YVec;
+                    XYZ pointCXYZPlanarFace = (face as PlanarFace).Origin +
+                                              pointCPlanarFaceUV.U * faceToPlane.XVec +
+                                              pointCPlanarFaceUV.V * faceToPlane.YVec;
+                    XYZ centreTrianglePlanarface = (face as PlanarFace).Origin +
+                                                   centreTrianglePlanarFaceUV.U * faceToPlane.XVec +
+                                                   centreTrianglePlanarFaceUV.V * faceToPlane.YVec;
 
                     XYZ pointBXYZMaxPlanarFace = pointBXYZPlanarFace + (normalToPlanarFace).Normalize() * captureRange;
                     XYZ pointAXYZMaxPlanarFace = pointAXYZPlanarFace + (normalToPlanarFace).Normalize() * captureRange;
@@ -265,6 +271,7 @@ namespace BMCIModule
                     XYZ pointBXYZMinPlanarFace = pointBXYZPlanarFace + (-1)*(normalToPlanarFace).Normalize() * captureRange;
                     XYZ pointAXYZMinPlanarFace = pointAXYZPlanarFace + (-1) * (normalToPlanarFace).Normalize() * captureRange;
                     XYZ pointCXYZMinPlanarFace = pointCXYZPlanarFace + (-1) * (normalToPlanarFace).Normalize() * captureRange;
+
                     Plane minHightTrianglePlanarFace = Plane.CreateByThreePoints(pointBXYZMinPlanarFace,
                         pointAXYZMinPlanarFace, pointCXYZMinPlanarFace);
                     List<XYZ> trinagleMinHightPlanarFace = new List<XYZ>() { pointBXYZMinPlanarFace, pointAXYZMinPlanarFace, pointCXYZMinPlanarFace, pointBXYZMinPlanarFace };
@@ -281,7 +288,11 @@ namespace BMCIModule
                         Plane reversPlanePlanarFace=Plane.CreateByNormalAndOrigin(reversNormalPlanarFace*(-1),plane.Origin);
                         reversListPlanarFace.Add(reversPlanePlanarFace);
                     }
-                    reversListPlanarFace.Add(maxHightTrianglePlanarFace);
+
+                    Plane reversMaxHightPlanarFace =
+                        Plane.CreateByNormalAndOrigin(maxHightTrianglePlanarFace.Normal * (-1),
+                            maxHightTrianglePlanarFace.Origin);
+                    reversListPlanarFace.Add(reversMaxHightPlanarFace);
                     reversListPlanarFace.Add(minHightTrianglePlanarFace);
 
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(reversListPlanarFace);
@@ -405,12 +416,11 @@ namespace BMCIModule
                 List<double> resultCollection = new List<double>();
                 List<double> raznicaCollection = new List<double>();
                 // TODO можно проще сделать
-                foreach (Face face in faceList)
+                foreach (Face face in listFaceToAnalysis)
                 {
                     if (face is CylindricalFace)
                     {
-                        foreach (var dictionaryItem in dictionaryFaceAndUV)
-                        {
+                            var dictionaryItem = dictionaryFaceAndUV.Where(x => x.Key.Equals(face)).Select(x => x).First();
                             AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
                             if (i == 0)
                             {
@@ -446,14 +456,13 @@ namespace BMCIModule
                             FieldValues vals = new FieldValues(valList);
                             int schemaIndex = spf.RegisterResult(resultSchema);
                             spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
-                            uvpts.Clear();
-                            valList.Clear();
-                        }
+                            
                     }
                     if (face is PlanarFace)
                     {
-                        foreach (var dictionaryItem in dictionaryFaceAndUVPlanarface)
-                        {
+                        var dictionaryItem = dictionaryFaceAndUVPlanarface.Where(x => x.Key.Equals(face)).Select(x=>x).First();
+                        //foreach (var dictionaryItem in dictionaryFaceAndUVPlanarface)
+                        //{
                             AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
                             if (i == 0)
                             {
@@ -489,10 +498,11 @@ namespace BMCIModule
                             FieldValues vals = new FieldValues(valList);
                             int schemaIndex = spf.RegisterResult(resultSchema);
                             spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
-                            uvpts.Clear();
-                            valList.Clear();
-                        }
+                            
+                        //}
                     }
+                    uvpts.Clear();
+                    valList.Clear();
                 }
                 
                 
