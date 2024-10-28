@@ -28,7 +28,7 @@ namespace BMCIModule
         CreateAnalysisFaceVM createAnalysisFaceVm=new CreateAnalysisFaceVM();
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            #region Поулчение документа и интерфейса
+            #region Получение документа и интерфейса
 
             var app = commandData.Application;// пользовательский интерфейс
             var uidoc = app.ActiveUIDocument;// активный документ

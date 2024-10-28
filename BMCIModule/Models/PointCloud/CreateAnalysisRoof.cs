@@ -41,7 +41,7 @@ namespace BMCIModule
 
             #region Выбор поверзности
 
-            TaskDialog.Show("Выбор элемента", "Выберите поверхности (ЗдфтуPlaneпол/крыша)");
+            TaskDialog.Show("Выбор элемента", "Выберите экземпляр (Крыша)");
             Selection choiceElement = uidoc.Selection;
             Reference choiceElementRef = choiceElement.PickObject(ObjectType.Element, "Выбор элемента(пол / перекрытие)");
             Element selectElement = doc.GetElement(choiceElementRef);

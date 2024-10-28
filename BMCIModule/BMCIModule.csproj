@@ -127,6 +127,7 @@
     <Compile Include="Models\PointCloud\СreateAnalysisFloorCopy.cs" />
     <Compile Include="Models\PointCloud\СreateAnalysisFloor.cs" />
     <Compile Include="Models\PreparingTheFile\ChangeGridStatus.cs" />
+    <Compile Include="Models\WSSD\TheAmountOfPainting.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
