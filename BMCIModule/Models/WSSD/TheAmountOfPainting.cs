@@ -33,6 +33,7 @@ namespace BMCIModule.Models.WSSD
 
             #endregion
 
+
             #region Собираем элементы
 
             FilteredElementCollector collector = new FilteredElementCollector(doc);
@@ -47,6 +48,36 @@ namespace BMCIModule.Models.WSSD
             #endregion
 
             return Result.Succeeded;
+        }
+
+
+        public static CategorySet CreateFullCategorySet(Document document)
+        {
+            CategorySet categorySet = new CategorySet();
+            foreach (Category category in document.Settings.Categories)
+            {
+                if (category.AllowsBoundParameters)
+                {
+                    categorySet.Insert(category);
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (category.SubCategories.IsEmpty == false)
+                {
+                    foreach (var value in category.SubCategories)
+                    {
+                        if (value is Category subCategory)
+                        {
+                            if (subCategory.AllowsBoundParameters) categorySet.Insert(subCategory);
+                        }
+                    }
+                }
+            }
+
+            return categorySet;
         }
     }
 }
