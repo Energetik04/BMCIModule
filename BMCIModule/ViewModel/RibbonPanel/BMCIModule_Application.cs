@@ -37,6 +37,7 @@ namespace BMCIModule
             string ribbonCoordination = "Координация";
             string panelFactConstruction = "Фактические конструкции";
             string ribbonLogo = "ОАО Белгорхимпром";
+            string ribbonWSSD = "ВиК";
             
             AW.ComponentManager.UIElementActivated += ComponentManager_UIElementActivated;
             
@@ -46,6 +47,7 @@ namespace BMCIModule
             RibbonPanel panelCoordination=application.CreateRibbonPanel(namePlugin,ribbonCoordination);
             RibbonPanel panelFloor= application.CreateRibbonPanel(namePlugin, panelFactConstruction);
             RibbonPanel panelGrid = application.CreateRibbonPanel(namePlugin, "Оси");
+            RibbonPanel panelWSSD = application.CreateRibbonPanel(namePlugin, ribbonWSSD);
 
             AW.RibbonControl ribbon = AW.ComponentManager.Ribbon;
             // картинку на фон кнопок
@@ -95,6 +97,7 @@ namespace BMCIModule
             AddButtonCoordination(panelCoordination);
             AddButtonFloor(panelFloor);
             AddButtonChangeGrid(panelGrid);
+            AddButtomfForWSSD(panelWSSD);
             
             #region Действующая панель
 
@@ -170,6 +173,15 @@ namespace BMCIModule
                 // путь к картинкам либо изменить либо пересмотреть 
                 changeStatusGrid.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
                 PushButton createFloorToPointCloudDataButton = panel.AddItem(changeStatusGrid) as PushButton;
+            }
+
+            void AddButtomfForWSSD(RibbonPanel panelWSSDForButton)
+            {
+                PushButtonData dataButtonWSSD = new PushButtonData("WSSDButton", "Объем АКЗ", wayForApplication, "BMCIModule.Models.WSSD.TheAmountOfPainting");
+                dataButtonWSSD.ToolTip = "Заполение площади АКЗ для обобщенной модели";
+                // путь к картинкам либо изменить либо пересмотреть 
+                dataButtonWSSD.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
+                PushButton buttonWSSD=panelWSSDForButton.AddItem(dataButtonWSSD) as PushButton;
             }
 
             #endregion
