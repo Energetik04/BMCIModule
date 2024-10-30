@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using BMCIModule.Models.Extension;
 
 namespace BMCIModule.Models.ESD
 {
+    [Transaction((TransactionMode.Manual))]
     public class VolumeWorkForFloor:IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
 
             double maxDeviation,minDeviation;
-            maxDeviation = 0.0;
+            maxDeviation =0.1;
             minDeviation = 0.0;
 
             #region Получение документа и интерфейса
@@ -39,8 +41,38 @@ namespace BMCIModule.Models.ESD
             #endregion
 
             List<Face> topFaces = GetTopFace(selectElement, doc);
-            XYZ startPlane = new XYZ();
+            BoundingBoxXYZ bbSelectElement = selectElement.get_BoundingBox(doc.ActiveView);
+            Element levelFloor =doc.GetElement(selectElement.LevelId);
+            double elevationLevel = (levelFloor as Level).Elevation;
+            double aboveLevel = (selectElement as Floor).get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM)
+                .AsDouble();
+            double zMaxRange = BasePoint.GetProjectBasePoint(doc).Position.Z+elevationLevel+aboveLevel+maxDeviation;
 
+            XYZ point1 = new XYZ(bbSelectElement.Min.X, bbSelectElement.Min.Y, zMaxRange);
+            XYZ point2 = new XYZ(bbSelectElement.Max.X,bbSelectElement.Max.Y, zMaxRange);
+            XYZ point3 = new XYZ(bbSelectElement.Min.X,bbSelectElement.Max.Y,zMaxRange);
+
+            Plane maxRangePlane = Plane.CreateByThreePoints(point1, point2, point3);
+            Surface maxRangeSurface=maxRangePlane;
+
+            List<double> distancePointFaceInRefPlane= new List<double>();
+
+            topFaces.Select(x =>
+            {
+                var pointInFace = x.GetListPointInFace();
+                var faceNormal = (x as PlanarFace).FaceNormal;
+                pointInFace.Select(y =>
+                {
+                    XYZ pointPlane2 = new XYZ(y.X, y.Y, zMaxRange);
+                    XYZ vectorToPlane =pointPlane2-y;
+                    distancePointFaceInRefPlane.Add(vectorToPlane.DotProduct(faceNormal));
+                    //maxRangePlane.Project(y, out UV uvOut, out double distance);
+                    //distancePointFaceInRefPlane.Add(distance);
+                    return y;
+                }).ToList();
+                return x;
+            }).ToList();
+            var listNegative=distancePointFaceInRefPlane.Where(x => x < 0).ToList();
             return Result.Succeeded;
         }
 
@@ -64,7 +96,7 @@ namespace BMCIModule.Models.ESD
             // модумать над сложными полами и переборке этих полов 
             Solid solid = list[0] as Solid;
             FaceArray faceSolid = solid.Faces;
-            List<Face> topFace = null;
+            List<Face> topFace = new List<Face>();
             XYZ nullVector = new XYZ(0.000000000, 0.000000000, 0.000000000); // с вектором 1 , для того чтобы вытащить парраллельно оси Z 
             foreach (Face face in faceSolid)
             {
