@@ -53,26 +53,54 @@ namespace BMCIModule.Models.ESD
             XYZ point3 = new XYZ(bbSelectElement.Min.X,bbSelectElement.Max.Y,zMaxRange);
 
             Plane maxRangePlane = Plane.CreateByThreePoints(point1, point2, point3);
-            Surface maxRangeSurface=maxRangePlane;
-
-            List<double> distancePointFaceInRefPlane= new List<double>();
-
+            Dictionary<Face,List<XYZ>> faceList = new Dictionary<Face, List<XYZ>>();
             topFaces.Select(x =>
             {
+                List<XYZ> collectionPoint = new List<XYZ>();
                 var pointInFace = x.GetListPointInFace();
+                var listCurveIntersectPoint= new List<XYZ>();
                 var faceNormal = (x as PlanarFace).FaceNormal;
+                int i = 0;
                 pointInFace.Select(y =>
                 {
                     XYZ pointPlane2 = new XYZ(y.X, y.Y, zMaxRange);
                     XYZ vectorToPlane =pointPlane2-y;
-                    distancePointFaceInRefPlane.Add(vectorToPlane.DotProduct(faceNormal));
+                    var scallarProduct = vectorToPlane.DotProduct(faceNormal);
+                    if (scallarProduct < 0)
+                    {
+                        i++;
+                        collectionPoint.Add(y);
+                    }
                     //maxRangePlane.Project(y, out UV uvOut, out double distance);
                     //distancePointFaceInRefPlane.Add(distance);
                     return y;
                 }).ToList();
+                if(i!=0) faceList.Add(x,collectionPoint);
                 return x;
             }).ToList();
-            var listNegative=distancePointFaceInRefPlane.Where(x => x < 0).ToList();
+            foreach (var directoryItem in faceList)
+            {
+                if (directoryItem.Value.Count == 1)
+                {
+                    maxRangePlane.Project(directoryItem.Value.First(),out UV outUV,out double distance);
+                    XYZ projectPoint = maxRangePlane.Origin + outUV.U * maxRangePlane.XVec +
+                                       outUV.V * maxRangePlane.YVec;
+                    foreach (CurveLoop curveLoop in directoryItem.Key.GetEdgesAsCurveLoops())
+                    {
+                        foreach (Curve curve in curveLoop)
+                        {
+                            if (curve.GetEndPoint(0) == directoryItem.Value.First() ||
+                                curve.GetEndPoint(1) == directoryItem.Value.First())
+                            {
+                                int curveEndPointForPlane = 0;
+                                if (curve.GetEndPoint(0) == directoryItem.Value.First()) curveEndPointForPlane = 1;
+                                Plane sidePlane=Plane.CreateByThreePoints(projectPoint,directoryItem.Value.First(),curve.GetEndPoint(curveEndPointForPlane));
+
+                            }
+                        }
+                    }
+                }
+            }
             return Result.Succeeded;
         }
 
