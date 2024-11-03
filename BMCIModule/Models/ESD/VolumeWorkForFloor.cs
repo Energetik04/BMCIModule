@@ -122,6 +122,20 @@ namespace BMCIModule.Models.ESD
                     sum = sum + volume;
                     //Plane projectPlane = Plane.CreateByThreePoints(collectionCrossPoint[0], collectionCrossPoint[1], collectionCrossPoint[2]);
                 }
+
+                if (directoryItem.Value.Count == 3)
+                {
+                    XYZ pointA,pointB,pointC;
+                    List<XYZ> pointTriangle = directoryItem.Key.GetListPointInFace();
+                    //TODO приделать проекцию на maxRange,потом подумать над подъемом фигуры до максимальной точки и вытеснение остатка
+                    pointA= pointTriangle[0];
+                    pointB= pointTriangle[1];
+                    pointC= pointTriangle[2];
+                    XYZ AB = pointB - pointA;
+                    XYZ AC= pointC - pointA;
+                    var vectorCross=AB.CrossProduct(AC);
+                    //volume = Math.Abs(vectorCross.DotProduct());
+                }
             }
             double convertVolumeToMetricSystem=UnitUtils.Convert(sum,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
             return Result.Succeeded;
