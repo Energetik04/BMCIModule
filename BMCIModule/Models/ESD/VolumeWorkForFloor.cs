@@ -18,7 +18,7 @@ namespace BMCIModule.Models.ESD
         {
 
             double maxDeviation,minDeviation;
-            maxDeviation =0.1;
+            maxDeviation =0.085;
             minDeviation = 0.0;
 
             #region Получение документа и интерфейса
@@ -78,10 +78,17 @@ namespace BMCIModule.Models.ESD
                 if(i!=0) faceList.Add(x,collectionPoint);
                 return x;
             }).ToList();
+            double volume=0;
+            double sum = 0;
+
+            //список объемов
+            List<double> listDouble = new List<double>();
+
             foreach (var directoryItem in faceList)
             {
                 if (directoryItem.Value.Count == 1)
                 {
+                    List<XYZ> collectionCrossPoint = new List<XYZ>();
                     maxRangePlane.Project(directoryItem.Value.First(),out UV outUV,out double distance);
                     XYZ projectPoint = maxRangePlane.Origin + outUV.U * maxRangePlane.XVec +
                                        outUV.V * maxRangePlane.YVec;
@@ -89,18 +96,34 @@ namespace BMCIModule.Models.ESD
                     {
                         foreach (Curve curve in curveLoop)
                         {
-                            if (curve.GetEndPoint(0) == directoryItem.Value.First() ||
-                                curve.GetEndPoint(1) == directoryItem.Value.First())
+                            XYZ curveEndPoint0 = curve.GetEndPoint(0);
+                            XYZ curveEndPoint1=curve.GetEndPoint(1);
+                            if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First()) ||
+                                curve.GetEndPoint(1) .IsAlmostEqualTo(directoryItem.Value.First()))
                             {
                                 int curveEndPointForPlane = 0;
-                                if (curve.GetEndPoint(0) == directoryItem.Value.First()) curveEndPointForPlane = 1;
-                                Plane sidePlane=Plane.CreateByThreePoints(projectPoint,directoryItem.Value.First(),curve.GetEndPoint(curveEndPointForPlane));
-
+                                if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First())) curveEndPointForPlane = 1;
+                                XYZ point2Curve = curve.GetEndPoint(curveEndPointForPlane);
+                                XYZ crossPoint = GetCrossPoint(directoryItem.Value.First(), point2Curve, maxRangePlane);
+                                collectionCrossPoint.Add(crossPoint);
+                                //XYZ crossPoint1 = GetCrossPoint(directoryItem.Value.First(),
+                                //    curve.GetEndPoint(curveEndPointForPlane), maxRangePlane);
                             }
                         }
                     }
+                    collectionCrossPoint.Add(projectPoint);
+                    
+                    XYZ a = collectionCrossPoint[2] - collectionCrossPoint[1];
+                    XYZ b = collectionCrossPoint[2] - collectionCrossPoint[0];
+                    var vectorCross = a.CrossProduct(b);
+                    var length = (directoryItem.Value.First() - projectPoint).GetLength();
+                    volume =(Math.Abs(vectorCross.DotProduct(directoryItem.Value.First() - projectPoint)))/2;
+                    listDouble.Add(volume);
+                    sum = sum + volume;
+                    //Plane projectPlane = Plane.CreateByThreePoints(collectionCrossPoint[0], collectionCrossPoint[1], collectionCrossPoint[2]);
                 }
             }
+            double convertVolumeToMetricSystem=UnitUtils.Convert(sum,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
             return Result.Succeeded;
         }
 
@@ -132,6 +155,33 @@ namespace BMCIModule.Models.ESD
                 if ((face as PlanarFace).FaceNormal.Z>nullVector.Z) { topFace.Add(face); }
             }
             return topFace;
+        }
+
+        public XYZ GetCrossPoint(XYZ endPointLine1,XYZ endPointLine2,Plane plane)
+        {
+            double x,y,z;
+            double t;
+            double x0,y0,z0;
+            double a, b, c;
+            x0=endPointLine1.X;
+            y0=endPointLine1.Y;
+            z0=endPointLine1.Z;
+            XYZ directionVector = endPointLine2 - endPointLine1;
+            a = directionVector.X;
+            b = directionVector.Y;
+            c = directionVector.Z;
+            XYZ normalPlane= plane.Normal;
+            XYZ origin= plane.Origin;
+            double A,B,C,D;
+            A = normalPlane.X;
+            B = normalPlane.Y;
+            C = normalPlane.Z;
+            D = (-1) * (A * origin.X + B * origin.Y + C * origin.Z);
+            t = (-1) * (A * x0 + B * y0 + C * z0 + D) / (a * A + B * b + C * c);
+            x = x0 + a * t;
+            y = y0 + b * t;
+            z= z0 + c * t;
+            return new XYZ(x, y, z);
         }
 
     }

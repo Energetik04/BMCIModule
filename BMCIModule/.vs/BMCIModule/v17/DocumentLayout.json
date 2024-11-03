@@ -48,8 +48,7 @@
               "RelativeToolTip": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
               "ViewState": "AQIAACgAAACATsJ9CRQswFEAAABDAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-08T07:25:25.009Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-08T07:25:25.009Z"
             },
             {
               "$type": "Document",
@@ -89,9 +88,9 @@
               "Title": "VolumeWorkForFloor.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\ESD\\VolumeWorkForFloor.cs",
               "RelativeDocumentMoniker": "Models\\ESD\\VolumeWorkForFloor.cs",
-              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\ESD\\VolumeWorkForFloor.cs*",
-              "RelativeToolTip": "Models\\ESD\\VolumeWorkForFloor.cs*",
-              "ViewState": "AQIAACgAAAAAAAAAAAAgwGEAAAAAAAAA",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\ESD\\VolumeWorkForFloor.cs",
+              "RelativeToolTip": "Models\\ESD\\VolumeWorkForFloor.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAIwBcAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-30T08:04:47.757Z",
               "IsPinned": true,
