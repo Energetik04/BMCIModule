@@ -18,7 +18,7 @@ namespace BMCIModule.Models.ESD
         {
 
             double maxDeviation,minDeviation;
-            maxDeviation =0.085;
+            maxDeviation =0.1;
             minDeviation = 0.0;
 
             #region Получение документа и интерфейса
@@ -79,11 +79,13 @@ namespace BMCIModule.Models.ESD
                 return x;
             }).ToList();
             double volume=0;
-            double sum = 0;
+            double sumVolume = 0;
+            double square = 0;
 
             //список объемов
             List<double> listDouble = new List<double>();
-
+            List<double> listSquare=new List<double>();
+            int j = 0;
             foreach (var directoryItem in faceList)
             {
                 if (directoryItem.Value.Count == 1)
@@ -118,26 +120,66 @@ namespace BMCIModule.Models.ESD
                     var vectorCross = a.CrossProduct(b);
                     var length = (directoryItem.Value.First() - projectPoint).GetLength();
                     volume =(Math.Abs(vectorCross.DotProduct(directoryItem.Value.First() - projectPoint)))/2;
-                    listDouble.Add(volume);
-                    sum = sum + volume;
+                    listSquare.Add(Math.Abs(vectorCross.GetLength()/2));
+                    sumVolume = sumVolume + volume;
+                    square = square+vectorCross.GetLength()/2;
                     //Plane projectPlane = Plane.CreateByThreePoints(collectionCrossPoint[0], collectionCrossPoint[1], collectionCrossPoint[2]);
                 }
-
                 if (directoryItem.Value.Count == 3)
                 {
                     XYZ pointA,pointB,pointC;
                     List<XYZ> pointTriangle = directoryItem.Key.GetListPointInFace();
+                    var maxZ = pointTriangle.OrderByDescending(x => x.Z).First();
+                    var minZ = pointTriangle.OrderBy(x => x.Z).First();
                     //TODO приделать проекцию на maxRange,потом подумать над подъемом фигуры до максимальной точки и вытеснение остатка
                     pointA= pointTriangle[0];
                     pointB= pointTriangle[1];
                     pointC= pointTriangle[2];
                     XYZ AB = pointB - pointA;
-                    XYZ AC= pointC - pointA;
-                    var vectorCross=AB.CrossProduct(AC);
-                    //volume = Math.Abs(vectorCross.DotProduct());
+                    XYZ AC = pointC - pointA;
+                    var vectorCross= AB.CrossProduct(AC);
+
+                    maxRangePlane.Project(pointA,out UV outUVA,out double distanceA);
+                    maxRangePlane.Project(pointB,out UV outUVB,out double distanceB);
+                    maxRangePlane.Project(pointC, out UV outUVC, out double distanceC);
+                    maxRangePlane.Project(maxZ, out UV outUVmax, out double distanceMax);
+
+                    XYZ projectPointA= maxRangePlane.Origin + outUVA.U * maxRangePlane.XVec +
+                                       outUVA.V * maxRangePlane.YVec;
+                    XYZ projectPointB = maxRangePlane.Origin + outUVB.U * maxRangePlane.XVec +
+                                        outUVB.V * maxRangePlane.YVec;
+                    XYZ projectPointC = maxRangePlane.Origin + outUVC.U * maxRangePlane.XVec +
+                                        outUVC.V * maxRangePlane.YVec;
+                    XYZ maxZProject = maxRangePlane.Origin + outUVmax.U * maxRangePlane.XVec +
+                                      outUVmax.V * maxRangePlane.YVec;
+
+                    XYZ ABProject = projectPointB - projectPointA;
+                    XYZ ACProject = projectPointC - projectPointA;
+
+                    var vectorCrossProject=ABProject.CrossProduct(ACProject);
+                    //максимальный объем, осталось отнять экструдер пустой
+                    var maxVolume=Math.Abs(vectorCrossProject.DotProduct(maxZ-maxZProject))/2;
+                    //площадь треугольника
+                    square = square + Math.Abs(vectorCross.GetLength() / 2);
+
+                    var helps2 = maxZ - minZ;
+                    //подумать над просчетом объема еще раз 
+                    var volumeExtruder = Math.Abs(vectorCrossProject.DotProduct(helps2))/2;
+                    //объем итоговый
+                    sumVolume = sumVolume + (maxVolume - volumeExtruder);
+                    listDouble.Add(maxVolume-volumeExtruder);
+                    listSquare.Add(Math.Abs(vectorCross.GetLength() / 2));
+                }
+                if (directoryItem.Value.Count == 2)
+                {
+                    j++;
                 }
             }
-            double convertVolumeToMetricSystem=UnitUtils.Convert(sum,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
+            // Значения конвертированные объема и площади
+            double convertVolumeToMetricSystem=UnitUtils.Convert(sumVolume,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
+            double convertSquareToMetricSystem = UnitUtils.Convert(square, UnitTypeId.SquareFeet, UnitTypeId.SquareMeters);
+
+
             return Result.Succeeded;
         }
 
