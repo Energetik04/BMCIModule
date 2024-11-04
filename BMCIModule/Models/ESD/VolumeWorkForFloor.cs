@@ -218,7 +218,11 @@ namespace BMCIModule.Models.ESD
                                         outUVB.V * maxRangePlane.YVec;
                     XYZ projectPointC = maxRangePlane.Origin + outUVC.U * maxRangePlane.XVec +
                                         outUVC.V * maxRangePlane.YVec;
-
+                    XYZ abovePointA = collectionCrossPoint[0];
+                    XYZ abovePointB = collectionCrossPoint[1];
+                    XYZ ABproject = projectPointB - projectPointA;
+                    XYZ ACproject=projectPointC - projectPointA;
+                    var squareProject = ABproject.CrossProduct(ACproject);
 
                 }
             }
