@@ -81,6 +81,8 @@ namespace BMCIModule.Models.ESD
             double volume=0;
             double sumVolume = 0;
             double square = 0;
+            //точки треугольника
+            XYZ pointA, pointB, pointC;
 
             //список объемов
             List<double> listDouble = new List<double>();
@@ -127,7 +129,6 @@ namespace BMCIModule.Models.ESD
                 }
                 if (directoryItem.Value.Count == 3)
                 {
-                    XYZ pointA,pointB,pointC;
                     List<XYZ> pointTriangle = directoryItem.Key.GetListPointInFace();
                     var maxZ = pointTriangle.OrderByDescending(x => x.Z).First();
                     var minZ = pointTriangle.OrderBy(x => x.Z).First();
@@ -172,7 +173,53 @@ namespace BMCIModule.Models.ESD
                 }
                 if (directoryItem.Value.Count == 2)
                 {
-                    j++;
+                    List<XYZ> pointTriangle = directoryItem.Key.GetListPointInFace();
+                    List<XYZ> collectionCrossPoint = new List<XYZ>();
+                    List<XYZ> poitAbove=new List<XYZ>();
+
+                    foreach (XYZ pointFace in directoryItem.Value)
+                    {
+                        UV outUV;
+                        double distance;
+                        maxRangePlane.Project(pointFace,out outUV,out distance);
+                        XYZ pointAboveMaxRange = maxRangePlane.Origin + outUV.U * maxRangePlane.XVec +
+                                            outUV.V * maxRangePlane.YVec;
+                        poitAbove.Add(pointAboveMaxRange);
+                    }
+                    foreach (CurveLoop curveLoop in directoryItem.Key.GetEdgesAsCurveLoops())
+                    {
+                        foreach (Curve curve in curveLoop)
+                        {
+                            XYZ curveEndPoint0 = curve.GetEndPoint(0);
+                            XYZ curveEndPoint1 = curve.GetEndPoint(1);
+                            if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First()) ||
+                                curve.GetEndPoint(1).IsAlmostEqualTo(directoryItem.Value.First()))
+                            {
+                                int curveEndPointForPlane = 0;
+                                if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First())) curveEndPointForPlane = 1;
+                                XYZ point2Curve = curve.GetEndPoint(curveEndPointForPlane);
+                                XYZ crossPoint = GetCrossPoint(directoryItem.Value.First(), point2Curve, maxRangePlane);
+                                collectionCrossPoint.Add(crossPoint);
+                            }
+                        }
+                    }
+
+                    pointA = pointTriangle[0];
+                    pointB = pointTriangle[1];
+                    pointC = pointTriangle[2];
+
+                    maxRangePlane.Project(pointA, out UV outUVA, out double distanceA);
+                    maxRangePlane.Project(pointB, out UV outUVB, out double distanceB);
+                    maxRangePlane.Project(pointC, out UV outUVC, out double distanceC);
+
+                    XYZ projectPointA = maxRangePlane.Origin + outUVA.U * maxRangePlane.XVec +
+                                        outUVA.V * maxRangePlane.YVec;
+                    XYZ projectPointB = maxRangePlane.Origin + outUVB.U * maxRangePlane.XVec +
+                                        outUVB.V * maxRangePlane.YVec;
+                    XYZ projectPointC = maxRangePlane.Origin + outUVC.U * maxRangePlane.XVec +
+                                        outUVC.V * maxRangePlane.YVec;
+
+
                 }
             }
             // Значения конвертированные объема и площади
