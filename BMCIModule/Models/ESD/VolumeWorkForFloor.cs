@@ -230,7 +230,6 @@ namespace BMCIModule.Models.ESD
             double convertVolumeToMetricSystem=UnitUtils.Convert(sumVolume,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
             double convertSquareToMetricSystem = UnitUtils.Convert(square, UnitTypeId.SquareFeet, UnitTypeId.SquareMeters);
 
-
             return Result.Succeeded;
         }
 
