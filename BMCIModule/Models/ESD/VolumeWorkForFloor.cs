@@ -218,11 +218,48 @@ namespace BMCIModule.Models.ESD
                                         outUVB.V * maxRangePlane.YVec;
                     XYZ projectPointC = maxRangePlane.Origin + outUVC.U * maxRangePlane.XVec +
                                         outUVC.V * maxRangePlane.YVec;
+                    //через тройной интеград
+                    maxRangePlane.Project(directoryItem.Value.First(), out UV outUVProject, out double distanceProject);
+                    XYZ projectPointRandom = maxRangePlane.Origin + outUVProject.U * maxRangePlane.XVec +
+                                             outUVProject.V * maxRangePlane.YVec;
+
                     XYZ abovePointA = collectionCrossPoint[0];
                     XYZ abovePointB = collectionCrossPoint[1];
+
                     XYZ ABproject = projectPointB - projectPointA;
                     XYZ ACproject=projectPointC - projectPointA;
                     var squareProject = ABproject.CrossProduct(ACproject);
+
+                    Plane bottomPlane = Plane.CreateByThreePoints(abovePointA, abovePointB,projectPointRandom);
+                    Plane topPlane = Plane.CreateByThreePoints(abovePointA, abovePointB, directoryItem.Value.First());
+                    var point1backPlane=directoryItem.Value.First();
+                    var list= directoryItem.Value.ToArray();
+                    var point2backPlane = list[1];
+
+                    Plane backPlane = Plane.CreateByThreePoints(point1backPlane, point2backPlane, projectPointRandom);
+
+                    maxRangePlane.Project(point2backPlane, out UV outUVPoint2, out double distancePoint2);
+                    XYZ projectPoint2 = maxRangePlane.Origin + outUVPoint2.U * maxRangePlane.XVec +
+                                             outUVPoint2.V * maxRangePlane.YVec;
+                    Plane sidePlane1;
+                    Plane sidePlane2;
+                    if (abovePointB.DistanceTo(projectPoint2) < abovePointA.DistanceTo(projectPoint2))
+                    {
+                        sidePlane1 = Plane.CreateByThreePoints(abovePointB, projectPoint2, point2backPlane);
+                    }
+                    else
+                    {
+                        sidePlane1 = Plane.CreateByThreePoints(abovePointA, projectPoint2, point2backPlane);
+                    }
+                    if (abovePointB.DistanceTo(projectPointRandom) < abovePointA.DistanceTo(projectPointRandom))
+                    {
+                        sidePlane2 = Plane.CreateByThreePoints(abovePointB, projectPointRandom, point1backPlane);
+                    }
+                    else
+                    {
+                        sidePlane2 = Plane.CreateByThreePoints(abovePointA, projectPointRandom, point1backPlane);
+                    }
+                    //необходимо все разрешить в интегральной форме, обход тройного интерграла, в принципе все +/- понятно
 
                 }
             }
