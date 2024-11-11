@@ -50,7 +50,7 @@ namespace BMCIModule.ViewModel
         {
             get => stepMin;
             set
-            { 
+            {
                 Set(ref stepMin, value);
             }
         }

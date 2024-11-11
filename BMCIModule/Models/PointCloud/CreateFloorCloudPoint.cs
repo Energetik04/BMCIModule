@@ -38,8 +38,6 @@ namespace BMCIModule
             #endregion
             createFloorCloudPoint.DataContext = createFloorCloudPointVm;
             createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
-            createFloorCloudPoint.ShowDialog();
-            captureRange = createFloorCloudPointVm.CaptureRange * 0.003281d;
             if (createFloorCloudPoint.ShowDialog() == false)
             {
                 return Result.Succeeded;
