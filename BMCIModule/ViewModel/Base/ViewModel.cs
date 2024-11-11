@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace BMCIModule.ViewModel.Base
 {
-    public abstract class ViewModel:INotifyPropertyChanged
+    public abstract class ViewModel:INotifyPropertyChanged,IDataErrorInfo
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -50,5 +50,8 @@ namespace BMCIModule.ViewModel.Base
             // Освобождение управляемых ресурсов
         }
 
+        public string this[string columnName] => string.Empty; //большой вопрос 
+
+        public string Error { get; }
     }
 }
