@@ -49,13 +49,12 @@ namespace BMCIModule.ViewModel
             get => stepMin;
             set => Set(ref stepMin, value);
         }
-
+        
         public int NumberPoint
         {
             get => numberPoint;
             set => Set(ref numberPoint, value);
         }
-
         public double CaptureRange
         {
             get => captureRange;
@@ -84,7 +83,7 @@ namespace BMCIModule.ViewModel
             set => Set(ref _checkBoxBottomFace, value);
         }
 
-        private bool _checkEnableButtom=false;
+        private bool _checkEnableButtom;
 
         public bool CheckEnableButtom
         {
@@ -130,10 +129,7 @@ namespace BMCIModule.ViewModel
         
 
         #region Apply
-        /// <summary>
-        /// Применение рабочих наборов
-        /// </summary>
-
+        
         public ICommand ApplyApplicationCommand { get; }
         private void OnApplyApplicationCommandExecuted(object p)
         {
