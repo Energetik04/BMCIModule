@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\views\\window\\createfloorcloudpointwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:views\\window\\createfloorcloudpointwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\viewmodel\\createfloorcloudpointvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\createfloorcloudpointvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createfloorcloudpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\views\\window\\createfloorcloudpointwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:views\\window\\createfloorcloudpointwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\views\\window\\createfloorcloudpointwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:views\\window\\createfloorcloudpointwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\viewmodel\\base\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\base\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\esd\\volumeworkforfloor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -60,7 +64,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "CreateAnalysisRoof.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisRoof.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisRoof.cs",
@@ -73,19 +77,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "CreateFloorCloudPointWindow.xaml",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Views\\Window\\CreateFloorCloudPointWindow.xaml",
               "RelativeDocumentMoniker": "Views\\Window\\CreateFloorCloudPointWindow.xaml",
-              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Views\\Window\\CreateFloorCloudPointWindow.xaml*",
-              "RelativeToolTip": "Views\\Window\\CreateFloorCloudPointWindow.xaml*",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Views\\Window\\CreateFloorCloudPointWindow.xaml",
+              "RelativeToolTip": "Views\\Window\\CreateFloorCloudPointWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2024-11-11T07:30:48.12Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "BMCIModule_Application.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
               "RelativeDocumentMoniker": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
@@ -97,7 +101,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "CoordinationFile.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PreparingTheFile\\CoordinationFile.cs",
               "RelativeDocumentMoniker": "Models\\PreparingTheFile\\CoordinationFile.cs",
@@ -112,11 +116,11 @@
         },
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "VolumeWorkForFloor.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\ESD\\VolumeWorkForFloor.cs",
               "RelativeDocumentMoniker": "Models\\ESD\\VolumeWorkForFloor.cs",
@@ -130,13 +134,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "CreateFloorCloudPoint.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\CreateFloorCloudPoint.cs",
-              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs*",
-              "RelativeToolTip": "Models\\PointCloud\\CreateFloorCloudPoint.cs*",
-              "ViewState": "AQIAAA0AAAAAAAAAAAAuwC8AAAARAAAA",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateFloorCloudPoint.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateFloorCloudPoint.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAADAAAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-11T08:20:20.912Z",
               "EditorCaption": ""
@@ -149,27 +153,40 @@
               "RelativeDocumentMoniker": "ViewModel\\CreateFloorCloudPointVM.cs",
               "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\CreateFloorCloudPointVM.cs",
               "RelativeToolTip": "ViewModel\\CreateFloorCloudPointVM.cs",
-              "ViewState": "AQIAACUAAAAAAAAAAAAgwEQAAAAiAAAA",
+              "ViewState": "AQIAAHcAAAAAAAAAAAAwwI0AAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-11T13:12:47.538Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "CreateFloorCloudPointWindow.xaml.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Views\\Window\\CreateFloorCloudPointWindow.xaml.cs",
               "RelativeDocumentMoniker": "Views\\Window\\CreateFloorCloudPointWindow.xaml.cs",
-              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Views\\Window\\CreateFloorCloudPointWindow.xaml.cs",
-              "RelativeToolTip": "Views\\Window\\CreateFloorCloudPointWindow.xaml.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADQAAABAAAAA",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Views\\Window\\CreateFloorCloudPointWindow.xaml.cs*",
+              "RelativeToolTip": "Views\\Window\\CreateFloorCloudPointWindow.xaml.cs*",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAACUAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-11T12:53:01.57Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
+              "Title": "ViewModel.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\Base\\ViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModel\\Base\\ViewModel.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\Base\\ViewModel.cs",
+              "RelativeToolTip": "ViewModel\\Base\\ViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB4AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T13:29:52.561Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "TheAmountOfPainting.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\WSSD\\TheAmountOfPainting.cs",
               "RelativeDocumentMoniker": "Models\\WSSD\\TheAmountOfPainting.cs",

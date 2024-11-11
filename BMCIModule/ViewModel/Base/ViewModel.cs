@@ -9,8 +9,24 @@ namespace BMCIModule.ViewModel.Base
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private bool _isChanged;
+
+        public bool IsChanged
+        {
+            get=> _isChanged;
+            set
+            {
+                if(value==_isChanged) return;
+                _isChanged = value;
+                OnPropertyChanged();
+            }
+        }
         protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName=null)
         {
+            if (PropertyName != nameof(IsChanged))
+            {
+                IsChanged = true;
+            }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
@@ -33,5 +49,6 @@ namespace BMCIModule.ViewModel.Base
             _Disposed = true;
             // Освобождение управляемых ресурсов
         }
+
     }
 }

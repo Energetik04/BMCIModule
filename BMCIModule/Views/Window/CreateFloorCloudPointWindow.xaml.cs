@@ -34,15 +34,7 @@ namespace BMCIModule.Views.Window
 
         private void ClickApplyWindow(object sender, RoutedEventArgs e)
         {
-            //if (!IsValid(this))
-            //{
-            //    ApplyButton.IsEnabled=false;
-            //    return;
-            //}
-            //else
-            //{
-                this.DialogResult = true;
-            //}
+            this.DialogResult = true;
         }
 
         //bool IsValid(DependencyObject node)
