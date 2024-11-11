@@ -37,7 +37,7 @@
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}"/>
-                <TextBox x:Name="valueStepMin" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step,UpdateSourceTrigger=PropertyChanged}" Height="20" TextAlignment="Center"/>
+                <TextBox x:Name="valueStepMin" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Height="20" TextAlignment="Center"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="0"  Text="Количество точек в ячейке:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textNumberPoint" Margin="10 0 0 0 " ToolTip="{Binding ToolTipNumberPoint}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="numberPoint" TextWrapping="Wrap" Text="{Binding NumberPoint}" Height="20" TextAlignment="Center"/>
