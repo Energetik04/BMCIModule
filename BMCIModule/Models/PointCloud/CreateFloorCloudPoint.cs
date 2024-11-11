@@ -20,6 +20,7 @@ using AW = Autodesk.Windows;
 namespace BMCIModule
 {
     [Transaction((TransactionMode.Manual))]
+    //TODO INotifyErrorTemplate
     public class CreateFloorCloudPoint:IExternalCommand
     {
         CreateFloorCloudPointVM createFloorCloudPointVm = new CreateFloorCloudPointVM();
@@ -37,6 +38,8 @@ namespace BMCIModule
             #endregion
             createFloorCloudPoint.DataContext = createFloorCloudPointVm;
             createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
+            createFloorCloudPoint.ShowDialog();
+            captureRange = createFloorCloudPointVm.CaptureRange * 0.003281d;
             if (createFloorCloudPoint.ShowDialog() == false)
             {
                 return Result.Succeeded;

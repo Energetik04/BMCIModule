@@ -9,7 +9,7 @@ namespace BMCIModule.ViewModel.Base
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnProperyChanged([CallerMemberName] string PropertyName=null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName=null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
@@ -18,11 +18,11 @@ namespace BMCIModule.ViewModel.Base
         {
             if(Equals(field,value)) return false;
             field = value;
-            OnProperyChanged(ProportyName);
+            OnPropertyChanged(ProportyName);
             return true;
         }
 
-       public void Dispodse()
+       public void Dispose()
         {
             Dispose(true);
         }

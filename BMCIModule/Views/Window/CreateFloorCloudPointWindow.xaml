@@ -70,7 +70,7 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button x:Name="ApplyButton" Grid.Column="0" Content="Применить" HorizontalAlignment="Center" VerticalAlignment="Center" Width="121" Command="{Binding ApplyApplicationCommand}" Click="ClickApplyWindow" IsEnabled="{Binding CheckEnableButtom}"/>
+            <Button x:Name="ApplyButton" Grid.Column="0" Content="Применить" HorizontalAlignment="Center" VerticalAlignment="Center" Width="121" Command="{Binding ApplyApplicationCommand}" Click="ClickApplyWindow"/>
             <Button Grid.Column="1" Content="Отмена/Закрыть" Width="121" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CloseApplicationCommand}" Click="ClickCloseWindow"/>
         </Grid>
     </Grid>
