@@ -56,8 +56,6 @@ namespace BMCIModule.Models.WSSD
                     if (parameter.GuidValue == guidParameter || parameter.Name == parameterName)
                     {
                         isPresent = true;
-
-
                         break;
                     }
                 }
@@ -88,7 +86,7 @@ namespace BMCIModule.Models.WSSD
                     if(parameter.IsShared && parameter.GUID==guidParameterGroup)
                     {
                         var stringParameter = parameter.AsString();
-                        if(stringParameter.Contains(groupParameter)) getElementWithParameter.Add(element);
+                        if(stringParameter != null && stringParameter.Contains(groupParameter)) getElementWithParameter.Add(element);
                     }
                 }
             }
