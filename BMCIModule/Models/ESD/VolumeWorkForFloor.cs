@@ -173,6 +173,7 @@ namespace BMCIModule.Models.ESD
                 }
                 if (directoryItem.Value.Count == 2)
                 {
+                    //точки грани
                     List<XYZ> pointTriangle = directoryItem.Key.GetListPointInFace();
                     List<XYZ> collectionCrossPoint = new List<XYZ>();
                     List<XYZ> poitAbove=new List<XYZ>();
@@ -186,23 +187,66 @@ namespace BMCIModule.Models.ESD
                                             outUV.V * maxRangePlane.YVec;
                         poitAbove.Add(pointAboveMaxRange);
                     }
+                    List<Plane> collectionSidePlane=new List<Plane>();
+                    // тут надо логику пересмотреть (что-то с точками пересеч)
                     foreach (CurveLoop curveLoop in directoryItem.Key.GetEdgesAsCurveLoops())
                     {
                         foreach (Curve curve in curveLoop)
                         {
                             XYZ curveEndPoint0 = curve.GetEndPoint(0);
                             XYZ curveEndPoint1 = curve.GetEndPoint(1);
-                            if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First()) ||
-                                curve.GetEndPoint(1).IsAlmostEqualTo(directoryItem.Value.First()))
+                            if ((curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.First()) ||
+                                 curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.Last())) &&
+                                (curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.First()) ||
+                                 curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.Last())))
                             {
-                                int curveEndPointForPlane = 0;
-                                if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First())) curveEndPointForPlane = 1;
-                                XYZ point2Curve = curve.GetEndPoint(curveEndPointForPlane);
-                                XYZ crossPoint = GetCrossPoint(directoryItem.Value.First(), point2Curve, maxRangePlane);
+                                continue;
+                            }
+                            else
+                            {
+                                // вот вроде нормальная точка пересечения
+                                //if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First()) ||
+                                //    curve.GetEndPoint(1).IsAlmostEqualTo(directoryItem.Value.First()))
+                                //{
+                                ////int curveEndPointForPlane = 0;
+                                //if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First())|| ) curveEndPointForPlane = 1;
+                                //XYZ point2Curve = curve.GetEndPoint(curveEndPointForPlane);
+                                XYZ crossPoint = GetCrossPoint(curveEndPoint0, curveEndPoint1, maxRangePlane);
+                                UV uvOut;
+                                Plane sidePlane;
+                                if (curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.First()) ||
+                                        curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.Last()))
+                                {
+                                    maxRangePlane.Project(curveEndPoint0, out uvOut, out double distance);
+                                    XYZ projectPointCurve = maxRangePlane.Origin + uvOut.U * maxRangePlane.XVec +
+                                                            uvOut.V * maxRangePlane.YVec;
+                                    sidePlane= Plane.CreateByThreePoints(projectPointCurve, crossPoint,
+                                        curveEndPoint0);
+                                }
+                                else
+                                {
+                                    maxRangePlane.Project(curveEndPoint1, out uvOut, out double distance);
+                                    XYZ projectPointCurve = maxRangePlane.Origin + uvOut.U * maxRangePlane.XVec +
+                                                                uvOut.V * maxRangePlane.YVec;
+                                    sidePlane = Plane.CreateByThreePoints(projectPointCurve, crossPoint,
+                                        curveEndPoint1);
+                                }
+                                collectionSidePlane.Add(sidePlane);
                                 collectionCrossPoint.Add(crossPoint);
+                                //}
                             }
                         }
                     }
+                    //тут бы решение тройного интеграла помогло бы
+                    //порядок обхода тела SSSdxdydz
+                    //1.Проекция на OXY плоскость
+                    //1)Создаем плоскости ограничивающие фигуру
+                    Plane topPlane = directoryItem.Key.GetSurface() as Plane;
+                    Plane bottomPlane=maxRangePlane;
+                    Plane sidePlane1 = collectionSidePlane.First();
+                    Plane sidePlane2=collectionSidePlane.Last();
+                    Plane backPlane=Plane.CreateByThreePoints(directoryItem.Value.First(),directoryItem.Value.Last(), poitAbove.First());
+
 
                     pointA = pointTriangle[0];
                     pointB = pointTriangle[1];
@@ -230,19 +274,19 @@ namespace BMCIModule.Models.ESD
                     XYZ ACproject=projectPointC - projectPointA;
                     var squareProject = ABproject.CrossProduct(ACproject);
 
-                    Plane bottomPlane = Plane.CreateByThreePoints(abovePointA, abovePointB,project1backPlane);
-                    Plane topPlane = Plane.CreateByThreePoints(abovePointA, abovePointB, directoryItem.Value.First());
+                    //Plane bottomPlane = Plane.CreateByThreePoints(abovePointA, abovePointB,project1backPlane);
+                    //Plane topPlane = Plane.CreateByThreePoints(abovePointA, abovePointB, directoryItem.Value.First());
                     var list = directoryItem.Value.ToArray();
                     var point1backPlane = list[0];
                     var point2backPlane = list[1];
 
-                    Plane backPlane = Plane.CreateByThreePoints(point1backPlane, point2backPlane, project1backPlane);
+                    //Plane backPlane = Plane.CreateByThreePoints(point1backPlane, point2backPlane, project1backPlane);
 
                     maxRangePlane.Project(point2backPlane, out UV outUVPoint2, out double distancePoint2);
                     XYZ projectPoint2 = maxRangePlane.Origin + outUVPoint2.U * maxRangePlane.XVec +
                                              outUVPoint2.V * maxRangePlane.YVec;
-                    Plane sidePlane1;
-                    Plane sidePlane2;
+                    //Plane sidePlane1;
+                    //Plane sidePlane2;
                     if (abovePointB.DistanceTo(projectPoint2) < abovePointA.DistanceTo(projectPoint2))
                     {
                         sidePlane1 = Plane.CreateByThreePoints(abovePointB, projectPoint2, point2backPlane);
