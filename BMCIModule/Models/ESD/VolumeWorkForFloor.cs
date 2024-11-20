@@ -115,47 +115,6 @@ namespace BMCIModule.Models.ESD
                             }
                         }
 
-                        //if (collectionCrossPoint.Count < 2)
-                        //{
-                        //    var curva = directoryItem.Key.GetEdgesAsCurveLoops().First();
-                            
-                        //    foreach (var hh in curva)
-                        //    {
-                        //    XYZ curveEndPoint0 = hh.GetEndPoint(0);
-                        //    XYZ curveEndPoint1 = hh.GetEndPoint(1);
-                        //    bool trueEndPoint0 = curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.First(),0.000001);
-                        //    bool trueEndPoint1 = curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.First(),0.000001);
-                        //    if (curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.First()) ||  curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.First()))
-                        //        {
-                        //            maxRangePlane.Project(directoryItem.Value.First(), out UV outUVcoord, out double distanceOUT);
-                        //            XYZ projectPointInMaxRange = maxRangePlane.Origin + outUVcoord.U * maxRangePlane.XVec +
-                        //                                     outUVcoord.V * maxRangePlane.YVec;
-                        //            XYZ crossPoint = GetCrossPoint(curveEndPoint0, curveEndPoint1, maxRangePlane);
-                        //            collectionCrossPoint.Add(crossPoint);
-                        //        }
-                        //    }
-                        //}
-
-                    //foreach (CurveLoop curveLoop in directoryItem.Key.GetEdgesAsCurveLoops())
-                    //{
-                    //    foreach (Curve curve in curveLoop)
-                    //    {
-                    //        XYZ curveEndPoint0 = curve.GetEndPoint(0);
-                    //        XYZ curveEndPoint1=curve.GetEndPoint(1);
-                    //        if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First()) ||
-                    //            curve.GetEndPoint(1) .IsAlmostEqualTo(directoryItem.Value.First()))
-                    //        {
-                    //            int curveEndPointForPlane = 0;
-                    //            if (curve.GetEndPoint(0).IsAlmostEqualTo(directoryItem.Value.First())) curveEndPointForPlane = 1;
-                    //            XYZ point2Curve = curve.GetEndPoint(curveEndPointForPlane);
-                    //            XYZ crossPoint = GetCrossPoint(directoryItem.Value.First(), point2Curve, maxRangePlane);
-                    //            collectionCrossPoint.Add(crossPoint);
-                    //            //XYZ crossPoint1 = GetCrossPoint(directoryItem.Value.First(),
-                    //            //    curve.GetEndPoint(curveEndPointForPlane), maxRangePlane);
-                    //        }
-                    //    }
-                    //}
-                    
                     collectionCrossPoint.Add(projectPoint);
                     //ошибка количества точек пересечения
                     XYZ a = collectionCrossPoint[2] - collectionCrossPoint[1];
