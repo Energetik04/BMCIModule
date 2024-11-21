@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.Attributes;
@@ -19,8 +20,8 @@ namespace BMCIModule.Models.ESD
         {
 
             double maxDeviation,minDeviation;
-            maxDeviation =0.12;
-            minDeviation = 0.0;
+            maxDeviation =0.14;
+            minDeviation = 0.1;
 
             #region Получение документа и интерфейса
 
@@ -44,41 +45,76 @@ namespace BMCIModule.Models.ESD
             List<Face> topFaces = GetTopFace(selectElement, doc);
             BoundingBoxXYZ bbSelectElement = selectElement.get_BoundingBox(doc.ActiveView);
             Element levelFloor =doc.GetElement(selectElement.LevelId);
+            //высота уровня на который опирается пол 
             double elevationLevel = (levelFloor as Level).Elevation;
+            //поднятие пола над уровнем
             double aboveLevel = (selectElement as Floor).get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM)
                 .AsDouble();
             double zMaxRange = BasePoint.GetProjectBasePoint(doc).Position.Z+elevationLevel+aboveLevel+maxDeviation;
+            double zMinRange = BasePoint.GetProjectBasePoint(doc).Position.Z + elevationLevel + aboveLevel -
+                               minDeviation;
 
-            XYZ point1 = new XYZ(bbSelectElement.Min.X, bbSelectElement.Min.Y, zMaxRange);
-            XYZ point2 = new XYZ(bbSelectElement.Max.X,bbSelectElement.Max.Y, zMaxRange);
-            XYZ point3 = new XYZ(bbSelectElement.Min.X,bbSelectElement.Max.Y,zMaxRange);
+            XYZ poin1MaxRange = new XYZ(bbSelectElement.Min.X, bbSelectElement.Min.Y, zMaxRange);
+            XYZ point2MaxRange = new XYZ(bbSelectElement.Max.X,bbSelectElement.Max.Y, zMaxRange);
+            XYZ point3MaxRange = new XYZ(bbSelectElement.Min.X,bbSelectElement.Max.Y,zMaxRange);
 
-            Plane maxRangePlane = Plane.CreateByThreePoints(point1, point2, point3);
-            Dictionary<Face,List<XYZ>> faceList = new Dictionary<Face, List<XYZ>>();
+            XYZ point1MinRange= new XYZ(bbSelectElement.Min.X, bbSelectElement.Min.Y, zMinRange);
+            XYZ point2MinRange= new XYZ(bbSelectElement.Max.X, bbSelectElement.Max.Y, zMinRange);
+            XYZ point3MinRange= new XYZ(bbSelectElement.Min.X, bbSelectElement.Max.Y, zMinRange);
+
+            Plane maxRangePlane = Plane.CreateByThreePoints(poin1MaxRange, point2MaxRange, point3MaxRange);
+            Plane minRangePlane = Plane.CreateByThreePoints(point1MinRange, point2MinRange, point3MinRange);
+
+
+            Dictionary<Face,List<XYZ>> dictionaryFaceAndCollectionPointMaxRange = new Dictionary<Face, List<XYZ>>();
+            Dictionary<Face, List<XYZ>> dictionaryFaceAndCollectionPointMinRange = new Dictionary<Face, List<XYZ>>();
+            List<XYZ> point=new List<XYZ>();
+            // скалярное произведение было как для наклонных плоскостей
             topFaces.Select(x =>
             {
-                List<XYZ> collectionPoint = new List<XYZ>();
+                List<XYZ> collectionPointMaxRange = new List<XYZ>();
+                List<XYZ> collectionPointMinRange=new List<XYZ>();
                 var pointInFace = x.GetListPointInFace();
-                var listCurveIntersectPoint= new List<XYZ>();
+                // не помню почему именно нормаль плоскости брал
                 var faceNormal = (x as PlanarFace).FaceNormal;
                 int i = 0;
+                double scallarProduct;
                 pointInFace.Select(y =>
                 {
-                    XYZ pointPlane2 = new XYZ(y.X, y.Y, zMaxRange);
-                    XYZ vectorToPlane =pointPlane2-y;
-                    var scallarProduct = vectorToPlane.DotProduct(faceNormal);
+                    point.Add(y);
+                if ((y.Z <= maxRangePlane.Origin.Z) && (y.Z >= minRangePlane.Origin.Z))
+                {
+                    return y;
+                }
+                if (y.Z > maxRangePlane.Origin.Z)
+                {
+                    XYZ pointPlaneMaxRange = new XYZ(y.X, y.Y, zMaxRange);
+                    XYZ vectorToPlaneMaxRange = pointPlaneMaxRange - y;
+                    scallarProduct = vectorToPlaneMaxRange.DotProduct(maxRangePlane.Normal);
                     if (scallarProduct < 0)
                     {
-                        i++;
-                        collectionPoint.Add(y);
+                        //i++;
+                        collectionPointMaxRange.Add(y);
                     }
-                    //maxRangePlane.Project(y, out UV uvOut, out double distance);
-                    //distancePointFaceInRefPlane.Add(distance);
-                    return y;
+                }
+                if (y.Z < minRangePlane.Origin.Z)
+                {
+                    XYZ pointPlaneMinRange = new XYZ(y.X, y.Y, zMinRange);
+                    XYZ vectorToPlaneMinRange = pointPlaneMinRange - y;
+                    scallarProduct = vectorToPlaneMinRange.DotProduct(minRangePlane.Normal);
+                    if (scallarProduct > 0)
+                    {
+                        //i++;
+                        collectionPointMinRange.Add(y);
+                    }
+                }
+                return y;
                 }).ToList();
-                if(i!=0) faceList.Add(x,collectionPoint);
+                if(collectionPointMaxRange.Count!=0) dictionaryFaceAndCollectionPointMaxRange.Add(x,collectionPointMaxRange);
+                if(collectionPointMinRange.Count!=0) dictionaryFaceAndCollectionPointMinRange.Add(x,collectionPointMinRange);
                 return x;
             }).ToList();
+            var minPoint=point.OrderBy(x => x.Z).First();
             double volume=0;
             double sumVolume = 0;
             double square = 0;
@@ -89,7 +125,7 @@ namespace BMCIModule.Models.ESD
             List<double> listDouble = new List<double>();
             List<double> listSquare=new List<double>();
             int j = 0;
-            foreach (var directoryItem in faceList)
+            foreach (var directoryItem in dictionaryFaceAndCollectionPointMaxRange)
             {
                 if (directoryItem.Value.Count == 1)
                 {
