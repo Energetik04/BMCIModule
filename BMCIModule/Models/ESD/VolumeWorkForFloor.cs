@@ -114,7 +114,6 @@ namespace BMCIModule.Models.ESD
                                 }
                             }
                         }
-
                     collectionCrossPoint.Add(projectPoint);
                     //ошибка количества точек пересечения
                     XYZ a = collectionCrossPoint[2] - collectionCrossPoint[1];
