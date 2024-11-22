@@ -130,6 +130,13 @@ namespace BMCIModule
                 // путь к картинкам либо изменить либо пересмотреть 
                 createAnalysisRoof.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
                 PushButton createAnalysisRoofButton = panel.AddItem(createAnalysisRoof) as PushButton;
+
+                PushButtonData createReport = new PushButtonData("createReport", "Отчет", wayForApplication, "BMCIModule.Models.ESD.VolumeWorkForFloor");
+                createReport.ToolTip = "Отчет по площади и объема за диапазоном";
+                // путь к картинкам либо изменить либо пересмотреть 
+                createReport.LargeImage = new BitmapImage(new Uri(wayForIcon + @"\Vector.png"));
+                PushButton createReportButton = panel.AddItem(createReport) as PushButton;
+
             }
 
             void AddButtonCoordination(RibbonPanel panel)

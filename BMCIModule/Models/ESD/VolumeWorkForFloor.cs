@@ -20,9 +20,9 @@ namespace BMCIModule.Models.ESD
         {
 
             double maxDeviation,minDeviation;
-            maxDeviation =0.14;
+            maxDeviation =0.1;
             minDeviation = 0.1;
-
+            TaskDialog.Show("Конфигурация диапазона", "Верхняя плоскость диапазона:"+maxDeviation.ToString()+"\n"+ "Нижняя плоскость диапазона:"+ minDeviation.ToString());
             #region Получение документа и интерфейса
 
             var app = commandData.Application;// пользовательский интерфейс
@@ -152,11 +152,12 @@ namespace BMCIModule.Models.ESD
                         }
                     collectionCrossPoint.Add(projectPoint);
                     //ошибка количества точек пересечения
-                    XYZ a = collectionCrossPoint[2] - collectionCrossPoint[1];
-                    XYZ b = collectionCrossPoint[2] - collectionCrossPoint[0];
+                    XYZ a = collectionCrossPoint[0] - collectionCrossPoint[2];
+                    XYZ b = collectionCrossPoint[1] - collectionCrossPoint[2];
                     var vectorCross = a.CrossProduct(b);
                     var length = (directoryItem.Value.First() - projectPoint).GetLength();
-                    volume =(Math.Abs(vectorCross.DotProduct(directoryItem.Value.First() - projectPoint)))/2;
+                    var vectorHight = projectPoint - directoryItem.Value.First();
+                    volume =(Math.Abs(vectorCross.DotProduct(vectorHight)))/6;
                     sumVolume = sumVolume + volume;
                     square = square+ Math.Abs(vectorCross.GetLength() / 2);
                     listSquare.Add(Math.Abs(vectorCross.GetLength() / 2));
@@ -165,6 +166,7 @@ namespace BMCIModule.Models.ESD
                 }
                 if (directoryItem.Value.Count == 3)
                 {
+                    //TODO проверить объем пирамиды с 2 точками
                     List<XYZ> pointTriangle = directoryItem.Key.GetListPointInFace();
                     var maxZ = pointTriangle.OrderByDescending(x => x.Z).First();
                     var minZ = pointTriangle.OrderBy(x => x.Z).First();
@@ -265,7 +267,7 @@ namespace BMCIModule.Models.ESD
             // Значения конвертированные объема и площади
             double convertVolumeToMetricSystem=UnitUtils.Convert(sumVolume,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
             double convertSquareToMetricSystem = UnitUtils.Convert(square, UnitTypeId.SquareFeet, UnitTypeId.SquareMeters);
-
+            TaskDialog.Show("Объем и площадь","Объем за верхней границей:"+convertVolumeToMetricSystem.ToString()+"\n"+"Площадь за верхней гранью"+convertSquareToMetricSystem);
             return Result.Succeeded;
         }
 
