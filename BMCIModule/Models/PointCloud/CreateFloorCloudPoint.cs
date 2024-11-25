@@ -38,7 +38,9 @@ namespace BMCIModule
             #endregion
             createFloorCloudPoint.DataContext = createFloorCloudPointVm;
             createFloorCloudPointVm.Close = createFloorCloudPoint.Close;
-            if (createFloorCloudPoint.ShowDialog() == false)
+            var boolWindow = createFloorCloudPoint.ShowDialog();
+            
+            if (boolWindow==false)
             {
                 return Result.Succeeded;
             }

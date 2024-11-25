@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Autodesk.Revit.DB;
 
+using BMCIModule.ViewModel;
+
 namespace BMCIModule.Views.Window
 {
     /// <summary>
@@ -35,6 +37,69 @@ namespace BMCIModule.Views.Window
         private void ClickApplyWindow(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+        }
+
+        private void valueStepMin_LostFocus(object sender, RoutedEventArgs e)
+        {
+            double valueInString;
+            try
+            {
+                valueInString = double.Parse(valueStepMin.Text);
+                if (valueInString.GetType() != typeof(double))
+                {
+                    ApplyButton.IsEnabled = false;
+                }
+                else
+                {
+                    ApplyButton.IsEnabled = true;
+                }
+            }
+            catch
+            {
+                ApplyButton.IsEnabled = false;
+            }
+        }
+
+        private void numberPoint_LostFocus(object sender, RoutedEventArgs e)
+        {
+            int valueInString;
+            try
+            {
+                valueInString = int.Parse(numberPoint.Text);
+                if (valueInString.GetType() != typeof(int))
+                {
+                    ApplyButton.IsEnabled = false;
+                }
+                else
+                {
+                    ApplyButton.IsEnabled = true;
+                }
+            }
+            catch
+            {
+                ApplyButton.IsEnabled = false;
+            }
+        }
+
+        private void captureRange_LostFocus(object sender, RoutedEventArgs e)
+        {
+            double valueInString;
+            try
+            {
+                valueInString = double.Parse(captureRange.Text);
+                if (valueInString.GetType() != typeof(double))
+                {
+                    ApplyButton.IsEnabled = false;
+                }
+                else
+                {
+                    ApplyButton.IsEnabled = true;
+                }
+            }
+            catch
+            {
+                ApplyButton.IsEnabled = false;
+            }
         }
 
         //bool IsValid(DependencyObject node)
@@ -64,7 +129,7 @@ namespace BMCIModule.Views.Window
         //        }
         //    }
 
-            // All dependency objects are valid
-            //return true;
+        // All dependency objects are valid
+        //return true;
     }
 }

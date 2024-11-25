@@ -29,6 +29,19 @@ namespace BMCIModuleTest
         {
             this.DialogResult = true;
         }
+        private void valueStepMin_LostFocus(object sender, RoutedEventArgs e)
+        {
+            double valueInString;
+            try
+            {
+                valueInString = double.Parse(valueStepMin.Text);
+                if (valueInString.GetType() != typeof(double)) ApplyButton.IsEnabled = false;
+            }
+            catch
+            {
+                ApplyButton.IsEnabled = false;
+            }
+        }
 
     }
 }

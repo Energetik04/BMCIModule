@@ -87,27 +87,7 @@ namespace BMCIModule.ViewModel
             get => _checkBoxBottomFace;
             set => Set(ref _checkBoxBottomFace, value);
         }
-
-        //private bool _checkEnableButtom;
-
-        //public bool CheckEnableButtom
-        //{
-        //    get => _checkEnableButtom;
-        //    set
-        //    {
-        //        if ((stepMin.GetType() == typeof(double) || stepMin.GetType() == typeof(int)) &&
-        //            (numberPoint.GetType() == typeof(int)) && (captureRange.GetType() == typeof(double) ||
-        //                                                       captureRange.GetType() == typeof(int)))
-        //        {
-        //            Set(ref _checkEnableButtom, true);
-        //        }
-        //        else
-        //        {
-        //            Set(ref _checkEnableButtom, false);
-        //        }
-        //    }
-        //}
-
+        
         public string ToolTipStepMin
         {
             get => "При создании треугольников внутри фигуры" + "\n" + "будет использоваться равносторонний треугольник" + "\n" + "с сторонами указанными в этом параметре.";

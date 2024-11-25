@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BMCIModuleTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51ae0c66a09f0728957478423d4e3b0dd0872895")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41cef9b247220dd26cbbe3bace496cfb33ed2fb7")]
 [assembly: System.Reflection.AssemblyProductAttribute("BMCIModuleTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BMCIModuleTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
