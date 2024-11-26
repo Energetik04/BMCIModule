@@ -162,7 +162,7 @@ namespace BMCIModuleTest
                     case nameof(stepMin):
                         if (stepMin.GetType() == typeof(double))
                         {
-                            string eror = "huita";
+                            string eror = "Необходим числовой тип данных";
                             AddError(nameof(stepMin), eror);
                         }
                         break;

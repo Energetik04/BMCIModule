@@ -3,13 +3,13 @@
   "WorkspaceRootPath": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2992D445-D57A-44FB-966B-E7D900906D40}|..\\BMCIModuleTest\\BMCIModuleTest.csproj|d:\\bmcimodule\\bmcimodule\\bmcimoduletest\\createfloorcloudpointvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2992D445-D57A-44FB-966B-E7D900906D40}|..\\BMCIModuleTest\\BMCIModuleTest.csproj|d:\\bmcimodule\\bmcimodule\\bmcimoduletest\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2992D445-D57A-44FB-966B-E7D900906D40}|..\\BMCIModuleTest\\BMCIModuleTest.csproj|d:\\bmcimodule\\bmcimodule\\bmcimoduletest\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2992D445-D57A-44FB-966B-E7D900906D40}|..\\BMCIModuleTest\\BMCIModuleTest.csproj|d:\\bmcimodule\\bmcimodule\\bmcimoduletest\\createfloorcloudpointvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2992D445-D57A-44FB-966B-E7D900906D40}|..\\BMCIModuleTest\\BMCIModuleTest.csproj|d:\\bmcimodule\\bmcimodule\\bmcimoduletest\\viewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -60,37 +60,37 @@
         },
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "CreateFloorCloudPointVM.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\CreateFloorCloudPointVM.cs",
               "RelativeDocumentMoniker": "..\\BMCIModuleTest\\CreateFloorCloudPointVM.cs",
               "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\CreateFloorCloudPointVM.cs",
               "RelativeToolTip": "..\\BMCIModuleTest\\CreateFloorCloudPointVM.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAArAAAA",
+              "ViewState": "AQIAAKYAAAAAAAAAAAArwLgAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-26T11:42:37.006Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "..\\BMCIModuleTest\\MainWindow.xaml.cs",
               "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\MainWindow.xaml.cs",
               "RelativeToolTip": "..\\BMCIModuleTest\\MainWindow.xaml.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAASAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACEAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-26T11:42:57.784Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModuleTest\\MainWindow.xaml",
               "RelativeDocumentMoniker": "..\\BMCIModuleTest\\MainWindow.xaml",
