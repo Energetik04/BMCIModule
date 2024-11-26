@@ -6,17 +6,48 @@
         xmlns:local="clr-namespace:BMCIModuleTest"
              mc:Ignorable="d" 
              Height="250" Width="400"
-             ResizeMode="NoResize"
+             
              Title="{Binding Title}"
              Topmost="True">
     <Window.DataContext>
         <local:CreateFloorCloudPointVM></local:CreateFloorCloudPointVM>
     </Window.DataContext>
+    
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="Background" Value="Pink" />
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},
+    Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <DockPanel LastChildFill="True">
+                            <TextBlock Foreground="Red" FontSize="20" Text="!"
+                                       ToolTip="{Binding ElementName=controlWithError,
+      Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
+                            <Border BorderBrush="Red" BorderThickness="1">
+                                <AdornedElementPlaceholder Name="controlWithError" />
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-    <Grid>
+    <Grid Name="Grid">
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding BackgroundWindow}" Stretch="Uniform" TileMode="None" Opacity="0.4"></ImageBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="80*"></RowDefinition>
             <RowDefinition Height="40*"></RowDefinition>
+            <RowDefinition Height="20*"/>
             <RowDefinition Height="20*"></RowDefinition>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Расставить точки триангуляции">
@@ -32,14 +63,14 @@
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}"/>
-                <TextBox x:Name="valueStepMin" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Height="20" TextAlignment="Center" LostFocus="valueStepMin_LostFocus"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}" />
+                <TextBox x:Name="valueStepMin" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Height="20" TextAlignment="Center"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="0"  Text="Количество точек в ячейке:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textNumberPoint" Margin="10 0 0 0 " ToolTip="{Binding ToolTipNumberPoint}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="numberPoint" TextWrapping="Wrap" Text="{Binding NumberPoint}" Height="20" TextAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="2"  Text="шт." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Диапазон захвата облака точек:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textCaptureRange" Margin="10 0 0 0 " ToolTip="{Binding ToolTipCaptureRange}"/>
-                <TextBox Grid.Row="2" Grid.Column="1" x:Name="captureRange" TextWrapping="Wrap" Text="{Binding CaptureRange}" Height="20" TextAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="captureRange" TextWrapping="Wrap" Text="{Binding CaptureRange}" Height="20" TextAlignment="Center" />
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Использовать нижнюю грань плиты" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 "/>
                 <CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding CheckBoxBottomFace}"/>
@@ -62,6 +93,16 @@
             </Grid>
         </GroupBox>
         <Grid Grid.Row="2">
+            <ListBox 
+                 ItemsSource="{Binding ElementName=valueStepMin, Path=(Validation.Errors)}">
+                <ListBox.ItemTemplate >
+                    <DataTemplate>
+                        <ListBox ItemsSource="{Binding Path=ErrorContent}" FontFamily="4"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>

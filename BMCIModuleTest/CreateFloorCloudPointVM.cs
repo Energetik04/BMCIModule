@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -6,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace BMCIModuleTest
 {
-    public class CreateFloorCloudPointVM:ViewModel
+    public partial class CreateFloorCloudPointVM:ViewModel
     {
         //TODO проверка вводных данных в поля черезе события
         #region Сборка
@@ -146,4 +147,44 @@ namespace BMCIModuleTest
                 new RelayCommand(OnApplyApplicationCommandExecuted, CanApplyApplicationCommandExecuted);
         }
     }
+    public partial class CreateFloorCloudPointVM : IDataErrorInfo
+    {
+        //вызывается каждый раз когда возникает OnProportyChange
+        //в качестве параметра columnName индексатор использует имя свойства из события
+        //public string this[string columnName] => string.Empty;
+
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case nameof(stepMin):
+                        if (stepMin.GetType() == typeof(double))
+                        {
+                            string eror = "huita";
+                            AddError(nameof(stepMin), eror);
+                        }
+                        break;
+                    case nameof(numberPoint):
+                        if (numberPoint.GetType() == typeof(int))
+                        {
+                            string eror = "Число должно быть целочисленным";
+                            AddError(nameof(numberPoint), eror);
+                        }
+                        break;
+                    case nameof(captureRange):
+                        if (captureRange.GetType() == typeof(double))
+                        {
+                            string eror = "Необходимо числовой тип данных";
+                            AddError(nameof(captureRange), eror);
+                        }
+                        break;
+                }
+                return string.Empty;
+            }
+        }
+        public string Error { get; }
+    }
 }
+

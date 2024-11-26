@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autodesk.Revit.DB;
 using BMCIModule.Infrastructure.Commands;
+using BMCIModule.Models;
 using Color = Autodesk.Revit.DB.Color;
 
 namespace BMCIModule.ViewModel
 {
-    public class CreateFloorCloudPointVM:ViewModel.Base.ViewModel
+    public partial class CreateFloorCloudPointVM:ViewModel.Base.ViewModel
     {
         //TODO проверка вводных данных в поля черезе события
         #region Сборка
@@ -132,5 +137,107 @@ namespace BMCIModule.ViewModel
             ApplyApplicationCommand =
                 new RelayCommand(OnApplyApplicationCommandExecuted, CanApplyApplicationCommandExecuted);
         }
+    }
+
+    public partial class CreateFloorCloudPointVM : IDataErrorInfo
+    {
+        //вызывается каждый раз когда возникает OnPropertyChange
+        //в качестве параметра columnName индексатор использует имя свойства из события
+        //public string this[string columnName] => string.Empty;
+
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case nameof(stepMin):
+                        if (stepMin.GetType() == typeof(double))
+                        {
+                            AddError(nameof(stepMin), "Необходимо числовой тип данных");
+                        }
+                        break;
+                    case nameof(numberPoint):
+                        if (numberPoint.GetType() == typeof(int))
+                        {
+                            AddError(nameof(numberPoint), "Число должно быть целочисленным");
+                        }
+                        break;
+                    case nameof(captureRange):
+                        if (captureRange.GetType() == typeof(double))
+                        {
+                            AddError(nameof(captureRange), "Необходимо числовой тип данных");
+                        }
+                        break;
+                }
+                return string.Empty;
+            }
+        }
+        public string Error { get; }
+
+        ////Возвращает список ошибок,либо пустой лист
+        //public IEnumerable GetErrors(string propertyName)
+        //{
+        //    if (string.IsNullOrEmpty(propertyName))
+        //    {
+        //        return dictionaryErrors.Values;
+        //    }
+        //    return dictionaryErrors.ContainsKey(propertyName) ? dictionaryErrors[propertyName] : null;
+        //}
+
+        //public bool HasErrors => dictionaryErrors.Any();
+        //public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        //private readonly Dictionary<string,List<string>> dictionaryErrors = new Dictionary<string,List<string>>();
+
+        ////вызывает событие ErrorsChanged
+        //private void OnErrorsChanged(string proportyName)
+        //{
+        //    ErrorsChanged?.Invoke(this,new DataErrorsChangedEventArgs(proportyName));
+        //}
+
+        //private void AddError(string propertyName, string error)
+        //{
+        //    AddErrors(propertyName, new List <string> {error});
+        //}
+
+        //private void AddErrors(string propertyName, IList<string> errors)
+        //{
+        //    if (errors == null || !errors.Any())
+        //    {
+        //        return;
+        //    }
+
+        //    var changed = false;
+        //    if (!dictionaryErrors.ContainsKey(propertyName))
+        //    {
+        //        dictionaryErrors.Add(propertyName,new List<string>());
+        //        changed=true;
+        //    }
+        //    //тут чехарда какая-то. надо разобраться
+        //    foreach (var error in dictionaryErrors)
+        //    {
+        //        if (dictionaryErrors[propertyName].Contains(error.Key)) continue;
+        //        dictionaryErrors[propertyName].Add(error.Key);
+        //        changed=true;
+        //    }
+
+        //    if (changed)
+        //    {
+        //        OnErrorsChanged(propertyName);
+        //    }
+        //}
+
+        //protected void ClearErrors(string propertyName = "")
+        //{
+        //    if (string.IsNullOrEmpty(propertyName))
+        //    {
+        //        dictionaryErrors.Clear();
+        //    }
+        //    else
+        //    {
+        //        dictionaryErrors.Remove(propertyName);
+        //    }
+        //    OnErrorsChanged(propertyName);
+        //}
     }
 }

@@ -13,14 +13,41 @@
     <Window.DataContext>
         <vm:CreateFloorCloudPointVM></vm:CreateFloorCloudPointVM>
     </Window.DataContext>
-
-    <Grid>
+    
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="Background" Value="Pink" />
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},
+     Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <DockPanel LastChildFill="True">
+                            <TextBlock Foreground="Red" FontSize="20" Text="!"
+                                       ToolTip="{Binding ElementName=controlWithError,
+       Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
+                            <Border BorderBrush="Red" BorderThickness="1">
+                                <AdornedElementPlaceholder Name="controlWithError" />
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Name="Grid">
         <Grid.Background>
             <ImageBrush ImageSource="{Binding BackgroundWindow}" Stretch="Uniform" TileMode="None" Opacity="0.4"></ImageBrush>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="80*"></RowDefinition>
             <RowDefinition Height="40*"></RowDefinition>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="20*"></RowDefinition>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Расставить точки триангуляции">
@@ -36,7 +63,7 @@
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" x:Name="textStepMin" Text="Шаг сетки триангуляции:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0 " ToolTip="{Binding ToolTipStepMin}" /> 
                 <TextBox x:Name="valueStepMin" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Step,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Height="20" TextAlignment="Center" LostFocus="valueStepMin_LostFocus"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="мм." HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Grid.Row="1" Grid.Column="0"  Text="Количество точек в ячейке:" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="textNumberPoint" Margin="10 0 0 0 " ToolTip="{Binding ToolTipNumberPoint}"/>
@@ -66,6 +93,16 @@
             </Grid>
         </GroupBox>
         <Grid Grid.Row="2">
+            <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                     ItemsSource="{Binding ElementName=Grid, Path=(Validation.Errors)}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ListBox ItemsSource="{Binding Path=ErrorContent}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
