@@ -127,6 +127,10 @@ namespace BMCIModule.Models.ESD
             int j = 0;
             foreach (var directoryItem in dictionaryFaceAndCollectionPointMaxRange)
             {
+                if (listDouble.Count == 122)
+                {
+
+                }
                 if (directoryItem.Value.Count == 1)
                 {
                     List<XYZ> collectionCrossPoint = new List<XYZ>();
@@ -225,8 +229,9 @@ namespace BMCIModule.Models.ESD
                             {
                                 XYZ curveEndPoint0 = curve.GetEndPoint(0);
                                 XYZ curveEndPoint1 = curve.GetEndPoint(1);
-                                if (curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.First()) &&
-                                    curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.Last()))
+                                if ((curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.First()) &&
+                                    curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.Last()))|| (curveEndPoint0.IsAlmostEqualTo(directoryItem.Value.Last()) &&
+                                    curveEndPoint1.IsAlmostEqualTo(directoryItem.Value.First())) )
                                 {
                                     continue;
                                 }
@@ -264,6 +269,8 @@ namespace BMCIModule.Models.ESD
                     listSquare.Add(square1+square2);
                 }
             }
+            var summListDouble = listDouble.Sum();
+            var summListSquare= listSquare.Sum();
             // Значения конвертированные объема и площади
             double convertVolumeToMetricSystem=UnitUtils.Convert(sumVolume,UnitTypeId.CubicFeet,UnitTypeId.CubicMeters);
             double convertSquareToMetricSystem = UnitUtils.Convert(square, UnitTypeId.SquareFeet, UnitTypeId.SquareMeters);
