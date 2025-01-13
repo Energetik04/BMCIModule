@@ -114,7 +114,7 @@ namespace BMCIModule
                         listPointFace.Add(point);
                     }
                 }
-                foreach (var pointUV in listPointFace)
+                foreach (UV pointUV in listPointFace)
                 {
                     XYZ point1 = face.Evaluate(pointUV);
                     CylindricalFace getFace=face as CylindricalFace;
@@ -142,7 +142,7 @@ namespace BMCIModule
 
                     #endregion
 
-                    #region Сдвигаем треугольник нааверх
+                    #region Сдвигаем треугольник наверх
 
                     XYZ pointBXYZMax = pointBXYZ + (normalToFace).Normalize() * captureRange;
                     XYZ pointAXYZMax = pointAXYZ + (normalToFace).Normalize() * captureRange;
