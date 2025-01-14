@@ -77,6 +77,7 @@ namespace BMCIModule.Models.PointCloud
             Dictionary<XYZ, double> XYZPredict = new Dictionary<XYZ, double>();
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
             Dictionary<XYZ,XYZ> srav=new Dictionary<XYZ,XYZ>();
+            List<int> countPoint=new List<int>();
 
             foreach (var face in faceList)
             {
@@ -158,6 +159,7 @@ namespace BMCIModule.Models.PointCloud
                     Autodesk.Revit.DB.PointClouds.PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
                     var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
                     variable.TrimExcess();
+                    countPoint.Add(variable.Count);
                     double zPredict;
                     double xPredict;
                     double yPredict;
@@ -166,6 +168,7 @@ namespace BMCIModule.Models.PointCloud
                     {
                         AproximateXZ(variable, out double a, out double b);
                         AproximateYZ(variable, out double c, out double d);
+                        //TODO подумать над функцией ниже 
                         xPredict = a * point1.Z + b;
                         yPredict=c* point1.Z + d;
                         if (xPredict.Equals(Double.NaN)|| yPredict.Equals(Double.NaN))
@@ -268,35 +271,35 @@ namespace BMCIModule.Models.PointCloud
         {
             a = 0;
             b = 0;
-            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
+            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumz = 0;
             foreach (var point in pointCollection)
             {
                 a1 = a1 + point.X * point.Z;
                 sumx = sumx + point.X;
-                sumy = sumy + point.Z;
-                a2 = a2 + Math.Pow(point.X, 2);
+                sumz = sumz + point.Z;
+                a2 = a2 + Math.Pow(point.Z, 2);
             }
-            a3 = Math.Pow(sumx, 2);
-            double a4 = (pointCollection.Count * a1 - sumx * sumy);
-            a = (Math.Round((pointCollection.Count * a1 - sumx * sumy), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
-            b = Math.Round((a2 * sumy - sumx * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
+            a3 = Math.Pow(sumz, 2);
+            double a4 = (pointCollection.Count * a1 - sumx * sumz);
+            a = (Math.Round((pointCollection.Count * a1 - sumx * sumz), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
+            b = Math.Round((a2 * sumx - sumz * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
         }
         public void AproximateYZ(List<XYZ> pointCollection, out double c, out double d)
         {
             c = 0;
             d = 0;
-            double a1 = 0, a2 = 0, a3 = 0, sumx = 0, sumy = 0;
+            double a1 = 0, a2 = 0, a3 = 0, sumz = 0, sumy = 0;
             foreach (var point in pointCollection)
             {
                 a1 = a1 + point.Y * point.Z;
-                sumx = sumx + point.Y;
-                sumy = sumy + point.Z;
-                a2 = a2 + Math.Pow(point.Y, 2);
+                sumy = sumy + point.Y;
+                sumz = sumz + point.Z;
+                a2 = a2 + Math.Pow(point.Z, 2);
             }
-            a3 = Math.Pow(sumx, 2);
-            double a4 = (pointCollection.Count * a1 - sumx * sumy);
-            c = (Math.Round((pointCollection.Count * a1 - sumx * sumy), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
-            d = Math.Round((a2 * sumy - sumx * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
+            a3 = Math.Pow(sumz, 2);
+            double a4 = (pointCollection.Count * a1 - sumz * sumy);
+            c = (Math.Round((pointCollection.Count * a1 - sumz * sumy), 9) / (Math.Round((pointCollection.Count * a2 - a3), 9)));
+            d = Math.Round((a2 * sumy - sumz * a1), 9) / Math.Round((pointCollection.Count * a2 - a3), 9);
         }
     }
 }
