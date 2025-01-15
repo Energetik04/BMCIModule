@@ -24,7 +24,7 @@ namespace BMCIModule.Models.PointCloud
             int numberPoint;
             
             stepMin = 0.05;
-            captureRange = 0.33;
+            captureRange = 0.5;
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
@@ -179,7 +179,8 @@ namespace BMCIModule.Models.PointCloud
                         yPredict = c * point1.Z + d;
                         XYZ aproximatePoint = new XYZ(xPredict, yPredict, point1.Z);
                         double length = (aproximatePoint - normalFaceEnd2).GetLength();
-                        double resultValueAnalysis =length- getFace.get_Radius(1).GetLength();
+                        double radius = getFace.get_Radius(1).GetLength();
+                        double resultValueAnalysis =length- radius;
                         //    if (xPredict.Equals(Double.NaN)|| yPredict.Equals(Double.NaN))
                         //    {
                         //        xPredict = 0;
