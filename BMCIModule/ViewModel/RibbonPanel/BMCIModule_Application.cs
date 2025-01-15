@@ -112,7 +112,7 @@ namespace BMCIModule
                 changeFloorToPointCloudData.LargeImage = new BitmapImage(new Uri(wayForIcon+@"\Vector.png"));
                 PushButton createFloorToPointCloudDataButton = panel.AddItem(changeFloorToPointCloudData) as PushButton;
                 //кровля
-                PushButtonData changeRoofToPointCloudData = new PushButtonData("CreateRoofCloudPointWindow", "Кровля", wayForApplication, "BMCIModule.CreateFloorOrRoofCloudPoint");
+                PushButtonData changeRoofToPointCloudData = new PushButtonData("CreateRoofCloudPointWindow", "Кровля", wayForApplication, "BMCIModule.Models.PointCloud.CreateAnalysisObject");
                 changeRoofToPointCloudData.ToolTip = "Изменение формы кровли по облаку точек";
 
                 // путь к картинкам либо изменить либо пересмотреть 

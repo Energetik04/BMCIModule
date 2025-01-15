@@ -73,11 +73,8 @@ namespace BMCIModule.Models.PointCloud
             FilteredElementCollector collectorPoint = new FilteredElementCollector(doc);
             var elementSet=collectorPoint.OfClass(typeof(FamilyInstance)).Where(x => x.Name == "Семейство1").ToList();
 
-            Dictionary<List<UV>, List<double>> collectionPointCloudPoint = new Dictionary<List<UV>, List<double>>();
-            Dictionary<XYZ, double> XYZPredict = new Dictionary<XYZ, double>();
+            Dictionary<Face, List<double>> collectionPointCloudPoint = new Dictionary<Face, List<double>>();
             Dictionary<Face, List<UV>> dictionaryFaceAndUV = new Dictionary<Face, List<UV>>();
-            Dictionary<XYZ,XYZ> srav=new Dictionary<XYZ,XYZ>();
-            List<int> countPoint=new List<int>();
 
             foreach (var face in faceList)
             {
@@ -94,10 +91,10 @@ namespace BMCIModule.Models.PointCloud
                 }
                 dictionaryFaceAndUV.Add(face,pointUVInFace);
             }
+
             foreach (var value in dictionaryFaceAndUV)
             {
-                List<UV> listPointForReport=new List<UV>();
-                List<double> listValuesForReport=new List<double>();
+                List<double> listValuesForReport = new List<double>();
                 foreach (var pointUV in value.Value)
                 {
                     XYZ point1 = value.Key.Evaluate(pointUV);
@@ -108,18 +105,22 @@ namespace BMCIModule.Models.PointCloud
                     BoundingBoxUV bbToTriangle = startPlane.GetBoundingBoxUV();
                     UV minTriangle = bbToTriangle.Min;
                     IList<Plane> faceToPlane = new List<Plane>();
+
                     #region Работа с треугольником
+
                     UV pointCentre = new UV();
                     startPlane.Project(point1, out pointCentre, out double distance);
-                    
-                    UV pointB = new UV(pointCentre.U,pointCentre.V+hight*0.5);
+
+                    UV pointB = new UV(pointCentre.U, pointCentre.V + hight * 0.5);
                     UV pointA = new UV(pointB.U - stepMin / 2, pointB.V - hight);
                     UV pointC = new UV(pointA.U + stepMin, pointA.V);
                     XYZ pointBXYZ = startPlane.Origin + pointB.U * startPlane.XVec + pointB.V * startPlane.YVec;
                     XYZ pointAXYZ = startPlane.Origin + pointA.U * startPlane.XVec + pointA.V * startPlane.YVec;
                     XYZ pointCXYZ = startPlane.Origin + pointC.U * startPlane.XVec + pointC.V * startPlane.YVec;
-                    XYZ centreStartPlane = startPlane.Origin + pointCentre.U * startPlane.XVec + pointCentre.V * startPlane.YVec;
+                    XYZ centreStartPlane = startPlane.Origin + pointCentre.U * startPlane.XVec +
+                                           pointCentre.V * startPlane.YVec;
                     List<XYZ> triangleStart = new List<XYZ>() { pointBXYZ, pointAXYZ, pointCXYZ };
+
                     #endregion
 
                     #region Сдвигаем треугольник наверх
@@ -129,21 +130,26 @@ namespace BMCIModule.Models.PointCloud
                     XYZ pointCXYZMax = pointCXYZ + (normalToFace).Normalize() * captureRange;
 
                     Plane maxHightTriangle = Plane.CreateByThreePoints(pointBXYZMax, pointAXYZMax, pointCXYZMax);
-                    List<XYZ> triangleMaxHight = new List<XYZ>() { pointBXYZMax, pointAXYZMax, pointCXYZMax, pointBXYZMax };
+                    List<XYZ> triangleMaxHight = new List<XYZ>()
+                        { pointBXYZMax, pointAXYZMax, pointCXYZMax, pointBXYZMax };
 
                     XYZ pointBXYZMin = pointBXYZ + (-1) * (normalToFace).Normalize() * captureRange;
                     XYZ pointAXYZMin = pointAXYZ + (-1) * (normalToFace).Normalize() * captureRange;
                     XYZ pointCXYZMin = pointCXYZ + (-1) * (normalToFace).Normalize() * captureRange;
 
                     Plane minHightTriangle = Plane.CreateByThreePoints(pointBXYZMin, pointAXYZMin, pointCXYZMin);
-                    List<XYZ> triangleMinHight = new List<XYZ>() { pointBXYZMin, pointAXYZMin, pointCXYZMin, pointBXYZMin };
+                    List<XYZ> triangleMinHight = new List<XYZ>()
+                        { pointBXYZMin, pointAXYZMin, pointCXYZMin, pointBXYZMin };
+
                     #endregion
 
                     for (int i = 0; i < triangleMaxHight.Count() - 1; i++)
                     {
-                        Plane sidePlane = Plane.CreateByThreePoints(triangleMinHight[i], triangleMinHight[i + 1], triangleMaxHight[i]);
+                        Plane sidePlane = Plane.CreateByThreePoints(triangleMinHight[i], triangleMinHight[i + 1],
+                            triangleMaxHight[i]);
                         faceToPlane.Add(sidePlane);
                     }
+
                     IList<Plane> reversList = new List<Plane>();
                     foreach (var plane in faceToPlane)
                     {
@@ -151,16 +157,16 @@ namespace BMCIModule.Models.PointCloud
                         Plane reversPlane = Plane.CreateByNormalAndOrigin(reversNormal * (-1), plane.Origin);
                         reversList.Add(reversPlane);
                     }
+
                     Plane reversMaxPlane =
                         Plane.CreateByNormalAndOrigin((maxHightTriangle.Normal * (-1)), maxHightTriangle.Origin);
                     reversList.Add(minHightTriangle);
                     reversList.Add(reversMaxPlane);
                     PointCloudFilter filter = PointCloudFilterFactory.CreateMultiPlaneFilter(reversList);
-                    Autodesk.Revit.DB.PointClouds.PointCollection pointCollection = pcInstance.GetPoints(filter, 0.0001, 4000);// как-будто надо увеличить количество точек
+                    Autodesk.Revit.DB.PointClouds.PointCollection pointCollection =
+                        pcInstance.GetPoints(filter, 0.0001, 4000); // как-будто надо увеличить количество точек
                     var variable = pointCollection.Select(x => pointTransform.OfPoint((XYZ)x)).ToList();
                     variable.TrimExcess();
-                    countPoint.Add(variable.Count);
-                    double zPredict;
                     double xPredict;
                     double yPredict;
                     //предсказание не выполняется правильно, надо подумать 
@@ -170,32 +176,33 @@ namespace BMCIModule.Models.PointCloud
                         AproximateYZ(variable, out double c, out double d);
                         //TODO подумать над функцией ниже 
                         xPredict = a * point1.Z + b;
-                        yPredict=c* point1.Z + d;
-                        if (xPredict.Equals(Double.NaN)|| yPredict.Equals(Double.NaN))
-                        {
-                            xPredict = 0;
-                            yPredict=0;
-                        }
-                        if (Math.Abs(point1.X - xPredict) >= captureRange)
-                        {
-                            xPredict = 0;
-                        }
-                        if(Math.Abs(point1.Y - yPredict) >= captureRange)
-                        {
-                            yPredict = 0;
-                        }
+                        yPredict = c * point1.Z + d;
+                        XYZ aproximatePoint = new XYZ(xPredict, yPredict, point1.Z);
+                        double length = (aproximatePoint - normalFaceEnd2).GetLength();
+                        double resultValueAnalysis =length- getFace.get_Radius(1).GetLength();
+                        //    if (xPredict.Equals(Double.NaN)|| yPredict.Equals(Double.NaN))
+                        //    {
+                        //        xPredict = 0;
+                        //        yPredict=0;
+                        //    }
+                        //    if (Math.Abs(point1.X - xPredict) >= captureRange)
+                        //    {
+                        //        xPredict = 0;
+                        //    }
+                        //    if(Math.Abs(point1.Y - yPredict) >= captureRange)
+                        //    {
+                        //        yPredict = 0;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    xPredict = point1.X;
+                        //    yPredict = point1.Y;
+                        //}
+                        listValuesForReport.Add(resultValueAnalysis);
                     }
-                    else
-                    {
-                        xPredict = point1.X;
-                        yPredict = point1.Y;
-                    }
-                    srav.Add(point1,new XYZ(xPredict,yPredict,point1.Z));
-                    listPointForReport.Add(pointUV);
-                    listValuesForReport.Add(xPredict);
-                    XYZPredict.Add(pointBXYZ, xPredict);
                 }
-                collectionPointCloudPoint.Add(listPointForReport, listValuesForReport);
+                collectionPointCloudPoint.Add(value.Key, listValuesForReport);
             }
 
             #region Создание типа легенды
@@ -265,8 +272,92 @@ namespace BMCIModule.Models.PointCloud
                 tr.Commit();
             }
             #endregion
+
+
+
+            #region Создание таблицы результатов
+            using (Transaction tr1 = new Transaction(doc, "Создание результатов анализа"))
+            {
+                //TODO найти max и min среди всех плоскостей, чтобы диаграмма была одинаковой
+                tr1.Start();
+                Stopwatch sw = new Stopwatch(); // чтобы увидеть время выполнения транзакции
+                sw.Start();
+                SpatialFieldManager spf = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
+                if (spf == null) spf = SpatialFieldManager.CreateSpatialFieldManager(doc.ActiveView, 1);
+                FilteredElementCollector collector1 = new FilteredElementCollector(doc);
+                ICollection<Element> collection1 = collector1.OfClass(typeof(AnalysisDisplayStyle)).ToElements();
+                var analysisDisplay = collection1.Where(x => x.Name == "Фактические конструкции").Select(x => x);
+                var analysisDisplayHide = collection1.Where(x => x.Name == "Фактические конструкции (скрытый)").Select(x => x);
+                int i = 0;
+                IList<ValueAtPoint> valList = new List<ValueAtPoint>();
+                IList<UV> uvpts = new List<UV>();
+                // хлам для контроля значений
+                UV outUVmax = null;
+                // TODO можно проще сделать
+                foreach (var toFace in dictionaryFaceAndUV)
+                {
+                    //var maxValue = collectionPointCloudPoint.OrderByDescending(x => x.Value).First();
+                    //var minValue = collectionPointCloudPoint.OrderBy(x => x.Value).First();
+                    if (toFace.Key is CylindricalFace)
+                    {
+                        var dictionaryItemCollectionPoint = collectionPointCloudPoint.Where(x => x.Key.Equals(toFace.Key)).Select(x => x.Value).First();
+                        AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
+                        if (i == 0)
+                        {
+                            resultSchema.AnalysisDisplayStyleId = analysisDisplay?.First().Id ?? null;
+                        }
+                        else
+                        {
+                            resultSchema.AnalysisDisplayStyleId = analysisDisplayHide?.First().Id ?? null;
+                        }
+
+                        List<UV> listUVcoord = toFace.Value;
+                        int currentIndex= 0;
+                        foreach (var UVpoint in listUVcoord)
+                        {
+                            var resultAnalysisLength = dictionaryItemCollectionPoint[currentIndex];
+                            List<double> doubleList = new List<double>();
+                            UV outUV = null;
+                            double distance;
+                            uvpts.Add(UVpoint);
+                            doubleList.Add(resultAnalysisLength * 304.8);
+                            valList.Add(new ValueAtPoint(doubleList));
+                            doubleList.Clear();
+                            currentIndex++;
+                        }
+                        // тут надо подумать
+                        //toFace.Key.GetSurface().Project(maxValue.Key, out outUVmax, out double distanceMax);
+                        //uvpts.Add(outUVmax);
+                        //valList.Add(new ValueAtPoint(new List<double>() { maxValue.Value }));
+                        //toFace.Key.GetSurface().Project(maxValue.Key, out outUVmax, out double distanceMin);
+                        //uvpts.Add(outUVmax);
+                        //valList.Add(new ValueAtPoint(new List<double>() { minValue.Value }));
+
+                        //опять получаю одну и туже ссылку на разные плокости
+                        i++;
+                        //if (i == 100) break;
+                        Reference reference = toFace.Key.Reference;
+                        int idx = spf.AddSpatialFieldPrimitive(reference);
+                        FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
+                        FieldValues vals = new FieldValues(valList);
+                        int schemaIndex = spf.RegisterResult(resultSchema);
+                        spf.UpdateSpatialFieldPrimitive(idx, pnts, vals, schemaIndex);
+                    }
+                    uvpts.Clear();
+                    valList.Clear();
+                }
+                sw.Stop();
+                TimeSpan ts = sw.Elapsed;
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                TaskDialog.Show("Время выполнения", "Время выполнения изменения высот субэлементов плиты" + "\n" + elapsedTime);
+                tr1.Commit();
+            }
+            #endregion
+            return Result.Succeeded;
             throw new System.NotImplementedException();
         }
+
         public void AproximateXZ(List<XYZ> pointCollection, out double a, out double b)
         {
             a = 0;
