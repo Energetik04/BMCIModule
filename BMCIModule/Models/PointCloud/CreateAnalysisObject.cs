@@ -111,7 +111,7 @@ namespace BMCIModule.Models.PointCloud
                 //}
                 dictionaryFaceAndUV.Add(face,pointUVInFace);
             }
-
+            //TODO поработать над пересписком, так как количество исследованных точек может быть 0
             foreach (var value in dictionaryFaceAndUV)
             {
                 List<double> listValuesForReport = new List<double>();
@@ -190,38 +190,38 @@ namespace BMCIModule.Models.PointCloud
                     double xPredict;
                     double yPredict;
                     //предсказание не выполняется правильно, надо подумать 
-                    if (variable.Count > 10)
-                    {
+                    //if (variable.Count > 10)
+                    //{
                         AproximateXZ(variable, out double a, out double b);
                         AproximateYZ(variable, out double c, out double d);
                         //TODO подумать над функцией ниже 
                         xPredict = a * point1.Z + b;
                         yPredict = c * point1.Z + d;
+                        if (xPredict.Equals(Double.NaN) || yPredict.Equals(Double.NaN))
+                        {
+                            xPredict = point1.X;
+                            yPredict = point1.Y;
+                        }
                         XYZ aproximatePoint = new XYZ(xPredict, yPredict, point1.Z);
                         double length = (aproximatePoint - normalFaceEnd2).GetLength();
                         double radius = getFace.get_Radius(1).GetLength();
-                        double resultValueAnalysis =length- radius;
-                        //    if (xPredict.Equals(Double.NaN)|| yPredict.Equals(Double.NaN))
-                        //    {
-                        //        xPredict = 0;
-                        //        yPredict=0;
-                        //    }
-                        //    if (Math.Abs(point1.X - xPredict) >= captureRange)
-                        //    {
-                        //        xPredict = 0;
-                        //    }
-                        //    if(Math.Abs(point1.Y - yPredict) >= captureRange)
-                        //    {
-                        //        yPredict = 0;
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    xPredict = point1.X;
-                        //    yPredict = point1.Y;
-                        //}
-                        listValuesForReport.Add(resultValueAnalysis);
-                    }
+                        double resultValueAnalysis = length - radius;
+                    //    if (Math.Abs(point1.X - xPredict) >= captureRange)
+                    //    {
+                    //        xPredict = 0;
+                    //    }
+                    //    if(Math.Abs(point1.Y - yPredict) >= captureRange)
+                    //    {
+                    //        yPredict = 0;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    xPredict = point1.X;
+                    //    yPredict = point1.Y;
+                    //}
+                    listValuesForReport.Add(resultValueAnalysis);
+                    //}
                 }
                 collectionPointCloudPoint.Add(value.Key, listValuesForReport);
             }
@@ -321,7 +321,8 @@ namespace BMCIModule.Models.PointCloud
                     //var minValue = collectionPointCloudPoint.OrderBy(x => x.Value).First();
                     if (toFace.Key is CylindricalFace)
                     {
-                        var dictionaryItemCollectionPoint = collectionPointCloudPoint.Where(x => x.Key.Equals(toFace.Key)).Select(x => x.Value).First();
+                        // плохо работает equals (надо сделать equals через свойства Face)
+                        var dictionaryItemCollectionPoint = collectionPointCloudPoint.Where(x => x.Key.Id==toFace.Key.Id).Select(x => x.Value).First();
                         AnalysisResultSchema resultSchema = new AnalysisResultSchema("Диаграмма плоскости" + " " + i.ToString(), "Цветная схема перепада отметок");
                         if (i == 0)
                         {
@@ -336,6 +337,7 @@ namespace BMCIModule.Models.PointCloud
                         int currentIndex= 0;
                         foreach (var UVpoint in listUVcoord)
                         {
+                            
                             var resultAnalysisLength = dictionaryItemCollectionPoint[currentIndex];
                             List<double> doubleList = new List<double>();
                             UV outUV = null;
@@ -376,7 +378,6 @@ namespace BMCIModule.Models.PointCloud
             }
             #endregion
             return Result.Succeeded;
-            throw new System.NotImplementedException();
         }
 
         public void AproximateXZ(List<XYZ> pointCollection, out double a, out double b)
