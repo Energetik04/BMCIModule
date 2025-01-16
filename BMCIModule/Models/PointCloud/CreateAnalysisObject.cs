@@ -358,7 +358,7 @@ namespace BMCIModule.Models.PointCloud
                         i++;
                         //if (i == 100) break;
                         Reference reference = toFace.Key.Reference;
-                        int idx = spf.AddSpatialFieldPrimitive(reference);
+                        int idx = spf.AddSpatialFieldPrimitive(reference,SpatialFieldPrimitiveHideMode.HideOnlyReference);
                         FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
                         FieldValues vals = new FieldValues(valList);
                         int schemaIndex = spf.RegisterResult(resultSchema);
