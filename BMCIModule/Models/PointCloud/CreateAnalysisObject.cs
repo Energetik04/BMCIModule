@@ -23,7 +23,7 @@ namespace BMCIModule.Models.PointCloud
             double stepMin, captureRange;
             int numberPoint;
             
-            stepMin = 0.05;
+            stepMin = 3;
             captureRange = 0.5;
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
 
@@ -55,7 +55,7 @@ namespace BMCIModule.Models.PointCloud
             {
                 ComputeReferences = true,
                 IncludeNonVisibleObjects = true,
-                DetailLevel = ViewDetailLevel.Fine,
+                DetailLevel = ViewDetailLevel.Undefined
             };
 
             List<Face> faceList = new List<Face>();
@@ -78,17 +78,37 @@ namespace BMCIModule.Models.PointCloud
 
             foreach (var face in faceList)
             {
-                List<UV> pointUVInFace=new List<UV>();
-                foreach (var element in elementSet)
+                // иная генерация точек
+                BoundingBoxUV cylindircalParameterzs = face.GetBoundingBox();
+                UV maxParameters = cylindircalParameterzs.Max;
+                UV minParameters = cylindircalParameterzs.Min;
+                var radius = (face.GetSurface() as CylindricalSurface).Radius;
+                var lengthSigment = (maxParameters.U - minParameters.U) * radius;
+                var countStep = (double)Math.Round(lengthSigment / stepMin);
+                var stepSigmentAngle = (maxParameters.U - minParameters.U) / (countStep);
+                var stepSigmentV = (maxParameters.V - minParameters.V) / stepMin;
+                List<UV> pointUVInFace = new List<UV>();
+                for (int i = 0; i <= (int)(lengthSigment / stepMin); i++)
                 {
-                    var asd = element as FamilyInstance;
-                    if (asd.HostFace == null) continue;
-                    Reference refElement = (element as FamilyInstance).HostFace;
-                    var projectPoint = face.Project((element as Instance).GetTotalTransform().Origin);
-                    if (projectPoint == null) continue;
-                    bool isInsidePoint = face.IsInside(projectPoint.UVPoint);
-                    if (isInsidePoint == true) pointUVInFace.Add(projectPoint.UVPoint);
+                    for (int j = 0; j <= (int)stepSigmentV; j++)
+                    {
+                        var Upoint = minParameters.U + stepSigmentAngle * i;
+                        var Vpoint = minParameters.V + stepMin * j;
+                        UV point = new UV(Upoint, Vpoint);
+                        pointUVInFace.Add(point);
+                    }
                 }
+                //List<UV> pointUVInFace=new List<UV>();
+                //foreach (var element in elementSet)
+                //{
+                //    var asd = element as FamilyInstance;
+                //    if (asd.HostFace == null) continue;
+                //    Reference refElement = (element as FamilyInstance).HostFace;
+                //    var projectPoint = face.Project((element as Instance).GetTotalTransform().Origin);
+                //    if (projectPoint == null) continue;
+                //    bool isInsidePoint = face.IsInside(projectPoint.UVPoint);
+                //    if (isInsidePoint == true) pointUVInFace.Add(projectPoint.UVPoint);
+                //}
                 dictionaryFaceAndUV.Add(face,pointUVInFace);
             }
 
