@@ -361,7 +361,7 @@ namespace BMCIModule.Models.PointCloud
                         //опять получаю одну и туже ссылку на разные плокости
                         i++;
                         //if (i == 100) break;
-                        Reference reference = choiceElementRef;
+                        Reference reference = toFace.Key.Reference;
                         //Reference reference = toFace.Key.Reference;
                         int idx = spf.AddSpatialFieldPrimitive(reference,SpatialFieldPrimitiveHideMode.HideOnlyReference);
                         FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
