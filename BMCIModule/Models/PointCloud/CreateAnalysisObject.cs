@@ -23,8 +23,8 @@ namespace BMCIModule.Models.PointCloud
             double stepMin, captureRange;
             int numberPoint;
             
-            stepMin = 3;
-            captureRange = 0.5;
+            stepMin = 2;
+            captureRange = 1;
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
@@ -34,6 +34,7 @@ namespace BMCIModule.Models.PointCloud
 
             TaskDialog.Show("Выбор элемента", "Выберите экземпляр (Крыша)");
             Selection choiceElement = uidoc.Selection;
+            //Reference choiceElementRef = choiceElement.PickObject(ObjectType.Face, "выбор плоскости");
             Reference choiceElementRef = choiceElement.PickObject(ObjectType.Element, "Выбор элемента");
             Element selectElement = doc.GetElement(choiceElementRef);
             ElementId selectElementId = selectElement.Id;
