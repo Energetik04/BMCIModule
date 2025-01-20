@@ -23,8 +23,8 @@ namespace BMCIModule.Models.PointCloud
             double stepMin, captureRange;
             int numberPoint;
             
-            stepMin = 2;
-            captureRange = 1;
+            stepMin = 1;
+            captureRange = 0.3;
             double hight = (Math.Sqrt(3)) * stepMin / 2.0d;
 
             SpatialFieldManager sfm = SpatialFieldManager.GetSpatialFieldManager(doc.ActiveView);
@@ -80,7 +80,8 @@ namespace BMCIModule.Models.PointCloud
 
             foreach (var face in faceList)
             {
-                // иная генерация точек
+
+                // равномерный шаг генерации точек
                 BoundingBoxUV cylindircalParameterzs = face.GetBoundingBox();
                 UV maxParameters = cylindircalParameterzs.Max;
                 UV minParameters = cylindircalParameterzs.Min;
@@ -100,7 +101,10 @@ namespace BMCIModule.Models.PointCloud
                         pointUVInFace.Add(point);
                     }
                 }
-                //List<UV> pointUVInFace=new List<UV>();
+
+                //шаг через семейство 
+
+                //List<UV> pointUVInFace = new List<UV>();
                 //foreach (var element in elementSet)
                 //{
                 //    var asd = element as FamilyInstance;
@@ -117,6 +121,13 @@ namespace BMCIModule.Models.PointCloud
             foreach (var value in dictionaryFaceAndUV)
             {
                 List<double> listValuesForReport = new List<double>();
+                BoundingBoxUV cylindircalParameterzs = value.Key.GetBoundingBox();
+                UV maxParameters = cylindircalParameterzs.Max;
+                UV minParameters = cylindircalParameterzs.Min;
+                var radiusR = (value.Key.GetSurface() as CylindricalSurface).Radius;
+                var lengthSigment = (maxParameters.U - minParameters.U) * radiusR;
+                var countStep = (double)Math.Round(lengthSigment / stepMin);
+                var stepSigmentAngle = (maxParameters.U - minParameters.U) / (countStep);
                 foreach (var pointUV in value.Value)
                 {
                     XYZ point1 = value.Key.Evaluate(pointUV);
@@ -134,8 +145,10 @@ namespace BMCIModule.Models.PointCloud
                     startPlane.Project(point1, out pointCentre, out double distance);
 
                     UV pointB = new UV(pointCentre.U, pointCentre.V + hight * 0.5);
-                    UV pointA = new UV(pointB.U - stepMin / 2, pointB.V - hight);
-                    UV pointC = new UV(pointA.U + stepMin, pointA.V);
+
+                    // косяк с захватом плоскости 
+                    UV pointA = new UV(pointB.U - stepSigmentAngle / 2, pointB.V - hight);
+                    UV pointC = new UV(pointA.U + stepSigmentAngle, pointA.V);
                     XYZ pointBXYZ = startPlane.Origin + pointB.U * startPlane.XVec + pointB.V * startPlane.YVec;
                     XYZ pointAXYZ = startPlane.Origin + pointA.U * startPlane.XVec + pointA.V * startPlane.YVec;
                     XYZ pointCXYZ = startPlane.Origin + pointC.U * startPlane.XVec + pointC.V * startPlane.YVec;
@@ -208,6 +221,10 @@ namespace BMCIModule.Models.PointCloud
                         double length = (aproximatePoint - normalFaceEnd2).GetLength();
                         double radius = getFace.get_Radius(1).GetLength();
                         double resultValueAnalysis = length - radius;
+                        if (resultValueAnalysis > 1)
+                        {
+
+                        }
                     //    if (Math.Abs(point1.X - xPredict) >= captureRange)
                     //    {
                     //        xPredict = 0;
@@ -345,6 +362,11 @@ namespace BMCIModule.Models.PointCloud
                             UV outUV = null;
                             double distance;
                             uvpts.Add(UVpoint);
+                            if (resultAnalysisLength * 304.8 > 1000)
+                            {
+                            }
+
+
                             doubleList.Add(resultAnalysisLength * 304.8);
                             valList.Add(new ValueAtPoint(doubleList));
                             doubleList.Clear();
@@ -363,7 +385,7 @@ namespace BMCIModule.Models.PointCloud
                         //if (i == 100) break;
                         Reference reference = toFace.Key.Reference;
                         //Reference reference = toFace.Key.Reference;
-                        int idx = spf.AddSpatialFieldPrimitive(reference,SpatialFieldPrimitiveHideMode.HideOnlyReference);
+                        int idx = spf.AddSpatialFieldPrimitive(reference,SpatialFieldPrimitiveHideMode.HideWholeElement);
                         FieldDomainPointsByUV pnts = new FieldDomainPointsByUV(uvpts);
                         FieldValues vals = new FieldValues(valList);
                         int schemaIndex = spf.RegisterResult(resultSchema);

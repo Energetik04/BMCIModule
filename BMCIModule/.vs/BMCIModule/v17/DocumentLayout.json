@@ -7,8 +7,8 @@
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\BMCIModule\\BMCIModule\\BMCIModule\\viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\bmcimodule\\bmcimodule\\bmcimodule\\models\\pointcloud\\createanalysisroof.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisroof.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -41,14 +41,15 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "BMCIModule_Application.cs",
-              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "RelativeDocumentMoniker": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "RelativeToolTip": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ViewState": "AQIAAGMAAAAAAAAAAAAowGcAAAAAAAAA",
+              "Title": "CreateAnalysisRoof.cs",
+              "DocumentMoniker": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisRoof.cs",
+              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisRoof.cs",
+              "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisRoof.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisRoof.cs",
+              "ViewState": "AQIAAFUAAAAAAAAAAAAgwIMAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-15T11:06:25.856Z"
+              "WhenOpened": "2025-01-20T07:09:14.185Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -58,7 +59,7 @@
               "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisObject.cs",
               "ToolTip": "D:\\BMCIModule\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
               "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisObject.cs",
-              "ViewState": "AQIAAHIBAAAAAAAAAAAiwIYBAAAyAAAA",
+              "ViewState": "AQIAAOUAAAAAAAAAAAAgwPEAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-13T06:12:12.43Z",
               "EditorCaption": ""
