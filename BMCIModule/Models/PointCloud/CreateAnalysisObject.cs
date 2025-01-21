@@ -152,8 +152,7 @@ namespace BMCIModule.Models.PointCloud
                     XYZ pointBXYZ = startPlane.Origin + pointB.U * startPlane.XVec + pointB.V * startPlane.YVec;
                     XYZ pointAXYZ = startPlane.Origin + pointA.U * startPlane.XVec + pointA.V * startPlane.YVec;
                     XYZ pointCXYZ = startPlane.Origin + pointC.U * startPlane.XVec + pointC.V * startPlane.YVec;
-                    XYZ centreStartPlane = startPlane.Origin + pointCentre.U * startPlane.XVec +
-                                           pointCentre.V * startPlane.YVec;
+                    XYZ centreStartPlane = startPlane.Origin + pointCentre.U * startPlane.XVec + pointCentre.V * startPlane.YVec;
                     List<XYZ> triangleStart = new List<XYZ>() { pointBXYZ, pointAXYZ, pointCXYZ };
 
                     #endregion
