@@ -20,3 +20,25 @@ D:\BMCIModule\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\refint\BMCIModu
 D:\BMCIModule\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.pdb
 D:\BMCIModule\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.genruntimeconfig.cache
 D:\BMCIModule\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\ref\BMCIModuleTest.dll
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.exe
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.deps.json
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.runtimeconfig.json
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.dll
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.pdb
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\MainWindow.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\App.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest_MarkupCompile.cache
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest_MarkupCompile.lref
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\MainWindow.baml
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.g.resources
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.GeneratedMSBuildEditorConfig.editorconfig
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.AssemblyInfoInputs.cache
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.AssemblyInfo.cs
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.csproj.CoreCompileInputs.cache
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.sourcelink.json
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.dll
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\refint\BMCIModuleTest.dll
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.pdb
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.genruntimeconfig.cache
+D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\ref\BMCIModuleTest.dll

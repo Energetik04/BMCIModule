@@ -51,3 +51,31 @@ E:\BMCI\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 E:\BMCI\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateAnalysisFace.g.cs
 D:\BMCIModule\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateAnalysisFace.baml
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll.config
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\BMCIModule.pdb
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\Microsoft.Extensions.Primitives.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\System.ComponentModel.Annotations.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\System.ValueTuple.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\UIFramework.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\Microsoft.Extensions.Primitives.xml
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Библиотека классов\BMCIModule\BMCIModule\bin\Debug\System.ValueTuple.xml
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.AssemblyReference.cache
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateAnalysisFace.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateFloorCloudPointWindow.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\GetLinkForFilePreparingWindow.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule_MarkupCompile.cache
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule_MarkupCompile.lref
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateAnalysisFace.baml
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\CreateFloorCloudPointWindow.baml
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\GetLinkForFilePreparingWindow.baml
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.baml
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.g.resources
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
