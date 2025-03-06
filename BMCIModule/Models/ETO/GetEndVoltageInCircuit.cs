@@ -177,20 +177,32 @@ public class ElectricCircuitDFS
         int polus=listparameterPolus.First().AsInteger();
         double deltaR=listParameterR.First().AsDouble();
         double deltaX=listParameterX.First().AsDouble();
+        double I = 0;
+        string s = el.GetParameters("Полная установленная мощность").First().AsValueString();
+        double P = double.Parse(s);
+
+        if (polus > 3)
+        {
+            I = P*cos/1.7385/0.4;
+        }
+        else
+        {
+            I = P * cos / 0.23;
+        }
 
         if(voltageStart>190 & voltageStart < 250)
         {
-            voltageEnd = voltageStart - 2 * el.ApparentCurrent * lengthEnd / 1000 * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
+            voltageEnd = voltageStart - 2 * I * lengthEnd / 1000 * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
         }
         else
         {
             if (polus > 3)
             {
-                voltageEnd = voltageStart - 1.7385 * lengthEnd / 1000 * el.ApparentCurrent * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
+                voltageEnd = voltageStart - 1.7385 * lengthEnd / 1000 * I * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
             }
             else
             {
-                voltageEnd = voltageStart/1.7385 - 2 * lengthEnd / 1000 * el.ApparentCurrent * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
+                voltageEnd = voltageStart/1.7385 - 2 * lengthEnd / 1000 * I * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
             }
         }
         return voltageEnd;
