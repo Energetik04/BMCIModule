@@ -168,8 +168,9 @@ public class ElectricCircuitDFS
         IList<Parameter> listparameterPolus = el.GetParameters("Жильность");
         IList<Parameter> listParameterR = el.GetParameters("r уд");
         IList<Parameter> listParameterX = el.GetParameters("x уд");
+              
         double voltageEnd = 0;
-        double cos=el.PowerFactor;
+        double cos=el.GetParameters("Коэффициент мощности руч.").First().AsDouble();
         double length=el.Length;//В футах
         double lengthEnd = (length + 2) * 1.02*304/1000;
         double voltageStart = listparameterVoltageStart.First().AsDouble();
