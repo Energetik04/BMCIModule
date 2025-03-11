@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\bmcimodule\\bmcimodule\\models\\eto\\getpathforcircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getpathforcircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\bmcimodule\\bmcimodule\\models\\filework\\readfile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\filework\\readfile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\bmcimodule\\bmcimodule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\models\\wssd\\theamountofpainting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\wssd\\theamountofpainting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\viewmodel\\selectworksetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\selectworksetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\models\\eto\\getpathforcircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getpathforcircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -32,33 +44,68 @@
         },
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GetPathForCircuit.cs",
-              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetPathForCircuit.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\GetPathForCircuit.cs",
-              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetPathForCircuit.cs*",
-              "RelativeToolTip": "Models\\ETO\\GetPathForCircuit.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "SelectWorksetViewModel.cs",
+              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\ViewModel\\SelectWorksetViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModel\\SelectWorksetViewModel.cs",
+              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\ViewModel\\SelectWorksetViewModel.cs",
+              "RelativeToolTip": "ViewModel\\SelectWorksetViewModel.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAkwFoAAABqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T11:50:49.525Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-06T07:06:53.668Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "TheAmountOfPainting.cs",
+              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\WSSD\\TheAmountOfPainting.cs",
+              "RelativeDocumentMoniker": "Models\\WSSD\\TheAmountOfPainting.cs",
+              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\WSSD\\TheAmountOfPainting.cs",
+              "RelativeToolTip": "Models\\WSSD\\TheAmountOfPainting.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAgwFkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-06T07:06:53.712Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ReadFile.cs",
+              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\FileWork\\ReadFile.cs",
+              "RelativeDocumentMoniker": "Models\\FileWork\\ReadFile.cs",
+              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\FileWork\\ReadFile.cs",
+              "RelativeToolTip": "Models\\FileWork\\ReadFile.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACcAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T09:56:03.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GetPathForCircuit.cs",
+              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetPathForCircuit.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\GetPathForCircuit.cs",
+              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetPathForCircuit.cs",
+              "RelativeToolTip": "Models\\ETO\\GetPathForCircuit.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-10T11:50:49.525Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "GetEndVoltageInCircuit.cs",
               "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs*",
-              "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAWAAAAAAAAAA==",
+              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAwwFsAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-05T16:24:59.5Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-05T16:24:59.5Z"
             }
           ]
         }

@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 41939859466
 
-43-343958085
+45-269189031
 1191632384011
 Views\Window\CreateAnalysisFace.xaml;Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\GetLinkForFilePreparingWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
 
-False
+True
 

@@ -121,6 +121,7 @@
     <Compile Include="Models\Extension\ExtensionPlane.cs" />
     <Compile Include="Models\Extension\ExtensionSolid.cs" />
     <Compile Include="Models\Extension\ExtensionXYZ.cs" />
+    <Compile Include="Models\FileWork\ReadFile.cs" />
     <Compile Include="Models\PointCloud\CreateAnalysisObject.cs" />
     <Compile Include="Models\PointCloud\CreateAnalysisRoof.cs" />
     <Compile Include="Models\PointCloud\CreateFloorCloudPoint.cs" />

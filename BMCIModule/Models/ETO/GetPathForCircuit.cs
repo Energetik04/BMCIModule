@@ -26,7 +26,7 @@ namespace BMCIModule.Models.ETO
             Selection choicePC = uidoc.Selection;
             IList<Reference> choicePCRef = choicePC.PickObjects(ObjectType.Element, "Путь трассы");
             #endregion
-
+            
 
             throw new NotImplementedException();
         }
