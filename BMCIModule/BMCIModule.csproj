@@ -70,6 +70,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="accoremgd">
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2021\accoremgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2021\acdbmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="acmgd">
+      <HintPath>C:\Program Files\Autodesk\AutoCAD 2021\acmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="AdWindows">
       <HintPath>C:\Program Files\Autodesk\Revit 2021\AdWindows.dll</HintPath>
       <Private>False</Private>
@@ -121,6 +133,7 @@
     <Compile Include="Models\Extension\ExtensionPlane.cs" />
     <Compile Include="Models\Extension\ExtensionSolid.cs" />
     <Compile Include="Models\Extension\ExtensionXYZ.cs" />
+    <Compile Include="Models\FileWork\FintText.cs" />
     <Compile Include="Models\FileWork\ReadFile.cs" />
     <Compile Include="Models\PointCloud\CreateAnalysisObject.cs" />
     <Compile Include="Models\PointCloud\CreateAnalysisRoof.cs" />
