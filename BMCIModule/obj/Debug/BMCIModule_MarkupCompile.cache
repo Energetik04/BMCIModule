@@ -16,5 +16,5 @@ DEBUG;TRACE
 122326192124
 Views\Window\CreateAnalysisFace.xaml;Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\GetLinkForFilePreparingWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
 
-False
+True
 
