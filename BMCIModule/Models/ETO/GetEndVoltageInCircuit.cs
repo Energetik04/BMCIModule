@@ -134,9 +134,8 @@ public class ElectricCircuitDFS
                     }
                 }
             }
-
+            
             endVoltageValue = GetVoltageEnd(connect);
-
             using (Transaction tr1=new Transaction(doc,"Uконч."))
             {
                 tr1.Start();
@@ -205,6 +204,10 @@ public class ElectricCircuitDFS
             {
                 voltageEnd = voltageStart/1.7385 - 2 * lengthEnd / 1000 * I * (deltaR * cos + deltaX * Math.Pow(1 - cos * cos, 0.5));
             }
+        }
+        if (voltageEnd == double.NaN)
+        {
+
         }
         return voltageEnd;
     }
