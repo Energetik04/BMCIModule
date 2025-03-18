@@ -13,10 +13,6 @@ using BMCIModule.Models.Extension;
 using BMCIModule.Models;
 using System.Drawing.Drawing2D;
 using System.Drawing;
-using System.Net;
-using System.Net.Configuration;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
 
 namespace BMCIModule
 {

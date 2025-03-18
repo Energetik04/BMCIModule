@@ -10,10 +10,15 @@ none
 false
 DEBUG;TRACE
 
-41939859466
+4-1721886346
 
+<<<<<<< Updated upstream
 45-2059852222
 119-503407463
+=======
+461297502650
+119432543826
+>>>>>>> Stashed changes
 Views\Window\CreateAnalysisFace.xaml;Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\GetLinkForFilePreparingWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
 
 False

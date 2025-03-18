@@ -79,6 +79,7 @@ D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModul
 D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
 D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
+<<<<<<< Updated upstream
 D:\Coding\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll.config
 D:\Coding\BMCIModule\BMCIModule\bin\Debug\BMCIModule.dll
 D:\Coding\BMCIModule\BMCIModule\bin\Debug\BMCIModule.pdb
@@ -104,5 +105,9 @@ D:\Coding\BMCIModule\BMCIModule\obj\Debug\Views\Window\SelectWorksetWindow.baml
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.g.resources
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
+=======
+D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.AssemblyReference.cache
+D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
+>>>>>>> Stashed changes
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
