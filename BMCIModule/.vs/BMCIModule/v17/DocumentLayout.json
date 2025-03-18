@@ -1,10 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\",
+  "WorkspaceRootPath": "D:\\Coding\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\bmcimodule\\bmcimodule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\coding\\bmcimodule\\bmcimodule\\models\\pointcloud\\createanalysisface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\coding\\bmcimodule\\bmcimodule\\models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,14 +31,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "GetEndVoltageInCircuit.cs",
-              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "ViewState": "AgIAALcAAAAAAAAAAAArwNAAAAAJAAAAAAAAAA==",
+              "Title": "CreateAnalysisFace.cs",
+              "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisFace.cs",
+              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisFace.cs",
+              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisFace.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisFace.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-12T10:35:30.632Z",
+              "WhenOpened": "2025-03-18T18:07:59.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreateAnalysisObject.cs",
+              "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
+              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisObject.cs",
+              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisObject.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAgwDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T18:03:30.511Z",
               "EditorCaption": ""
             }
           ]

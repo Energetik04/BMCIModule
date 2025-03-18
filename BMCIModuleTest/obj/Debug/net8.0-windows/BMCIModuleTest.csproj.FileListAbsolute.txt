@@ -42,3 +42,25 @@ D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.
 D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.pdb
 D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.genruntimeconfig.cache
 D:\Библиотека классов\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\ref\BMCIModuleTest.dll
+D:\Coding\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.exe
+D:\Coding\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.deps.json
+D:\Coding\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.runtimeconfig.json
+D:\Coding\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.dll
+D:\Coding\BMCIModule\BMCIModuleTest\bin\Debug\net8.0-windows\BMCIModuleTest.pdb
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\MainWindow.g.cs
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\App.g.cs
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest_MarkupCompile.cache
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest_MarkupCompile.lref
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\MainWindow.baml
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.g.resources
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.AssemblyInfoInputs.cache
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.AssemblyInfo.cs
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.csproj.CoreCompileInputs.cache
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.sourcelink.json
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.dll
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\refint\BMCIModuleTest.dll
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.pdb
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\BMCIModuleTest.genruntimeconfig.cache
+D:\Coding\BMCIModule\BMCIModuleTest\obj\Debug\net8.0-windows\ref\BMCIModuleTest.dll
