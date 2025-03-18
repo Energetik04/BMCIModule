@@ -106,8 +106,6 @@ D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.g.resources
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
 =======
-D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.AssemblyReference.cache
-D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
 >>>>>>> Stashed changes
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb

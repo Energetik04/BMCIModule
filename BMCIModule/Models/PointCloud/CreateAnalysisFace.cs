@@ -1,13 +1,4 @@
-<<<<<<< Updated upstream
-﻿namespace BMCIModule.Models.PointCloud
-{
-    public class CreateAnalysisFace
-    {
-        
-    }
-}
-=======
-﻿using Autodesk.Revit.Attributes;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
 using Autodesk.Revit.UI;
@@ -18,10 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BMCIModule.Models.PointCloud
 {
     [Transaction(TransactionMode.Manual)]
-    public class CreateAnalysisFace : IExternalCommand
+    public class CreateAnalysisFace:IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -34,7 +26,7 @@ namespace BMCIModule.Models.PointCloud
 
             #region Выбор поверзности
 
-            TaskDialog.Show("Выбор элемента", "Выберите экземпляhs плоскостей");
+            TaskDialog.Show("Выбор элемента", "Выберите экземпляры плоскостей");
             Selection choiceElement = uidoc.Selection;
             IList<Reference> choiceElementRef = choiceElement.PickObjects(ObjectType.Face, "Выбор плоскостей");
 
@@ -48,14 +40,13 @@ namespace BMCIModule.Models.PointCloud
             };
 
             List<Element> faceList = new List<Element>();
-            choiceElementRef.Select(x => 
-            {
-                faceList.Add(doc.GetElement(x));
-                return x; }
+            choiceElementRef.Select(x =>
+                {
+                    faceList.Add(doc.GetElement(x));
+                    return x;
+                }
             );
-
             return Result.Succeeded;
         }
     }
 }
->>>>>>> Stashed changes

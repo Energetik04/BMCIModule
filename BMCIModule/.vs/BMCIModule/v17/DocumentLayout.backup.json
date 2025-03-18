@@ -3,40 +3,22 @@
   "WorkspaceRootPath": "D:\\Coding\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-<<<<<<< Updated upstream
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\bmcimodule\\bmcimodule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-=======
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\coding\\bmcimodule\\bmcimodule\\models\\pointcloud\\createanalysisface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\coding\\bmcimodule\\bmcimodule\\models\\pointcloud\\createanalysisroof.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisroof.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\coding\\bmcimodule\\bmcimodule\\viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:viewmodel\\ribbonpanel\\bmcimodule_application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\coding\\bmcimodule\\bmcimodule\\models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
->>>>>>> Stashed changes
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 0,
+      "Orientation": 1,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-<<<<<<< Updated upstream
           "DockedHeight": 200,
           "SelectedChildIndex": 2,
-=======
-          "DockedWidth": 200,
-          "SelectedChildIndex": 3,
->>>>>>> Stashed changes
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,76 +28,30 @@
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
-<<<<<<< Updated upstream
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GetEndVoltageInCircuit.cs",
-              "DocumentMoniker": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "ToolTip": "D:\\\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043A\u043B\u0430\u0441\u0441\u043E\u0432\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs",
-              "ViewState": "AgIAALcAAAAAAAAAAAArwNAAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-12T10:35:30.632Z",
-=======
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BMCIModule_Application.cs",
-              "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "RelativeDocumentMoniker": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "RelativeToolTip": "ViewModel\\RibbonPanel\\BMCIModule_Application.cs",
-              "ViewState": "AgIAAGAAAAAAAAAAAAAowIIAAABmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T08:32:18.482Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CreateAnalysisRoof.cs",
-              "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisRoof.cs",
-              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisRoof.cs",
-              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisRoof.cs",
-              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisRoof.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAgwEgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T08:27:52.785Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CreateAnalysisObject.cs",
-              "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
-              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisObject.cs",
-              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
-              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisObject.cs",
-              "ViewState": "AgIAAOMAAAAAAAAAAAAiwJUBAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T08:27:17.376Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "CreateAnalysisFace.cs",
               "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisFace.cs",
               "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisFace.cs",
-              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisFace.cs",
-              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisFace.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAiAAAAAAAAAA==",
+              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisFace.cs*",
+              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisFace.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T08:39:38.682Z",
->>>>>>> Stashed changes
+              "WhenOpened": "2025-03-18T18:07:59.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreateAnalysisObject.cs",
+              "DocumentMoniker": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
+              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisObject.cs",
+              "ToolTip": "D:\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
+              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisObject.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAgwDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T18:03:30.511Z",
               "EditorCaption": ""
             }
           ]
