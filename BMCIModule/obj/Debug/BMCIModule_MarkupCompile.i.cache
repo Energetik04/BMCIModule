@@ -4,7 +4,7 @@
 library
 C#
 .cs
-D:\Coding\BMCIModule\BMCIModule\obj\Debug\
+D:\Библиотека классов\BMCIModule\BMCIModule\obj\Debug\
 BMCIModule
 none
 false
@@ -12,13 +12,9 @@ DEBUG;TRACE
 
 41939859466
 
-<<<<<<< Updated upstream
 46-138074101
-=======
-47981991384
->>>>>>> Stashed changes
-119-503407463
+1191632384011
 Views\Window\CreateAnalysisFace.xaml;Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\GetLinkForFilePreparingWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
 
-False
+True
 
