@@ -26,3 +26,30 @@ D:\Библиотека классов\BMCIModule\BMCIModule\obj\x64\Debug\BMCIM
 D:\Библиотека классов\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.csproj.Up2Date
 D:\Библиотека классов\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.dll
 D:\Библиотека классов\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.pdb
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\BMCIModule.dll.config
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\BMCIModule.dll
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\BMCIModule.pdb
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\Microsoft.Extensions.Primitives.dll
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\System.ComponentModel.Annotations.dll
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\System.ValueTuple.dll
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\Microsoft.Extensions.Primitives.xml
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Coding\BMCIModule\BMCIModule\bin\x64\Debug\System.ValueTuple.xml
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.csproj.AssemblyReference.cache
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\CreateAnalysisFace.g.cs
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\CreateFloorCloudPointWindow.g.cs
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\GetLinkForFilePreparingWindow.g.cs
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\SelectWorksetWindow.g.cs
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule_MarkupCompile.cache
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule_MarkupCompile.lref
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\CreateAnalysisFace.baml
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\CreateFloorCloudPointWindow.baml
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\GetLinkForFilePreparingWindow.baml
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\Views\Window\SelectWorksetWindow.baml
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.g.resources
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.csproj.CoreCompileInputs.cache
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.csproj.Up2Date
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.dll
+D:\Coding\BMCIModule\BMCIModule\obj\x64\Debug\BMCIModule.pdb
