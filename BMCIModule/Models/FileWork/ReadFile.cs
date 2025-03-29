@@ -59,7 +59,6 @@ namespace BMCIModule.Models.FileWork
                             var elemParam = elem.First().GetParameters("Имя панели").First();
                             elem.First().get_Parameter(guid).Set(string.Concat(line[1], "-XT"));
                             elemParam.Set(string.Concat(line[1], "-XT"));
-                            //
                         }
                     }
                     tr1.Commit();
