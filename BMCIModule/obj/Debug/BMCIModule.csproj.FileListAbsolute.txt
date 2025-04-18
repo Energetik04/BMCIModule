@@ -109,3 +109,7 @@ D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.Up2Date
 >>>>>>> Stashed changes
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
 D:\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb
+D:\Development\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.AssemblyReference.cache
+D:\Development\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.csproj.CoreCompileInputs.cache
+D:\Development\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.dll
+D:\Development\Coding\BMCIModule\BMCIModule\obj\Debug\BMCIModule.pdb

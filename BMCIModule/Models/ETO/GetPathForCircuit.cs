@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autodesk.Private.InfoCenter;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -18,15 +19,17 @@ namespace BMCIModule.Models.ETO
             var uiapp = commandData.Application;
             var uidoc = uiapp.ActiveUIDocument;
             var doc = uidoc.Document;
-            Element selectElement = null;
-            ElementId selectElementId = null;
-
-            #region SelectPathCircuit
-            TaskDialog.Show("Выбор элемента", "Выберите щит, в цепях которого прописано Uнач.");
-            Selection choicePC = uidoc.Selection;
-            IList<Reference> choicePCRef = choicePC.PickObjects(ObjectType.Element, "Путь трассы");
-            #endregion
             
+            FilteredElementCollector collector=new FilteredElementCollector(doc);
+            //все цепи проекта
+            IList<Element> collectionEC=collector.OfCategory(BuiltInCategory.OST_ElectricalCircuit).ToElements();
+
+            //все короба
+            FilteredElementCollector collectorCT=new FilteredElementCollector(doc);
+            var collectionCT=collectorCT.OfCategory(BuiltInCategory.OST_CableTray).ToElements();
+            
+
+
 
             throw new NotImplementedException();
         }
