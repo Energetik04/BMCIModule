@@ -33,6 +33,9 @@
   <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'ENA20258' ">
     <MyLibsPath>C:\Program Files\Autodesk\Revit 2021</MyLibsPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'MNK-ALKULIK' ">
+    <MyLibsPath>C:\Program Files\Autodesk\Revit 2021</MyLibsPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'DESKTOP-LN735L0' ">
     <MyLibsPath>C:\Soft\Revit 2021</MyLibsPath>
   </PropertyGroup>

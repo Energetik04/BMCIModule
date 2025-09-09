@@ -1,18 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\",
+  "WorkspaceRootPath": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\development\\coding\\bmcimodule\\bmcimodule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u043D\u043E\u0441\u0435\u0432\u0438\u0447\\development\\bmcimodule\\bmcimodule\\models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u043D\u043E\u0441\u0435\u0432\u0438\u0447\\development\\bmcimodule\\bmcimodule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\Development\\Coding\\BMCIModule\\BMCIModule\\models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\pointcloud\\createanalysisobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u043D\u043E\u0441\u0435\u0432\u0438\u0447\\development\\bmcimodule\\bmcimodule\\models\\preparingthefile\\changegridstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\preparingthefile\\changegridstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\development\\coding\\bmcimodule\\bmcimodule\\models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\\u043D\u043E\u0441\u0435\u0432\u0438\u0447\\development\\bmcimodule\\bmcimodule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,34 +26,8 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "VolumeCableTray.cs",
-              "DocumentMoniker": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\VolumeCableTray.cs",
-              "ToolTip": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
-              "RelativeToolTip": "Models\\ETO\\VolumeCableTray.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T08:05:25.58Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "SetLoadNameCurcuits.cs",
-              "DocumentMoniker": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\SetLoadNameCurcuits.cs",
-              "ToolTip": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
-              "RelativeToolTip": "Models\\ETO\\SetLoadNameCurcuits.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABTAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T08:04:10.535Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
@@ -60,15 +38,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CreateAnalysisObject.cs",
-              "DocumentMoniker": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
-              "RelativeDocumentMoniker": "Models\\PointCloud\\CreateAnalysisObject.cs",
-              "ToolTip": "D:\\Development\\Coding\\BMCIModule\\BMCIModule\\Models\\PointCloud\\CreateAnalysisObject.cs",
-              "RelativeToolTip": "Models\\PointCloud\\CreateAnalysisObject.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACsAAAAMAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "GetEndVoltageInCircuit.cs",
+              "DocumentMoniker": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "ToolTip": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAgwDsAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T18:03:30.511Z",
+              "WhenOpened": "2025-09-09T16:04:21.992Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ChangeGridStatus.cs",
+              "DocumentMoniker": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\PreparingTheFile\\ChangeGridStatus.cs",
+              "RelativeDocumentMoniker": "Models\\PreparingTheFile\\ChangeGridStatus.cs",
+              "ToolTip": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\PreparingTheFile\\ChangeGridStatus.cs",
+              "RelativeToolTip": "Models\\PreparingTheFile\\ChangeGridStatus.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABsAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-09T15:53:10.014Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VolumeCableTray.cs",
+              "DocumentMoniker": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\VolumeCableTray.cs",
+              "ToolTip": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
+              "RelativeToolTip": "Models\\ETO\\VolumeCableTray.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-09T15:28:41.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SetLoadNameCurcuits.cs",
+              "DocumentMoniker": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\SetLoadNameCurcuits.cs",
+              "ToolTip": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
+              "RelativeToolTip": "Models\\ETO\\SetLoadNameCurcuits.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAABwAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-09T08:04:10.535Z",
               "EditorCaption": ""
             }
           ]
