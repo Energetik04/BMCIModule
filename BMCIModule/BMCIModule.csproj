@@ -29,16 +29,13 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-</PropertyGroup>
-
-   <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'ENA20258' ">
-  <MyLibsPath>C:\Program Files\Autodesk\Revit 2021</MyLibsPath>
   </PropertyGroup>
-  
-   <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'DESKTOP-LN735L0' ">
-  <MyLibsPath>C:\Soft\Revit 2021</MyLibsPath>
+  <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'ENA20258' ">
+    <MyLibsPath>C:\Program Files\Autodesk\Revit 2021</MyLibsPath>
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'DESKTOP-LN735L0' ">
+    <MyLibsPath>C:\Soft\Revit 2021</MyLibsPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -78,7 +75,6 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-
   <ItemGroup>
     <Reference Include="AdWindows">
       <HintPath>$(MyLibsPath)\AdWindows.dll</HintPath>
@@ -127,6 +123,8 @@
     <Compile Include="Models\ESD\VolumeWorkForFloor.cs" />
     <Compile Include="Models\ETO\GetEndVoltageInCircuit.cs" />
     <Compile Include="Models\ETO\GetPathForCircuit.cs" />
+    <Compile Include="Models\ETO\SetLoadNameCurcuits.cs" />
+    <Compile Include="Models\ETO\VolumeCableTray.cs" />
     <Compile Include="Models\Extension\ExtensionFloor.cs" />
     <Compile Include="Models\Extension\ExtensionPlane.cs" />
     <Compile Include="Models\Extension\ExtensionSolid.cs" />
