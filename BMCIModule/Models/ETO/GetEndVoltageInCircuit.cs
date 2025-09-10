@@ -36,7 +36,6 @@ namespace BMCIModule.Models.ETO
             dfs.PerformDFS(selectElement);
 
             return Result.Succeeded;
-            throw new NotImplementedException();
         }
     }
 }
