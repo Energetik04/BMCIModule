@@ -25,6 +25,7 @@ namespace BMCIModule.Models.ETO
             var cableTrays=collectorCableTray.OfCategory(BuiltInCategory.OST_CableTray).OfClass(typeof(CableTray)).ToList();
 
             Guid guidCL = new Guid("3c465675-d0fa-4d5f-a997-77e21d61ca4d");
+            Guid guidValCable = new Guid("02605d3c-419c-4860-8d2c-04d6a9d4af2f");
 
             using (Transaction tr1=new Transaction(doc,"Подсчет объема заполнения"))
             {
@@ -49,7 +50,7 @@ namespace BMCIModule.Models.ETO
                                         ElementId elementId = new ElementId(4459288);
                                         if (parameter.Id == elementId)
                                         {
-                                            volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4;
+                                            volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4*es.get_Parameter(guidValCable).AsInteger();
                                             break;
                                         }
                                     }
