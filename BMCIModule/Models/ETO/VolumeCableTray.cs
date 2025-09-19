@@ -37,6 +37,7 @@ namespace BMCIModule.Models.ETO
                     if (cableTray.get_Parameter(guidCL).AsString() != null)
                     {
                         line = cableTray.get_Parameter(guidCL).AsString();
+                        if(line==null || line.Equals("")) break;
                         string[] lineES = line.Split(new char[] { ',' });
                         double volume = cableTray.Height * cableTray.Width * Math.Pow(304.8,2);
                         for (int i = 0; i < lineES.Length; i++)
