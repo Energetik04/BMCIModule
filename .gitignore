@@ -5,4 +5,6 @@
 */BMCIModule/.vs
 */BMCIModule/bin
 */BMCIModule/obj
+*/BMCIModule/.vscode
+*/BMCIModule/.idea
 *.cache
