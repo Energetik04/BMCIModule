@@ -48,6 +48,7 @@ namespace BMCIModule.Models.ETO
                 }
 
                 string lineArray = cableTray.get_Parameter(guidCL).AsString();
+                if (lineArray==null) continue;
                 string[] line = lineArray.Split(',');
 
                 XYZ centeCableTray = new XYZ(X, Y, Z);
@@ -70,8 +71,16 @@ namespace BMCIModule.Models.ETO
                                 double d = es.GetParameters("Dк").First().AsDouble();
                                 arcLine = Arc.Create(centeCableTray, d / 304.8/2, 0, 2 * Math.PI, xAxis, yAxis);
                                 DetailArc arcDetail = doc.Create.NewDetailCurve(doc.ActiveView, arcLine) as DetailArc;
-                                X = centeCableTray.X + d / 304.8 /2*3.5;
-                                centeCableTray = new XYZ(X , Y, Z);
+                                if(xAxis.X<0 || xAxis.Y<0 || xAxis.Z<0)
+                                {
+                                    X = centeCableTray.X - xAxis.Multiply(d / 304.8 / 2 * 3.5).X;
+                                }
+                                else
+                                {
+                                    X = centeCableTray.X + d / 304.8 / 2 * 3.5;
+                                }
+
+                                centeCableTray = new XYZ(X, Y, Z);
                                 break;
                             }
                         }

@@ -11,9 +11,6 @@
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\rnosevich\\AppData\\Local\\Temp\\.vsdbgsrc\\76b8419fad9734dc7d34887b181117374b28068d96b062ee4660383dd7c20956\\LanguageStorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -25,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -37,24 +34,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "LanguageStorage.cs",
-              "DocumentMoniker": "C:\\Users\\rnosevich\\AppData\\Local\\Temp\\.vsdbgsrc\\76b8419fad9734dc7d34887b181117374b28068d96b062ee4660383dd7c20956\\LanguageStorage.cs",
-              "ToolTip": "C:\\Users\\rnosevich\\AppData\\Local\\Temp\\.vsdbgsrc\\76b8419fad9734dc7d34887b181117374b28068d96b062ee4660383dd7c20956\\LanguageStorage.cs [\u0422\u043E\u043B\u044C\u043A\u043E \u0447\u0442\u0435\u043D\u0438\u0435]",
-              "ViewState": "AgIAACUAAAAAAAAAAAAEwDcAAAAEAAAAAQAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-19T18:24:08.178Z",
-              "EditorCaption": " [\u0422\u043E\u043B\u044C\u043A\u043E \u0447\u0442\u0435\u043D\u0438\u0435]"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "CreateSection.cs",
               "DocumentMoniker": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\CreateSection.cs",
-              "ToolTip": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs*",
-              "RelativeToolTip": "Models\\ETO\\CreateSection.cs*",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAEwDwAAABBAAAAAAAAAA==",
+              "ToolTip": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs",
+              "RelativeToolTip": "Models\\ETO\\CreateSection.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAgwDMAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-19T18:13:48.421Z",
               "EditorCaption": ""
@@ -74,7 +60,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "SetLoadNameCurcuits.cs",
               "DocumentMoniker": "D:\\\u041D\u043E\u0441\u0435\u0432\u0438\u0447\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\SetLoadNameCurcuits.cs",
