@@ -45,6 +45,7 @@ namespace BMCIModule.Models.ETO
                 Curve arcLine = Arc.Create(centeCableTray,0.16,0,3,xAxis,yAxis);
                 using (Transaction tr1=new Transaction(doc,"jxrj"))
                 {
+                    //указать плоскость
                     tr1.Start();
                     DetailCurve arcDetail=doc.Create.NewDetailCurve(doc.ActiveView as ViewSection, arcLine as Arc) as DetailCurve;
                     tr1.Commit();
