@@ -25,8 +25,7 @@ namespace BMCIModule.Models.ETO
             FilteredElementCollector collectorCableTray=new FilteredElementCollector(doc);
             var cableTrays=collectorCableTray.OfCategory(BuiltInCategory.OST_CableTray).OfClass(typeof(CableTray)).ToList();
 
-            Guid guidCL = new Guid("3c465675-d0fa-4d5f-a997-77e21d61ca4d");
-            Guid guidValCable = new Guid("02605d3c-419c-4860-8d2c-04d6a9d4af2f");
+            Guid guidCL = new Guid("3c465675-d0fa-4d5f-a997-77e21d61ca4d");// Кабельная трасса 
             Guid cableSquare = new Guid("b387334b-95f4-475a-8fd5-3ffd56556f2f");//Площадь кабеля
             Guid cableProcent = new Guid("8e6494c3-aac9-4faa-b3ca-7950322ca990");//Площадь кабеля в процентах
 
@@ -47,7 +46,7 @@ namespace BMCIModule.Models.ETO
                             cableTray.get_Parameter(cableProcent).Set(0);
                             continue;
                         }
-                        string[] lineES = line.Split(new char[] { ',' });
+                        string[] lineES = line.Split(',');
                         double volume = cableTray.Height * cableTray.Width * Math.Pow(304.8,2);
                         for (int i = 0; i < lineES.Length; i++)
                         {
