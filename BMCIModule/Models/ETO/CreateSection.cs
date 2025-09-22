@@ -61,6 +61,7 @@ namespace BMCIModule.Models.ETO
 
                 using (Transaction tr1 = new Transaction(doc, "Раскладка кабеля"))
                 {
+                    //указать плоскость
                     tr1.Start();
                     foreach (var lineEs in line)
                     {

@@ -1,10 +1,10 @@
 ﻿################################################################################
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
-*/.vs
-*/BMCIModule/.vs
-*/BMCIModule/bin
-*/BMCIModule/obj
-*/BMCIModule/.vscode
-*/BMCIModule/.idea
+*\.vs
+*\BMCIModule\.vs
+*\BMCIModule\bin
+*\BMCIModule\obj
+*\BMCIModule\.vscode
+*\BMCIModule\.idea
 *.cache
