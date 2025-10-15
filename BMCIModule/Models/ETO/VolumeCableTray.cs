@@ -28,6 +28,7 @@ namespace BMCIModule.Models.ETO
             Guid guidCL = new Guid("3c465675-d0fa-4d5f-a997-77e21d61ca4d");// Кабельная трасса 
             Guid cableSquare = new Guid("b387334b-95f4-475a-8fd5-3ffd56556f2f");//Площадь кабеля
             Guid cableProcent = new Guid("8e6494c3-aac9-4faa-b3ca-7950322ca990");//Площадь кабеля в процентах
+            Guid cableNumber = new Guid("02605d3c-419c-4860-8d2c-04d6a9d4af2f");// Кабель количество //
 
             using (Transaction tr1=new Transaction(doc,"Подсчет объема заполнения"))
             {
@@ -59,7 +60,9 @@ namespace BMCIModule.Models.ETO
                                         ElementId elementId = new ElementId(4459288);
                                         if (parameter.Id == elementId)
                                         {
-                                            volumeCable = volumeCable +parameter.AsDouble()*cableTray.Height*304.8;
+                                            int numberCable=es.get_Parameter(cableNumber).AsInteger();
+                                            if (numberCable == 0) numberCable = 1;
+                                            volumeCable = volumeCable +parameter.AsDouble()*cableTray.Height*304.8*numberCable;
                                             //volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4*es.get_Parameter(guidValCable).AsInteger();
                                             break;
                                         }
