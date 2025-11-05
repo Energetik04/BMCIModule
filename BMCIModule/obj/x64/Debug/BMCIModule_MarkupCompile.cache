@@ -4,7 +4,7 @@
 library
 C#
 .cs
-D:\Носевич\Development\BMCIModule\BMCIModule\obj\x64\Debug\
+D:\!всякое\Development\BMCIModule\BMCIModule\obj\x64\Debug\
 BMCIModule
 none
 false
@@ -12,8 +12,8 @@ DEBUG;TRACE
 
 41939859466
 
-48781100905
-1192024310265
+49-1512158904
+11984653749
 Views\Window\CreateAnalysisFace.xaml;Views\Window\CreateFloorCloudPointWindow.xaml;Views\Window\GetLinkForFilePreparingWindow.xaml;Views\Window\SelectWorksetWindow.xaml;
 
 False

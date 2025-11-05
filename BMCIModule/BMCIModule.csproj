@@ -36,6 +36,9 @@
   <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'MNK-ALKULIK' ">
     <MyLibsPath>C:\Program Files\Autodesk\Revit 2021</MyLibsPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'MNK-NOSEVICH' ">
+    <MyLibsPath>C:\Program Files\Autodesk\Revit 2021</MyLibsPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(COMPUTERNAME)' == 'DESKTOP-LN735L0' ">
     <MyLibsPath>C:\Soft\Revit 2021</MyLibsPath>
   </PropertyGroup>
@@ -128,6 +131,7 @@
     <Compile Include="Models\ETO\GetEndVoltageInCircuit.cs" />
     <Compile Include="Models\ETO\GetPathForCircuit.cs" />
     <Compile Include="Models\ETO\SetLoadNameCurcuits.cs" />
+    <Compile Include="Models\ETO\SetTracingForEC.cs" />
     <Compile Include="Models\ETO\VolumeCableTray.cs" />
     <Compile Include="Models\Extension\ExtensionFloor.cs" />
     <Compile Include="Models\Extension\ExtensionPlane.cs" />
