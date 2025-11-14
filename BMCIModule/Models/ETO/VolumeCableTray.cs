@@ -57,13 +57,25 @@ namespace BMCIModule.Models.ETO
                                 {
                                     foreach (Parameter parameter in es.Parameters)
                                     {
+                                        //диаметр кабеля
                                         ElementId elementId = new ElementId(4459288);
                                         if (parameter.Id == elementId)
                                         {
                                             int numberCable=es.get_Parameter(cableNumber).AsInteger();
                                             if (numberCable == 0) numberCable = 1;
-                                            volumeCable = volumeCable +parameter.AsDouble()*cableTray.Height*304.8*numberCable;
-                                            //volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4*es.get_Parameter(guidValCable).AsInteger();
+                                            //проверка кабеля по сечению
+                                            ElementId peramES=es.GetParameters("Аналог изоляции").First().AsElementId();
+                                            Element getElement=doc.GetElement(peramES);
+                                            var volumePhase=getElement.GetParameters("Размер_жилы").First().AsDouble();
+                                            if (volumePhase < 16)
+                                            {
+                                                volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4;
+                                            }
+                                            else
+                                            {
+                                                volumeCable = volumeCable + parameter.AsDouble() * cableTray.Height * 304.8 * numberCable;
+                                            }
+
                                             break;
                                         }
                                     }

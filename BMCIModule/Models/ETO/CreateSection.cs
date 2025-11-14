@@ -72,16 +72,10 @@ namespace BMCIModule.Models.ETO
                                 double d = es.GetParameters("Dк").First().AsDouble();
                                 arcLine = Arc.Create(centeCableTray, d / 304.8/2, 0, 2 * Math.PI, xAxis, yAxis);
                                 DetailArc arcDetail = doc.Create.NewDetailCurve(doc.ActiveView, arcLine) as DetailArc;
-                                if(xAxis.X<0 || xAxis.Y<0 || xAxis.Z<0)
-                                {
-                                    X = centeCableTray.X - xAxis.Multiply(d / 304.8 / 2 * 3.5).X;
-                                }
-                                else
-                                {
-                                    X = centeCableTray.X + d / 304.8 / 2 * 3.5;
-                                }
-
-                                centeCableTray = new XYZ(X, Y, Z);
+                                centeCableTray = centeCableTray.Add(xAxis * d);
+                                //X = centeCableTray.X +doc.ActiveView.RightDirection.X*(d);
+                                
+                                //centeCableTray = new XYZ(X, Y, Z);
                                 break;
                             }
                         }
