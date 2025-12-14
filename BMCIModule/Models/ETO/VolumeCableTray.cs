@@ -95,7 +95,6 @@ namespace BMCIModule.Models.ETO
                 }
                 tr1.Commit();
             }
-                
             return Result.Succeeded;
         }
     }

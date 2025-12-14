@@ -3,15 +3,19 @@
   "WorkspaceRootPath": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\gettracecurcitpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\gettracecurcitpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\createsection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\createsection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\createsection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -26,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,7 +42,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "GetTraceCurcitPanel.cs",
+              "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetTraceCurcitPanel.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\GetTraceCurcitPanel.cs",
+              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetTraceCurcitPanel.cs*",
+              "RelativeToolTip": "Models\\ETO\\GetTraceCurcitPanel.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T08:11:47.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "SetTracingForEC.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetTracingForEC.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\SetTracingForEC.cs",
@@ -46,25 +63,24 @@
               "RelativeToolTip": "Models\\ETO\\SetTracingForEC.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T09:18:50.514Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-05T09:18:50.514Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "CreateSection.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\CreateSection.cs",
               "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs",
               "RelativeToolTip": "Models\\ETO\\CreateSection.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACsAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwDcAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-19T18:13:48.421Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "SetLoadNameCurcuits.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\SetLoadNameCurcuits.cs",
@@ -72,8 +88,7 @@
               "RelativeToolTip": "Models\\ETO\\SetLoadNameCurcuits.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T08:04:10.535Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-09T08:04:10.535Z"
             }
           ]
         },
@@ -83,13 +98,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "VolumeCableTray.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\VolumeCableTray.cs",
-              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
-              "RelativeToolTip": "Models\\ETO\\VolumeCableTray.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAgwGQAAAAFAAAAAAAAAA==",
+              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs*",
+              "RelativeToolTip": "Models\\ETO\\VolumeCableTray.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-09T15:28:41.837Z",
               "EditorCaption": ""
