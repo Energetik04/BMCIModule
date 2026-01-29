@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\createsection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\createsection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\getfireload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getfireload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\setloadnamecurcuits.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,60 +38,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "SetTracingForEC.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetTracingForEC.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\SetTracingForEC.cs",
               "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetTracingForEC.cs",
               "RelativeToolTip": "Models\\ETO\\SetTracingForEC.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T09:18:50.514Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CreateSection.cs",
-              "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\CreateSection.cs",
-              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\CreateSection.cs",
-              "RelativeToolTip": "Models\\ETO\\CreateSection.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACsAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-19T18:13:48.421Z",
+              "WhenOpened": "2026-01-29T13:39:24.415Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "SetLoadNameCurcuits.cs",
-              "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
-              "RelativeDocumentMoniker": "Models\\ETO\\SetLoadNameCurcuits.cs",
-              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\SetLoadNameCurcuits.cs",
-              "RelativeToolTip": "Models\\ETO\\SetLoadNameCurcuits.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAhAAAAAAAAAA==",
+              "Title": "GetEndVoltageInCircuit.cs",
+              "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAmwIkAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T08:04:10.535Z",
+              "WhenOpened": "2026-01-29T12:47:00.542Z",
               "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
+            },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "VolumeCableTray.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\VolumeCableTray.cs",
               "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\VolumeCableTray.cs",
               "RelativeToolTip": "Models\\ETO\\VolumeCableTray.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAgwGQAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwEgAAABrAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-09T15:28:41.837Z",
+              "WhenOpened": "2026-01-29T12:47:00.578Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GetFireLoad.cs",
+              "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetFireLoad.cs",
+              "RelativeDocumentMoniker": "Models\\ETO\\GetFireLoad.cs",
+              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetFireLoad.cs",
+              "RelativeToolTip": "Models\\ETO\\GetFireLoad.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwD4AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-29T11:39:04.781Z",
               "EditorCaption": ""
             }
           ]

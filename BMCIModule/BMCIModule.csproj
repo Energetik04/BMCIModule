@@ -129,6 +129,7 @@
     <Compile Include="Models\ESD\VolumeWorkForFloor.cs" />
     <Compile Include="Models\ETO\CreateSection.cs" />
     <Compile Include="Models\ETO\GetEndVoltageInCircuit.cs" />
+    <Compile Include="Models\ETO\GetFireLoad.cs" />
     <Compile Include="Models\ETO\GetPathForCircuit.cs" />
     <Compile Include="Models\ETO\GetTraceCurcitPanel.cs" />
     <Compile Include="Models\ETO\SetLoadNameCurcuits.cs" />

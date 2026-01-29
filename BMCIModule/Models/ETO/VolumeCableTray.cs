@@ -35,6 +35,10 @@ namespace BMCIModule.Models.ETO
                 tr1.Start();
                 foreach (CableTray cableTray in cableTrays)
                 {
+                    if (cableTray.Id.IntegerValue == 5896890)
+                    {
+                        
+                    }
 
                     double volumeCable = 0;
                     string line = null;
@@ -69,11 +73,11 @@ namespace BMCIModule.Models.ETO
                                             var volumePhase=getElement.GetParameters("Размер_жилы").First().AsDouble();
                                             if (volumePhase < 16)
                                             {
-                                                volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4;
+                                                volumeCable = volumeCable + Math.PI * Math.Pow(parameter.AsDouble(), 2) / 4 + Math.PI*26.52*2;
                                             }
                                             else
                                             {
-                                                volumeCable = volumeCable + parameter.AsDouble() * cableTray.Height * 304.8 * numberCable;
+                                                volumeCable = volumeCable + parameter.AsDouble() * cableTray.Height * 304.8 * numberCable + Math.PI * 26.52 * 2;
                                             }
 
                                             break;
@@ -86,7 +90,7 @@ namespace BMCIModule.Models.ETO
                         if (volumeCable != 0)
                         {
                             double procent = volumeCable/volume*100;
-                            cableTray.get_Parameter(cableSquare).Set(volumeCable);
+                            cableTray.get_Parameter(cableSquare).Set(volumeCable*0.0000107);// треш с перефодом футов квадратных к метрам 
                             cableTray.get_Parameter(cableProcent).Set(procent);
                         }
 
