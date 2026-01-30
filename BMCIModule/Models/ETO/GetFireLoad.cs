@@ -30,14 +30,19 @@ namespace BMCIModule.Models.ETO
                 IncludeNonVisibleObjects = true,
                 DetailLevel = ViewDetailLevel.Fine,
             };
+            Guid guidPrimechani = new Guid("a85b7661-26b0-412f-979c-66af80b4b2c3");
             SolidCurveIntersectionOptions intersectionOptions= new SolidCurveIntersectionOptions();
             foreach (var space in spaceList)
             {
                 Solid solidSpace = space.get_Geometry(op).First() as Solid;
-                foreach(var elSys in electricalSystem)
+                double volumeFireLoad = 0;
+                
+                
+                foreach (var elSys in electricalSystem)
                 {
-                    var listXYZ = elSys.GetCircuitPath();
                     double length = 0;
+                    var listXYZ = elSys.GetCircuitPath();
+
                     for (int i=0; i<listXYZ.Count()-1; i++)
                     {
                         Curve curve = Line.CreateBound(listXYZ[i], listXYZ[i+1]);
@@ -48,19 +53,22 @@ namespace BMCIModule.Models.ETO
                         {
                             Curve curveInside=intersection.GetCurveSegment(segment);
                             length=curveInside.Length + length;
-                            
                         }
                         
                     }
                     if (length != 0)
                     {
-                        using (Transaction tr = new Transaction(doc, "длина"))
-                        {
-                            tr.Start();
-                            elSys.GetParameters("Комментарии").First().Set(length.ToString());
-                            tr.Commit();
-                        }
+                        double volumeOneCable = elSys.GetParameters("Объем_гор._масс").First().AsDouble();
+                        double lengthToMeter = length * 314 / 1000;
+                        volumeFireLoad = volumeOneCable*lengthToMeter+0.133*lengthToMeter+volumeFireLoad;
+                        
                     }
+                }
+                using (Transaction tr = new Transaction(doc, "длина"))
+                {
+                    tr.Start();
+                    space.get_Parameter(guidPrimechani).Set(volumeFireLoad.ToString());
+                    tr.Commit();
                 }
             }
 

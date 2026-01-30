@@ -7,15 +7,15 @@
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getfireload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\settracingforec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\volumecabletray.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|d:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\development\\bmcimodule\\bmcimodule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA28C660-34B8-4827-B74D-4F9D9BF61209}|BMCIModule.csproj|solutionrelative:models\\eto\\getendvoltageincircuit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -46,8 +46,7 @@
               "RelativeToolTip": "Models\\ETO\\SetTracingForEC.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-29T13:39:24.415Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-29T13:39:24.415Z"
             },
             {
               "$type": "Document",
@@ -59,8 +58,7 @@
               "RelativeToolTip": "Models\\ETO\\GetEndVoltageInCircuit.cs",
               "ViewState": "AgIAAFQAAAAAAAAAAAAmwIkAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-29T12:47:00.542Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-29T12:47:00.542Z"
             },
             {
               "$type": "Document",
@@ -72,8 +70,7 @@
               "RelativeToolTip": "Models\\ETO\\VolumeCableTray.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAgwEgAAABrAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-29T12:47:00.578Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-29T12:47:00.578Z"
             },
             {
               "$type": "Document",
@@ -81,9 +78,9 @@
               "Title": "GetFireLoad.cs",
               "DocumentMoniker": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetFireLoad.cs",
               "RelativeDocumentMoniker": "Models\\ETO\\GetFireLoad.cs",
-              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetFireLoad.cs",
-              "RelativeToolTip": "Models\\ETO\\GetFireLoad.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAgwD4AAAAVAAAAAAAAAA==",
+              "ToolTip": "D:\\!\u0432\u0441\u044F\u043A\u043E\u0435\\Development\\BMCIModule\\BMCIModule\\Models\\ETO\\GetFireLoad.cs*",
+              "RelativeToolTip": "Models\\ETO\\GetFireLoad.cs*",
+              "ViewState": "AgIAABAAAAAAAAAAAAA1wEoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-29T11:39:04.781Z",
               "EditorCaption": ""
